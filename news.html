@@ -1,38 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>All News - Stock Portal</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { darkMode: 'class' }</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All News - Stock Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">📢 All News</h1>
-      <a href="index.html" class="text-blue-600 hover:underline">← Back to Home</a>
-    </div>
 
-    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-      <div id="allNewsList">Loading...</div>
-    </section>
+  <div class="max-w-5xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">📢 All News</h1>
+    <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+    <div class="mt-6"><a href="index.html" class="text-blue-600 hover:underline">← Back to Home</a></div>
   </div>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwgGVcCAYqL6DXy1Fe62WoxB2thLa5cELaGYEpzgGEVLDRuQH_Wm1DaGDaHwbULqczLfA/exec";
-    async function loadAllNews(){
-      try{
-        const res = await fetch(url);
-        const data = await res.json();
-        const container = document.getElementById("allNewsList");
-        container.innerHTML = "";
-        (data.news.reverse()).forEach(n=>{
-          container.innerHTML += `<div class="p-3 border-b last:border-b-0"><div class="font-medium"><a href="${n.link||'#'}" target="_blank">${n.headline}</a></div><div class="text-xs text-gray-500 mt-1">${n.date||''}</div></div>`;
-        });
-      }catch(e){ console.error(e); document.getElementById("allNewsList").innerText = "Failed to load"; }
+    const url = "https://script.google.com/macros/s/AKfycbw083PoQG87h3LsTLepgAZFOXC3Ebw2g5aAd5sPTe8XIC221XFbSwpraL2bXKmQWcgn3A/exec";
+
+    async function loadNews() {
+      const res = await fetch(url);
+      const data = await res.json();
+      const newsList = document.getElementById("newsList");
+      newsList.innerHTML = "";
+      data.news.reverse().forEach(n => {
+        newsList.innerHTML += `<div class="p-3 border rounded bg-white dark:bg-gray-700">
+          <a href="${n.link || '#'}" target="_blank" class="font-medium">${n.headline}</a>
+          <div class="text-xs text-gray-500 mt-1">${n.date || ''}</div>
+        </div>`;
+      });
     }
-    window.onload = loadAllNews;
+    loadNews();
   </script>
 </body>
 </html>
