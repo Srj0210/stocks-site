@@ -6,12 +6,23 @@
   <title>Stock Portal - srjahir.in</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' }</script>
-  <style>html{scroll-behavior:smooth}.ticker-wrap{overflow:hidden;background:#facc15}.ticker{display:inline-block;padding-left:100%;animation:ticker 20s linear infinite;white-space:nowrap;font-weight:bold}@keyframes ticker{0%{transform:translateX(0%)}100%{transform:translateX(-100%)}}</style>
+  <style>
+    html { scroll-behavior: smooth; }
+    .ticker-wrap { overflow: hidden; background: #facc15; }
+    .ticker { display: inline-block; padding-left: 100%; animation: ticker 20s linear infinite; white-space: nowrap; font-weight: bold; }
+    @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+  </style>
   <script>
     // default to dark
     if (localStorage.theme === 'light') document.documentElement.classList.remove('dark');
     else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; }
-    function toggleTheme(){ if(document.documentElement.classList.contains('dark')){document.documentElement.classList.remove('dark'); localStorage.theme='light'}else{document.documentElement.classList.add('dark'); localStorage.theme='dark'} }
+    function toggleTheme(){ 
+      if(document.documentElement.classList.contains('dark')){
+        document.documentElement.classList.remove('dark'); localStorage.theme='light';
+      } else {
+        document.documentElement.classList.add('dark'); localStorage.theme='dark';
+      } 
+    }
   </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
@@ -39,7 +50,7 @@
 
   <!-- Ticker -->
   <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
-    <div class="ticker">🔥 Nifty gains 150 points | Reliance dips 2% | Adani Power rallies 5% | SEBI announces new F&O rules</div>
+    <div class="ticker" id="tickerText">Loading latest news...</div>
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
@@ -79,7 +90,7 @@
     </section>
   </main>
 
-  <!-- ABOUT (always white) -->
+  <!-- ABOUT -->
   <section id="about" class="bg-white text-black text-center py-10">
     <div class="mb-6">
       <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
@@ -103,26 +114,33 @@
   </section>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwgGVcCAYqL6DXy1Fe62WoxB2thLa5cELaGYEpzgGEVLDRuQH_Wm1DaGDaHwbULqczLfA/exec";
+    const url = "https://script.google.com/macros/s/AKfycbw083PoQG87h3LsTLepgAZFOXC3Ebw2g5aAd5sPTe8XIC221XFbSwpraL2bXKmQWcgn3A/exec";
 
     async function loadData() {
       try {
         const res = await fetch(url);
         const data = await res.json();
 
+        // 🔥 Auto Ticker (last 5 headlines)
+        const ticker = document.getElementById("tickerText");
+        ticker.innerHTML = data.news.slice(-5).map(n => n.headline).join(" | ");
+
         // News (latest 5)
         const newsList = document.getElementById("newsList");
         newsList.innerHTML = "";
         (data.news.slice(-5).reverse()).forEach(n => {
           const link = n.link || "#";
-          newsList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700"><a href="${link}" target="_blank" class="font-medium">${n.headline}</a><div class="text-xs text-gray-500 mt-1">${n.date || ''}</div></div>`;
+          newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+              <a href="${link}" target="_blank" class="font-medium">${n.headline}</a>
+              <div class="text-xs text-gray-500 mt-1">${n.date || ''}</div>
+            </div>`;
         });
 
         // IPOs (latest 10)
         const ipoTable = document.getElementById("ipoTable");
         ipoTable.innerHTML = "";
         data.ipos.slice(-10).reverse().forEach(i => {
-          ipoTable.innerHTML += `<tr>
+          ipoTable.innerHTML += `<tr class="searchable">
             <td class="border px-2 py-1">${i.name || ''}</td>
             <td class="border px-2 py-1">${i.open || ''}</td>
             <td class="border px-2 py-1">${i.close || ''}</td>
@@ -135,21 +153,34 @@
         moversList.innerHTML = "";
         (data.movers.slice(-10).reverse()).forEach(m => {
           const cls = (m.type && m.type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
-          moversList.innerHTML += `<div class="p-3 border rounded ${cls}"><strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span><div class="text-xs mt-1">${m.type||''}</div></div>`;
+          moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
+              <strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span>
+              <div class="text-xs mt-1">${m.type||''}</div>
+            </div>`;
         });
 
         // Picks (latest 4)
         const picksList = document.getElementById("picksList");
         picksList.innerHTML = "";
         (data.picks.slice(-4).reverse()).forEach(p => {
-          picksList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700"><strong>${p.stock}</strong><div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div></div>`;
+          picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+              <strong>${p.stock}</strong>
+              <div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div>
+            </div>`;
         });
 
       } catch (err) {
         console.error(err);
       }
     }
-    function searchContent(){ let input=document.getElementById("searchBox").value.toLowerCase(); document.querySelectorAll(".searchable").forEach(el=>el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"); }
+
+    function searchContent(){ 
+      let input=document.getElementById("searchBox").value.toLowerCase(); 
+      document.querySelectorAll(".searchable").forEach(el=>{
+        el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
+      }); 
+    }
+
     window.onload = loadData;
   </script>
 </body>
