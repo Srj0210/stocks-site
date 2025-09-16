@@ -1,195 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Stock Portal - srjahir.in</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
+  <style>html{scroll-behavior:smooth}.ticker-wrap{overflow:hidden;background:#facc15}.ticker{display:inline-block;padding-left:100%;animation:ticker 20s linear infinite;white-space:nowrap;font-weight:bold}@keyframes ticker{0%{transform:translateX(0%)}100%{transform:translateX(-100%)}}</style>
   <script>
-    // Enable dark mode via class strategy
-    tailwind.config = { darkMode: 'class' }
-  </script>
-  <style>
-    /* Smooth scroll */
-    html { scroll-behavior: smooth; }
-
-    /* News ticker animation */
-    .ticker-wrap { overflow: hidden; background: #facc15; }
-    .ticker { display: inline-block; padding-left: 100%; animation: ticker 20s linear infinite; white-space: nowrap; font-weight: bold; }
-    @keyframes ticker { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
-  </style>
-  <script>
-    // Dark mode toggle (default = dark)
-    if (localStorage.theme === 'light') {
-      document.documentElement.classList.remove('dark');
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.theme = 'dark'; // default
-    }
-
-    function toggleTheme() {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.theme = 'light';
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.theme = 'dark';
-      }
-    }
-
-    // Search function
-    function searchContent() {
-      let input = document.getElementById("searchBox").value.toLowerCase();
-      document.querySelectorAll(".searchable").forEach(el => {
-        el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none";
-      });
-    }
+    // default to dark
+    if (localStorage.theme === 'light') document.documentElement.classList.remove('dark');
+    else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; }
+    function toggleTheme(){ if(document.documentElement.classList.contains('dark')){document.documentElement.classList.remove('dark'); localStorage.theme='light'}else{document.documentElement.classList.add('dark'); localStorage.theme='dark'} }
   </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
-  <!-- Navbar -->
+  <!-- NAV -->
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
-      
-      <!-- Stock Portal with Logo -->
       <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
         <span>Stock Portal</span>
-        <img src="logo.png.png" alt="Logo" class="w-8 h-8">
+        <img src="logo.png.png" alt="logo" class="w-8 h-8">
       </a>
-
-      <!-- Navigation Links -->
       <ul class="flex space-x-4 text-sm">
         <li><a href="#news" class="hover:underline">News</a></li>
         <li><a href="#ipo" class="hover:underline">IPOs</a></li>
-        <li><a href="#gainers" class="hover:underline">Gainers/Losers</a></li>
+        <li><a href="#gainers" class="hover:underline">Movers</a></li>
         <li><a href="#picks" class="hover:underline">Picks</a></li>
         <li><a href="#about" class="hover:underline">About</a></li>
       </ul>
-
-      <!-- Search + Dark/Light Toggle -->
       <div class="flex items-center space-x-2">
         <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
-        <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded shadow">
-          🌞 / 🌙
-        </button>
+        <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
       </div>
     </div>
   </nav>
 
-  <!-- News Ticker -->
+  <!-- Ticker -->
   <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
-    <div class="ticker">
-      🔥 Nifty gains 150 points | Reliance dips 2% | Adani Power rallies 5% | SEBI announces new F&O rules
-    </div>
+    <div class="ticker">🔥 Nifty gains 150 points | Reliance dips 2% | Adani Power rallies 5% | SEBI announces new F&O rules</div>
   </div>
 
-  <!-- News Section -->
-  <section id="news" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-    <h2 class="text-xl font-bold mb-4">📢 Latest News</h2>
-    <div class="grid sm:grid-cols-2 gap-4">
-      <div class="p-4 border rounded bg-gray-50 dark:bg-gray-700 searchable">Nifty 50 surges on banking stocks rally</div>
-      <div class="p-4 border rounded bg-gray-50 dark:bg-gray-700 searchable">Infosys Q2 results expected next week</div>
-      <div class="p-4 border rounded bg-gray-50 dark:bg-gray-700 searchable">Crude oil prices hit new highs</div>
-    </div>
-  </section>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- News (latest 5) -->
+    <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
+      <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+      <div class="text-right mt-4"><a href="news.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All News →</a></div>
+    </section>
 
-  <!-- IPO Tracker -->
-  <section id="ipo" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-    <h2 class="text-xl font-bold mb-4">📊 Upcoming IPOs</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full border border-gray-400 dark:border-gray-600 text-sm">
-        <thead class="bg-gray-200 dark:bg-gray-700">
-          <tr>
-            <th class="border px-2 py-1">IPO Name</th>
-            <th class="border px-2 py-1">Open Date</th>
-            <th class="border px-2 py-1">Close Date</th>
-            <th class="border px-2 py-1">Price Band</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="searchable">
-            <td class="border px-2 py-1">Tata Tech</td>
-            <td class="border px-2 py-1">2025-09-20</td>
-            <td class="border px-2 py-1">2025-09-24</td>
-            <td class="border px-2 py-1">₹475–₹500</td>
-          </tr>
-          <tr class="searchable">
-            <td class="border px-2 py-1">XYZ Fintech</td>
-            <td class="border px-2 py-1">2025-09-28</td>
-            <td class="border px-2 py-1">2025-09-30</td>
-            <td class="border px-2 py-1">₹150–₹160</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <!-- IPOs (latest 10) -->
+    <section id="ipo" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📊 Latest IPOs</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+          <thead class="bg-gray-200 dark:bg-gray-700">
+            <tr><th class="border px-2 py-1">IPO Name</th><th class="border px-2 py-1">Open Date</th><th class="border px-2 py-1">Close Date</th><th class="border px-2 py-1">Price Band</th></tr>
+          </thead>
+          <tbody id="ipoTable"></tbody>
+        </table>
+      </div>
+      <div class="text-right mt-3"><a href="ipos.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All IPOs →</a></div>
+    </section>
 
-  <!-- Top Gainers & Losers -->
-  <section id="gainers" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-    <h2 class="text-xl font-bold mb-4">📈 Top Gainers & Losers</h2>
-    <div class="grid grid-cols-2 gap-4">
-      <div>
-        <h3 class="font-semibold">Top Gainers</h3>
-        <ul class="list-disc pl-6 text-green-600">
-          <li class="searchable">Adani Power +5%</li>
-          <li class="searchable">TCS +3.2%</li>
-          <li class="searchable">HDFC Bank +2.8%</li>
-        </ul>
-      </div>
-      <div>
-        <h3 class="font-semibold">Top Losers</h3>
-        <ul class="list-disc pl-6 text-red-600">
-          <li class="searchable">Reliance -2%</li>
-          <li class="searchable">Infosys -1.5%</li>
-          <li class="searchable">Wipro -1.2%</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+    <!-- Movers (latest 10) -->
+    <section id="gainers" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📈 Top Movers</h2>
+      <div id="moversList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+      <div class="text-right mt-3"><a href="movers.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Movers →</a></div>
+    </section>
 
-  <!-- Stock Picks -->
-  <section id="picks" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-10">
-    <h2 class="text-xl font-bold mb-4">🎯 Stock Picks (Educational)</h2>
-    <div class="grid sm:grid-cols-2 gap-4">
-      <div class="p-4 border rounded bg-green-50 dark:bg-green-900 searchable">
-        <h3 class="font-bold">Long Term: Infosys</h3>
-        <p>Strong earnings, consistent dividends, and leadership in IT sector.</p>
-      </div>
-      <div class="p-4 border rounded bg-yellow-50 dark:bg-yellow-900 searchable">
-        <h3 class="font-bold">Short Term: Adani Power</h3>
-        <p>Momentum stock with recent 5% rally in 3 sessions.</p>
-      </div>
-    </div>
-    <p class="text-xs mt-2 text-gray-600 dark:text-gray-400">⚠️ Disclaimer: This is for educational purposes only, not financial advice.</p>
-  </section>
+    <!-- Picks (latest 4) -->
+    <section id="picks" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-10">
+      <h2 class="text-xl font-bold mb-3">🎯 Stock Picks (Educational)</h2>
+      <div id="picksList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+      <div class="text-right mt-3"><a href="picks.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Picks →</a></div>
+    </section>
+  </main>
 
-  <!-- About Us -->
+  <!-- ABOUT (always white) -->
   <section id="about" class="bg-white text-black text-center py-10">
-    <!-- Instagram QR -->
     <div class="mb-6">
       <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
-        <img src="instagram-qr.png.png" alt="Instagram QR Code" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
+        <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
       </a>
       <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
       <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
     </div>
 
-    <!-- Logo (Clickable) -->
     <div class="my-8">
       <a href="https://www.srjahir.in/home" target="_blank">
         <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
       </a>
     </div>
 
-    <!-- Copyright -->
     <p class="text-sm text-gray-700">&copy; 2025 SRJ Ahir Technologies. All rights reserved.</p>
 
-    <!-- Sanskrit Line -->
     <div class="mt-4">
-      <img src="sanskrit.png.png" alt="Sanskrit Line" class="mx-auto w-44 sm:w-52 md:w-64">
+      <img src="sanskrit.png.png" alt="Sanskrit" class="mx-auto w-44 sm:w-52 md:w-64">
     </div>
   </section>
 
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbwgGVcCAYqL6DXy1Fe62WoxB2thLa5cELaGYEpzgGEVLDRuQH_Wm1DaGDaHwbULqczLfA/exec";
+
+    async function loadData() {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        // News (latest 5)
+        const newsList = document.getElementById("newsList");
+        newsList.innerHTML = "";
+        (data.news.slice(-5).reverse()).forEach(n => {
+          const link = n.link || "#";
+          newsList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700"><a href="${link}" target="_blank" class="font-medium">${n.headline}</a><div class="text-xs text-gray-500 mt-1">${n.date || ''}</div></div>`;
+        });
+
+        // IPOs (latest 10)
+        const ipoTable = document.getElementById("ipoTable");
+        ipoTable.innerHTML = "";
+        data.ipos.slice(-10).reverse().forEach(i => {
+          ipoTable.innerHTML += `<tr>
+            <td class="border px-2 py-1">${i.name || ''}</td>
+            <td class="border px-2 py-1">${i.open || ''}</td>
+            <td class="border px-2 py-1">${i.close || ''}</td>
+            <td class="border px-2 py-1">${i.price || ''}</td>
+          </tr>`;
+        });
+
+        // Movers (latest 10)
+        const moversList = document.getElementById("moversList");
+        moversList.innerHTML = "";
+        (data.movers.slice(-10).reverse()).forEach(m => {
+          const cls = (m.type && m.type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
+          moversList.innerHTML += `<div class="p-3 border rounded ${cls}"><strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span><div class="text-xs mt-1">${m.type||''}</div></div>`;
+        });
+
+        // Picks (latest 4)
+        const picksList = document.getElementById("picksList");
+        picksList.innerHTML = "";
+        (data.picks.slice(-4).reverse()).forEach(p => {
+          picksList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700"><strong>${p.stock}</strong><div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div></div>`;
+        });
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    function searchContent(){ let input=document.getElementById("searchBox").value.toLowerCase(); document.querySelectorAll(".searchable").forEach(el=>el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"); }
+    window.onload = loadData;
+  </script>
 </body>
 </html>
