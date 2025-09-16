@@ -1,109 +1,176 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stocks Portal - srjahir.in</title>
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-900 font-sans">
+  <style>
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
 
-  <!-- Header -->
-  <header class="bg-blue-900 text-white p-4 text-center shadow-md">
-    <h1 class="text-2xl font-bold">Stocks Portal - srjahir.in</h1>
-    <p class="text-sm">Educational stock news, IPO updates & market trends</p>
-  </header>
+    /* News ticker animation */
+    .ticker-wrap { overflow: hidden; background: #facc15; }
+    .ticker { display: inline-block; padding-left: 100%; animation: ticker 20s linear infinite; white-space: nowrap; font-weight: bold; }
+    @keyframes ticker { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
+  </style>
+  <script>
+    // Dark mode
+    if (localStorage.theme === 'dark') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+    function toggleTheme() {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+      }
+    }
+
+    // Search function
+    function searchContent() {
+      let input = document.getElementById("searchBox").value.toLowerCase();
+      document.querySelectorAll(".searchable").forEach(el => {
+        el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none";
+      });
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
+      <a href="#" class="text-xl font-bold">Stocks Portal</a>
+      <ul class="flex space-x-4 text-sm">
+        <li><a href="#news" class="hover:underline">News</a></li>
+        <li><a href="#ipo" class="hover:underline">IPOs</a></li>
+        <li><a href="#gainers" class="hover:underline">Gainers/Losers</a></li>
+        <li><a href="#picks" class="hover:underline">Picks</a></li>
+        <li><a href="#about" class="hover:underline">About</a></li>
+      </ul>
+      <div class="flex items-center space-x-2">
+        <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
+        <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded shadow">
+          🌞 / 🌙
+        </button>
+      </div>
+    </div>
+  </nav>
 
   <!-- News Ticker -->
-  <section class="bg-yellow-300 text-black p-2">
-    <marquee behavior="scroll" direction="left" scrollamount="5">
+  <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
+    <div class="ticker">
       🔥 Nifty gains 150 points | Reliance dips 2% | Adani Power rallies 5% | SEBI announces new F&O rules
-    </marquee>
-  </section>
+    </div>
+  </div>
 
   <!-- News Section -->
-  <section class="max-w-5xl mx-auto mt-6 bg-white shadow rounded-lg p-4">
-    <h2 class="text-xl font-semibold mb-2">📢 Latest News</h2>
-    <ul class="list-disc pl-6 space-y-1">
-      <li>Nifty 50 surges on banking stocks rally</li>
-      <li>Infosys Q2 results expected next week</li>
-      <li>Crude oil prices hit new highs</li>
-    </ul>
+  <section id="news" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+    <h2 class="text-xl font-bold mb-4">📢 Latest News</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="p-4 border rounded bg-gray-50 dark:bg-gray-700 searchable">Nifty 50 surges on banking stocks rally</div>
+      <div class="p-4 border rounded bg-gray-50 dark:bg-gray-700 searchable">Infosys Q2 results expected next week</div>
+      <div class="p-4 border rounded bg-gray-50 dark:bg-gray-700 searchable">Crude oil prices hit new highs</div>
+    </div>
   </section>
 
   <!-- IPO Tracker -->
-  <section class="max-w-5xl mx-auto mt-6 bg-white shadow rounded-lg p-4">
-    <h2 class="text-xl font-semibold mb-2">📊 Upcoming IPOs</h2>
-    <table class="w-full border border-gray-300 text-sm">
-      <thead class="bg-gray-200">
-        <tr>
-          <th class="border px-2 py-1">IPO Name</th>
-          <th class="border px-2 py-1">Open Date</th>
-          <th class="border px-2 py-1">Close Date</th>
-          <th class="border px-2 py-1">Price Band</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="border px-2 py-1">Tata Tech</td>
-          <td class="border px-2 py-1">2025-09-20</td>
-          <td class="border px-2 py-1">2025-09-24</td>
-          <td class="border px-2 py-1">₹475–₹500</td>
-        </tr>
-        <tr>
-          <td class="border px-2 py-1">XYZ Fintech</td>
-          <td class="border px-2 py-1">2025-09-28</td>
-          <td class="border px-2 py-1">2025-09-30</td>
-          <td class="border px-2 py-1">₹150–₹160</td>
-        </tr>
-      </tbody>
-    </table>
+  <section id="ipo" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+    <h2 class="text-xl font-bold mb-4">📊 Upcoming IPOs</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-400 dark:border-gray-600 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="border px-2 py-1">IPO Name</th>
+            <th class="border px-2 py-1">Open Date</th>
+            <th class="border px-2 py-1">Close Date</th>
+            <th class="border px-2 py-1">Price Band</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="searchable">
+            <td class="border px-2 py-1">Tata Tech</td>
+            <td class="border px-2 py-1">2025-09-20</td>
+            <td class="border px-2 py-1">2025-09-24</td>
+            <td class="border px-2 py-1">₹475–₹500</td>
+          </tr>
+          <tr class="searchable">
+            <td class="border px-2 py-1">XYZ Fintech</td>
+            <td class="border px-2 py-1">2025-09-28</td>
+            <td class="border px-2 py-1">2025-09-30</td>
+            <td class="border px-2 py-1">₹150–₹160</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- Top Gainers & Losers -->
-  <section class="max-w-5xl mx-auto mt-6 bg-white shadow rounded-lg p-4">
-    <h2 class="text-xl font-semibold mb-2">📈 Top Gainers & Losers</h2>
+  <section id="gainers" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+    <h2 class="text-xl font-bold mb-4">📈 Top Gainers & Losers</h2>
     <div class="grid grid-cols-2 gap-4">
       <div>
         <h3 class="font-semibold">Top Gainers</h3>
         <ul class="list-disc pl-6 text-green-600">
-          <li>Adani Power +5%</li>
-          <li>TCS +3.2%</li>
-          <li>HDFC Bank +2.8%</li>
+          <li class="searchable">Adani Power +5%</li>
+          <li class="searchable">TCS +3.2%</li>
+          <li class="searchable">HDFC Bank +2.8%</li>
         </ul>
       </div>
       <div>
         <h3 class="font-semibold">Top Losers</h3>
         <ul class="list-disc pl-6 text-red-600">
-          <li>Reliance -2%</li>
-          <li>Infosys -1.5%</li>
-          <li>Wipro -1.2%</li>
+          <li class="searchable">Reliance -2%</li>
+          <li class="searchable">Infosys -1.5%</li>
+          <li class="searchable">Wipro -1.2%</li>
         </ul>
       </div>
     </div>
   </section>
 
   <!-- Stock Picks -->
-  <section class="max-w-5xl mx-auto mt-6 bg-white shadow rounded-lg p-4 mb-10">
-    <h2 class="text-xl font-semibold mb-2">🎯 Stock Picks (Educational)</h2>
-    <div class="grid grid-cols-2 gap-4">
-      <div class="p-4 border rounded bg-green-50">
+  <section id="picks" class="max-w-5xl mx-auto mt-6 bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-10">
+    <h2 class="text-xl font-bold mb-4">🎯 Stock Picks (Educational)</h2>
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div class="p-4 border rounded bg-green-50 dark:bg-green-900 searchable">
         <h3 class="font-bold">Long Term: Infosys</h3>
         <p>Strong earnings, consistent dividends, and leadership in IT sector.</p>
       </div>
-      <div class="p-4 border rounded bg-yellow-50">
+      <div class="p-4 border rounded bg-yellow-50 dark:bg-yellow-900 searchable">
         <h3 class="font-bold">Short Term: Adani Power</h3>
         <p>Momentum stock with recent 5% rally in 3 sessions.</p>
       </div>
     </div>
-    <p class="text-xs mt-2 text-gray-600">⚠️ Disclaimer: This is for educational purposes only, not financial advice.</p>
+    <p class="text-xs mt-2 text-gray-600 dark:text-gray-400">⚠️ Disclaimer: This is for educational purposes only, not financial advice.</p>
   </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-800 text-white text-center p-4">
-    <p>&copy; 2025 srjahir.in | Stocks Portal</p>
-  </footer>
+  <!-- About Us -->
+  <section id="about" class="bg-gray-900 text-white text-center py-10">
+    <!-- Instagram QR -->
+    <div class="mb-6">
+      <img src="instagram-qr.png.png" alt="Instagram QR Code" class="mx-auto w-52 sm:w-60 md:w-72">
+      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
+      <p class="mt-1 text-sm text-gray-300">only available on Instagram</p>
+    </div>
+
+    <!-- Logo -->
+    <div class="my-8">
+      <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40">
+    </div>
+
+    <!-- Copyright -->
+    <p class="text-sm text-gray-300">&copy; 2025 SRJ Ahir Technologies. All rights reserved.</p>
+
+    <!-- Sanskrit Line -->
+    <div class="mt-4">
+      <img src="sanskrit.png.png" alt="Sanskrit Line" class="mx-auto w-44 sm:w-52 md:w-64">
+    </div>
+  </section>
 
 </body>
 </html>
-
