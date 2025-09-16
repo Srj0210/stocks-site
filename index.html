@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stocks Portal - srjahir.in</title>
+  <title>Stock Portal - srjahir.in</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     // Enable dark mode via class strategy
@@ -19,12 +19,14 @@
     @keyframes ticker { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
   </style>
   <script>
-    // Dark mode toggle
-    if (localStorage.theme === 'dark') {
-      document.documentElement.classList.add('dark')
+    // Dark mode toggle (default = dark)
+    if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
     } else {
-      document.documentElement.classList.remove('dark')
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark'; // default
     }
+
     function toggleTheme() {
       if (document.documentElement.classList.contains('dark')) {
         document.documentElement.classList.remove('dark');
@@ -49,7 +51,14 @@
   <!-- Navbar -->
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
-      <a href="#" class="text-xl font-bold">Stocks Portal</a>
+      
+      <!-- Stock Portal with Logo -->
+      <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
+        <span>Stock Portal</span>
+        <img src="logo.png.png" alt="Logo" class="w-8 h-8">
+      </a>
+
+      <!-- Navigation Links -->
       <ul class="flex space-x-4 text-sm">
         <li><a href="#news" class="hover:underline">News</a></li>
         <li><a href="#ipo" class="hover:underline">IPOs</a></li>
@@ -57,6 +66,8 @@
         <li><a href="#picks" class="hover:underline">Picks</a></li>
         <li><a href="#about" class="hover:underline">About</a></li>
       </ul>
+
+      <!-- Search + Dark/Light Toggle -->
       <div class="flex items-center space-x-2">
         <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
         <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded shadow">
@@ -154,32 +165,31 @@
   </section>
 
   <!-- About Us -->
-<section id="about" class="bg-white text-black text-center py-10">
+  <section id="about" class="bg-white text-black text-center py-10">
+    <!-- Instagram QR -->
+    <div class="mb-6">
+      <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
+        <img src="instagram-qr.png" alt="Instagram QR Code" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
+      </a>
+      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
+      <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
+    </div>
 
-  <!-- Instagram QR -->
-  <div class="mb-6">
-    <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
-      <img src="instagram-qr.png" alt="Instagram QR Code" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
-    </a>
-    <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
-    <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
-  </div>
+    <!-- Logo (Clickable) -->
+    <div class="my-8">
+      <a href="https://www.srjahir.in/home" target="_blank">
+        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
+      </a>
+    </div>
 
-  <!-- Logo -->
-  <div class="my-8">
-    <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40">
-  </div>
+    <!-- Copyright -->
+    <p class="text-sm text-gray-700">&copy; 2025 SRJ Ahir Technologies. All rights reserved.</p>
 
-  <!-- Copyright -->
-  <p class="text-sm text-gray-700">&copy; 2025 SRJ Ahir Technologies. All rights reserved.</p>
-
-  <!-- Sanskrit Line -->
-  <div class="mt-4">
-    <img src="sanskrit.png.png" alt="Sanskrit Line" class="mx-auto w-44 sm:w-52 md:w-64">
-  </div>
-
-</section>
-
+    <!-- Sanskrit Line -->
+    <div class="mt-4">
+      <img src="sanskrit.png.png" alt="Sanskrit Line" class="mx-auto w-44 sm:w-52 md:w-64">
+    </div>
+  </section>
 
 </body>
 </html>
