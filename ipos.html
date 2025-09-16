@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All IPOs - Stock Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+
+  <!-- Header -->
+  <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold">📊 All IPOs</h1>
+    <a href="index.html" class="text-blue-600 hover:underline">← Back to Home</a>
+  </div>
+
+  <!-- IPOs Table -->
+  <section class="max-w-6xl mx-auto mt-4 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+    <table class="w-full border border-gray-400 dark:border-gray-600 text-sm">
+      <thead class="bg-gray-200 dark:bg-gray-700">
+        <tr>
+          <th class="border px-2 py-1">IPO Name</th>
+          <th class="border px-2 py-1">Open Date</th>
+          <th class="border px-2 py-1">Close Date</th>
+          <th class="border px-2 py-1">Price Band</th>
+        </tr>
+      </thead>
+      <tbody id="ipoTableFull"></tbody>
+    </table>
+  </section>
+
+  <script>
+    async function loadAllIPOs() {
+      const url = "YOUR_WEB_APP_URL"; // replace with your API
+      const res = await fetch(url);
+      const data = await res.json();
+
+      let ipoHTML = "";
+      data.ipos.forEach(i => {
+        ipoHTML += `<tr>
+          <td class="border px-2 py-1">${i.name}</td>
+          <td class="border px-2 py-1">${i.open}</td>
+          <td class="border px-2 py-1">${i.close}</td>
+          <td class="border px-2 py-1">${i.price}</td>
+        </tr>`;
+      });
+      document.getElementById("ipoTableFull").innerHTML = ipoHTML;
+    }
+
+    window.onload = loadAllIPOs;
+  </script>
+
+</body>
+</html>
