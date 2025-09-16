@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stocks Portal - srjahir.in</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Enable dark mode via class strategy
+    tailwind.config = { darkMode: 'class' }
+  </script>
   <style>
     /* Smooth scroll */
     html { scroll-behavior: smooth; }
@@ -15,7 +19,7 @@
     @keyframes ticker { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
   </style>
   <script>
-    // Dark mode
+    // Dark mode toggle
     if (localStorage.theme === 'dark') {
       document.documentElement.classList.add('dark')
     } else {
@@ -149,13 +153,13 @@
     <p class="text-xs mt-2 text-gray-600 dark:text-gray-400">⚠️ Disclaimer: This is for educational purposes only, not financial advice.</p>
   </section>
 
-  <!-- About Us -->
-  <section id="about" class="bg-gray-900 text-white text-center py-10">
+  <!-- About Us (always white) -->
+  <section id="about" class="bg-white text-black text-center py-10">
     <!-- Instagram QR -->
     <div class="mb-6">
       <img src="instagram-qr.png.png" alt="Instagram QR Code" class="mx-auto w-52 sm:w-60 md:w-72">
       <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
-      <p class="mt-1 text-sm text-gray-300">only available on Instagram</p>
+      <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
     </div>
 
     <!-- Logo -->
@@ -164,7 +168,7 @@
     </div>
 
     <!-- Copyright -->
-    <p class="text-sm text-gray-300">&copy; 2025 SRJ Ahir Technologies. All rights reserved.</p>
+    <p class="text-sm text-gray-700">&copy; 2025 SRJ Ahir Technologies. All rights reserved.</p>
 
     <!-- Sanskrit Line -->
     <div class="mt-4">
