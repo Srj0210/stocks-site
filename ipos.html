@@ -1,50 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>All IPOs - Stock Portal</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script>tailwind.config = { darkMode: 'class' }</script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All IPOs - Stock Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">📊 All IPOs</h1>
-      <a href="index.html" class="text-blue-600 hover:underline">← Back to Home</a>
-    </div>
 
-    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-      <div class="overflow-x-auto">
-        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-          <thead class="bg-gray-200 dark:bg-gray-700">
-            <tr><th class="border px-2 py-1">IPO Name</th><th class="border px-2 py-1">Open Date</th><th class="border px-2 py-1">Close Date</th><th class="border px-2 py-1">Price Band</th></tr>
-          </thead>
-          <tbody id="ipoTableFull"></tbody>
-        </table>
-      </div>
-    </section>
+  <div class="max-w-5xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">📊 All IPOs</h1>
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr><th class="border px-2 py-1">IPO Name</th><th class="border px-2 py-1">Open Date</th><th class="border px-2 py-1">Close Date</th><th class="border px-2 py-1">Price Band</th></tr>
+        </thead>
+        <tbody id="ipoTable"></tbody>
+      </table>
+    </div>
+    <div class="mt-6"><a href="index.html" class="text-blue-600 hover:underline">← Back to Home</a></div>
   </div>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwgGVcCAYqL6DXy1Fe62WoxB2thLa5cELaGYEpzgGEVLDRuQH_Wm1DaGDaHwbULqczLfA/exec";
-    async function loadAllIPOs(){
-      try{
-        const res = await fetch(url);
-        const data = await res.json();
-        const t = document.getElementById("ipoTableFull");
-        t.innerHTML = "";
-        data.ipos.reverse().forEach(i=>{
-          t.innerHTML += `<tr>
-            <td class="border px-2 py-1">${i.name||''}</td>
-            <td class="border px-2 py-1">${i.open||''}</td>
-            <td class="border px-2 py-1">${i.close||''}</td>
-            <td class="border px-2 py-1">${i.price||''}</td>
-          </tr>`;
-        });
-      }catch(e){ console.error(e); document.getElementById("ipoTableFull").innerHTML = '<tr><td colspan="4">Failed to load</td></tr>'; }
+    const url = "https://script.google.com/macros/s/AKfycbw083PoQG87h3LsTLepgAZFOXC3Ebw2g5aAd5sPTe8XIC221XFbSwpraL2bXKmQWcgn3A/exec";
+
+    async function loadIPOs() {
+      const res = await fetch(url);
+      const data = await res.json();
+      const ipoTable = document.getElementById("ipoTable");
+      ipoTable.innerHTML = "";
+      data.ipos.reverse().forEach(i => {
+        ipoTable.innerHTML += `<tr>
+          <td class="border px-2 py-1">${i.name || ''}</td>
+          <td class="border px-2 py-1">${i.open || ''}</td>
+          <td class="border px-2 py-1">${i.close || ''}</td>
+          <td class="border px-2 py-1">${i.price || ''}</td>
+        </tr>`;
+      });
     }
-    window.onload = loadAllIPOs;
+    loadIPOs();
   </script>
 </body>
 </html>
