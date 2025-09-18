@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Upcoming IPOs - srjahir.in</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+  <div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">📊 Upcoming IPOs</h1>
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="border px-2 py-1">IPO Name</th>
+            <th class="border px-2 py-1">Open Date</th>
+            <th class="border px-2 py-1">Close Date</th>
+            <th class="border px-2 py-1">Price Band</th>
+          </tr>
+        </thead>
+        <tbody id="upcomingIpos"></tbody>
+      </table>
+    </div>
+    <div class="mt-6"><a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded">← Back to Home</a></div>
+  </div>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbwnt5ky8hA_XIFVQs3QVPNF6Ad8glSPtic_xAS--SwUtDbKJpp66Wu1knTQXeLSf4RRCw/exec";
+
+    async function loadUpcomingIpos(){
+      const res = await fetch(url);
+      const data = await res.json();
+      const upcomingIpos = document.getElementById("upcomingIpos");
+      upcomingIpos.innerHTML = "";
+      (data.upcomingIpos || []).reverse().forEach(i=>{
+        upcomingIpos.innerHTML += `<tr>
+          <td class="border px-2 py-1">${i.name||''}</td>
+          <td class="border px-2 py-1">${i.open||''}</td>
+          <td class="border px-2 py-1">${i.close||''}</td>
+          <td class="border px-2 py-1">${i.price||''}</td>
+        </tr>`;
+      });
+    }
+    loadUpcomingIpos();
+  </script>
+</body>
+</html>
