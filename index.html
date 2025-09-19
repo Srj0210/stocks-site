@@ -9,7 +9,7 @@
   <style>
     html { scroll-behavior: smooth; }
     .ticker-wrap { overflow: hidden; background: #facc15; }
-    .ticker { display: inline-block; padding-left: 100%; animation: ticker 30s linear infinite; white-space: nowrap; font-weight: bold; }
+    .ticker { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; white-space: nowrap; font-weight: bold; }
     @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
   </style>
   <script>
@@ -66,14 +66,19 @@
       <div class="overflow-x-auto">
         <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
           <thead class="bg-gray-200 dark:bg-gray-700">
-            <tr><th class="border px-2 py-1">IPO Name</th><th class="border px-2 py-1">Open Date</th><th class="border px-2 py-1">Close Date</th><th class="border px-2 py-1">Price Band</th></tr>
+            <tr>
+              <th class="border px-2 py-1">IPO Name</th>
+              <th class="border px-2 py-1">Open Date</th>
+              <th class="border px-2 py-1">Close Date</th>
+              <th class="border px-2 py-1">Price Band</th>
+            </tr>
           </thead>
           <tbody id="ipoTable"></tbody>
         </table>
       </div>
-      <div class="text-right mt-3">
-        <a href="ipos_recent.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">Recent IPOs →</a>
-        <a href="ipos_upcoming.html" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800 ml-2">Upcoming IPOs →</a>
+      <div class="flex justify-end space-x-2 mt-3">
+        <button onclick="loadIpos('recent')" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">Recent IPOs →</button>
+        <button onclick="loadIpos('upcoming')" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-800">Upcoming IPOs →</button>
       </div>
     </section>
 
@@ -115,63 +120,79 @@
     </div>
 
     <!-- Disclaimer -->
-    <p class="text-xs text-gray-500 mt-6">
+    <p class="text-xs text-gray-500 mt-6 px-4">
       Disclaimer: This website and its data are for educational purposes only.  
       All rights reserved by their respective owners.
     </p>
   </section>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwnt5ky8hA_XIFVQs3QVPNF6Ad8glSPtic_xAS--SwUtDbKJpp66Wu1knTQXeLSf4RRCw/exec";
+    const url = "https://script.google.com/macros/s/AKfycbzSS-wYQ-ObZAFP0ksWNJrSMQV3PZ7UPuJVA1V_lLiPBCqZLsAc66DtpozzFRQaUiUggA/exec";
+    let globalData = {};
 
     async function loadData() {
       try {
         const res = await fetch(url);
-        const data = await res.json();
+        globalData = await res.json();
 
-        document.getElementById("tickerText").innerHTML = data.news.slice(-5).map(n => n.headline).join(" | ");
+        // Ticker
+        document.getElementById("tickerText").innerHTML = globalData.news.slice(-5).map(n => n.headline).join(" | ");
 
+        // News
         const newsList = document.getElementById("newsList");
         newsList.innerHTML = "";
-        (data.news.slice(-5).reverse()).forEach(n => {
-          const link = n.link || "#";
-          newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <a href="${link}" target="_blank" class="font-medium">${n.headline}</a>
-              <div class="text-xs text-gray-500 mt-1">${n.date || ''}</div>
-            </div>`;
+        globalData.news.slice(-5).reverse().forEach(n => {
+          newsList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700">
+            <a href="${n.link}" target="_blank" class="font-medium">${n.headline}</a>
+            <div class="text-xs text-gray-500 mt-1">${n.date || ''}</div>
+          </div>`;
         });
 
-        const ipoTable = document.getElementById("ipoTable");
-        ipoTable.innerHTML = "";
-        data.ipos.slice(-10).reverse().forEach(i => {
-          ipoTable.innerHTML += `<tr class="searchable">
-            <td class="border px-2 py-1">${i.name || ''}</td>
-            <td class="border px-2 py-1">${i.open || ''}</td>
-            <td class="border px-2 py-1">${i.close || ''}</td>
-            <td class="border px-2 py-1">${i.price || ''}</td>
-          </tr>`;
-        });
+        // IPOs default
+        loadIpos("recent");
 
+        // Movers
         const moversList = document.getElementById("moversList");
         moversList.innerHTML = "";
-        (data.movers.slice(-10).reverse()).forEach(m => {
-          const cls = (m.type && m.type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
-          moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-              <strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span>
-              <div class="text-xs mt-1">${m.type||''}</div>
-            </div>`;
+        [...globalData.gainers, ...globalData.losers].slice(-10).forEach(m => {
+          moversList.innerHTML += `<div class="p-3 border rounded ${m.change.startsWith('-') ? 'bg-red-100 dark:bg-red-900' : 'bg-green-100 dark:bg-green-900'}">
+            <strong>${m.symbol}</strong> <span class="text-sm">(${m.change})</span>
+          </div>`;
         });
 
+        // Picks
         const picksList = document.getElementById("picksList");
         picksList.innerHTML = "";
-        (data.picks.slice(-4).reverse()).forEach(p => {
-          picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <strong>${p.stock}</strong>
-              <div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div>
-            </div>`;
+        globalData.picks.slice(-4).reverse().forEach(p => {
+          picksList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700">
+            <strong>${p.stock}</strong> <span class="text-xs">${p.type}</span>
+            <div class="text-xs mt-1">${p.reason}</div>
+          </div>`;
         });
 
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error("Error loading data", err);
+      }
+    }
+
+    function loadIpos(type) {
+      const ipoTable = document.getElementById("ipoTable");
+      ipoTable.innerHTML = "";
+      const ipos = type === "recent" ? globalData.recentIpos : globalData.upcomingIpos;
+
+      if (!ipos || ipos.length === 0) {
+        ipoTable.innerHTML = `<tr><td colspan="4" class="text-center py-2">No data available</td></tr>`;
+        return;
+      }
+
+      ipos.slice(-10).reverse().forEach(i => {
+        ipoTable.innerHTML += `<tr>
+          <td class="border px-2 py-1">${i.name || ''}</td>
+          <td class="border px-2 py-1">${i.open || ''}</td>
+          <td class="border px-2 py-1">${i.close || ''}</td>
+          <td class="border px-2 py-1">${i.price || ''}</td>
+        </tr>`;
+      });
     }
 
     function searchContent(){ 
