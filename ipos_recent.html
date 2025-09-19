@@ -1,48 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Recent IPOs - srjahir.in</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-  <div class="max-w-5xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">📊 Recent IPOs</h1>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">📈 Recent IPOs</h1>
+
     <div class="overflow-x-auto">
       <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
         <thead class="bg-gray-200 dark:bg-gray-700">
           <tr>
-            <th class="border px-2 py-1">IPO Name</th>
-            <th class="border px-2 py-1">Open Date</th>
-            <th class="border px-2 py-1">Close Date</th>
-            <th class="border px-2 py-1">Price Band</th>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">Listing Date</th>
+            <th class="border px-2 py-1">MCap (Cr)</th>
+            <th class="border px-2 py-1">IPO Price</th>
+            <th class="border px-2 py-1">% Change</th>
           </tr>
         </thead>
-        <tbody id="recentIpos"></tbody>
+        <tbody id="ipoRecent"></tbody>
       </table>
     </div>
-    <div class="mt-6"><a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded">← Back to Home</a></div>
+    <div class="mt-6">
+      <a href="index.html#ipos" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">← Back to Home</a>
+    </div>
   </div>
 
   <script>
     const url = "https://script.google.com/macros/s/AKfycbwnt5ky8hA_XIFVQs3QVPNF6Ad8glSPtic_xAS--SwUtDbKJpp66Wu1knTQXeLSf4RRCw/exec";
 
-    async function loadRecentIpos(){
-      const res = await fetch(url);
-      const data = await res.json();
-      const recentIpos = document.getElementById("recentIpos");
-      recentIpos.innerHTML = "";
-      (data.recentIpos || []).reverse().forEach(i=>{
-        recentIpos.innerHTML += `<tr>
-          <td class="border px-2 py-1">${i.name||''}</td>
-          <td class="border px-2 py-1">${i.open||''}</td>
-          <td class="border px-2 py-1">${i.close||''}</td>
-          <td class="border px-2 py-1">${i.price||''}</td>
-        </tr>`;
-      });
+    async function loadRecent() {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        const tbody = document.getElementById("ipoRecent");
+        tbody.innerHTML = "";
+        (data.ipos.recent || []).forEach(i => {
+          tbody.innerHTML += `<tr>
+            <td class="border px-2 py-1">${i.name||''}</td>
+            <td class="border px-2 py-1">${i.listing||''}</td>
+            <td class="border px-2 py-1">${i.mcap||''}</td>
+            <td class="border px-2 py-1">${i.price||''}</td>
+            <td class="border px-2 py-1">${i.change||''}</td>
+          </tr>`;
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
-    loadRecentIpos();
+
+    window.onload = loadRecent;
   </script>
 </body>
 </html>
