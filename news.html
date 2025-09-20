@@ -1,59 +1,69 @@
-<!doctype html>
-<html>
-<head><link rel="icon" type="image/png" href="favicon.png" />
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>All News - Stock Portal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">All News</h1>
-    <div id="list"></div>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-    <div class="flex justify-between items-center mt-6">
-      <button id="prev" class="px-3 py-1 bg-gray-200 rounded">Prev</button>
-      <div id="pageinfo"></div>
-      <button id="next" class="px-3 py-1 bg-gray-200 rounded">Next</button>
+  <main class="max-w-4xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-6 text-center">📢 All Stock News</h1>
+    <div id="newsContainer" class="space-y-4">Loading...</div>
+    
+    <!-- Pagination -->
+    <div class="flex justify-center items-center space-x-4 mt-6">
+      <button id="prevBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 disabled:opacity-50">Prev</button>
+      <span id="pageIndicator" class="text-sm text-gray-500">Page 1</span>
+      <button id="nextBtn" class="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 disabled:opacity-50">Next</button>
     </div>
-  </div>
+  </main>
 
-<script>
-  const API_URL = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec";
-  let currentPage = 1, perPage = 20, dataset = [];
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec";
+    let news = [];
+    let currentPage = 1;
+    const perPage = 10;
 
-  async function loadAll() {
-    try {
-      const r = await fetch(API_URL);
-      const json = await r.json();
-      dataset = json.news || json.News || [];
-      renderPage();
-    } catch (e) {
-      document.getElementById('list').innerHTML = '<div class="text-red-500">Failed to load news.</div>';
-      console.error(e);
+    async function loadNews() {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        news = data.news || [];
+        renderPage(1);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
 
-  function renderPage(){
-    const start = (currentPage-1)*perPage;
-    const page = dataset.slice(start, start+perPage);
-    const html = page.map(n=>{
-      const title = n.headline||n.Title||n.Headline||'';
-      const link = n.link||n.Link||'#';
-      const date = n.date || n.Date || '';
-      return `<div class="p-3 bg-white dark:bg-gray-800 rounded mb-2">
-        <a href="${link}" target="_blank" class="font-medium">${title}</a>
-        <div class="text-xs text-gray-500 mt-1">${date}</div>
-      </div>`;
-    }).join('');
-    document.getElementById('list').innerHTML = html || '<div>No news found.</div>';
-    document.getElementById('pageinfo').innerText = `Page ${currentPage} of ${Math.max(1, Math.ceil(dataset.length/perPage))}`;
-  }
+    function renderPage(page) {
+      const newsContainer = document.getElementById("newsContainer");
+      const start = (page - 1) * perPage;
+      const end = start + perPage;
+      const items = news.slice(start, end);
 
-  document.getElementById('prev').addEventListener('click', ()=>{ if(currentPage>1){ currentPage--; renderPage(); }});
-  document.getElementById('next').addEventListener('click', ()=>{ if(currentPage*perPage < dataset.length){ currentPage++; renderPage(); }});
+      newsContainer.innerHTML = "";
+      items.forEach(n => {
+        newsContainer.innerHTML += `
+          <div class="p-4 bg-white dark:bg-gray-800 rounded shadow hover:shadow-md transition">
+            <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
+          </div>
+        `;
+      });
 
-  loadAll();
-</script>
+      currentPage = page;
+      document.getElementById("pageIndicator").textContent = "Page " + page + " of " + Math.ceil(news.length / perPage);
+      document.getElementById("prevBtn").disabled = (page === 1);
+      document.getElementById("nextBtn").disabled = (page * perPage >= news.length);
+    }
+
+    document.getElementById("prevBtn").onclick = () => renderPage(currentPage - 1);
+    document.getElementById("nextBtn").onclick = () => renderPage(currentPage + 1);
+
+    loadNews();
+  </script>
 </body>
 </html>
