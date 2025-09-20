@@ -12,15 +12,9 @@
     .ticker-wrap { overflow: hidden; background: #facc15; }
     .ticker { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; white-space: nowrap; font-weight: bold; }
     @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    .line-clamp-2 { 
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;  
-      overflow: hidden;
-    }
   </style>
   <script>
-    // default dark mode
+    // default dark
     if (localStorage.theme === 'light') document.documentElement.classList.remove('dark');
     else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; }
     function toggleTheme(){ 
@@ -37,7 +31,7 @@
   <!-- NAV -->
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
-      <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
+      <a href="index.html" class="flex items-center space-x-2 text-xl font-bold">
         <span>Stock Portal</span>
         <img src="logo.png.png" alt="logo" class="w-8 h-8">
       </a>
@@ -64,7 +58,7 @@
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
-      <div id="newsList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">Loading...</div>
+      <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
       <div class="text-right mt-4"><a href="news.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All News →</a></div>
     </section>
 
@@ -119,77 +113,68 @@
     </section>
   </main>
 
-  <!-- ABOUT -->
-  <section id="about" class="bg-white text-black text-center py-10">
-    <p class="text-sm text-gray-700">©️ 2025 SRJ Ahir Technologies</p>
-  </section>
-
   <script>
-    const url = "YOUR_APPSCRIPT_URL"; // replace with your latest Apps Script exec link
+    const url = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec";
 
     async function loadData() {
       try {
         const res = await fetch(url);
         const data = await res.json();
 
-        // Ticker (last 5 news)
+        // Ticker
         const ticker = document.getElementById("tickerText");
         ticker.innerHTML = data.news.slice(-5).map(n => n.Title).join(" | ");
 
-        // News (6 cards)
+        // News
         const newsList = document.getElementById("newsList");
         newsList.innerHTML = "";
-        data.news.slice(-6).reverse().forEach(n => {
-          newsList.innerHTML += `
-            <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
-              <a href="${n.Link || '#'}" target="_blank" class="font-medium line-clamp-2">${n.Title}</a>
-              <div class="text-xs text-gray-500 mt-1">ET Markets</div>
+        (data.news.slice(-6).reverse()).forEach(n => {
+          newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+              <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
             </div>`;
         });
 
-        // IPO Upcoming
+        // IPOs (Upcoming)
         const ipoUpcoming = document.getElementById("ipoUpcoming");
         ipoUpcoming.innerHTML = "";
-        (data.ipos.upcoming || []).slice(0, 10).forEach(i => {
-          ipoUpcoming.innerHTML += `<tr>
-            <td class="border px-2 py-1">${i.name||''}</td>
-            <td class="border px-2 py-1">${i.listing||''}</td>
-            <td class="border px-2 py-1">${i.mcap||''}</td>
-            <td class="border px-2 py-1">${i.roce||''}</td>
+        (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+          ipoUpcoming.innerHTML += `<tr class="searchable">
+            <td class="border px-2 py-1">${i.Name||''}</td>
+            <td class="border px-2 py-1">${i['Listing Date']||''}</td>
+            <td class="border px-2 py-1">${i.MCap||''}</td>
+            <td class="border px-2 py-1">${i.ROCE||''}</td>
           </tr>`;
         });
 
-        // IPO Recent
+        // IPOs (Recent)
         const ipoRecent = document.getElementById("ipoRecent");
         ipoRecent.innerHTML = "";
-        (data.ipos.recent || []).slice(0, 10).forEach(i => {
-          ipoRecent.innerHTML += `<tr>
-            <td class="border px-2 py-1">${i.name||''}</td>
-            <td class="border px-2 py-1">${i.listing||''}</td>
-            <td class="border px-2 py-1">${i.mcap||''}</td>
-            <td class="border px-2 py-1">${i.price||''}</td>
-            <td class="border px-2 py-1">${i.change||''}</td>
+        (data.ipos_recent || []).slice(0, 10).forEach(i => {
+          ipoRecent.innerHTML += `<tr class="searchable">
+            <td class="border px-2 py-1">${i.Name||''}</td>
+            <td class="border px-2 py-1">${i['Listing Date']||''}</td>
+            <td class="border px-2 py-1">${i.MCap||''}</td>
+            <td class="border px-2 py-1">${i.Price||''}</td>
+            <td class="border px-2 py-1">${i.Change||''}</td>
           </tr>`;
         });
 
         // Movers
         const moversList = document.getElementById("moversList");
         moversList.innerHTML = "";
-        (data.movers.slice(-10).reverse()).forEach(m => {
-          const cls = (m.type && m.type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
-          moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-              <strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span>
-              <div class="text-xs mt-1">${m.type||''}</div>
+        (data.gainerslosers || []).slice(0, 10).forEach(m => {
+          moversList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+              <strong>${m.Name}</strong> <span class="text-sm">(${m.CMP||''})</span>
             </div>`;
         });
 
         // Picks
         const picksList = document.getElementById("picksList");
         picksList.innerHTML = "";
-        (data.picks.slice(-4).reverse()).forEach(p => {
-          picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
-              <strong>${p.stock}</strong>
-              <div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div>
+        (data.picks || []).slice(0, 4).forEach(p => {
+          picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+              <strong>${p.Stock}</strong>
+              <div class="text-xs mt-1">${p.Reason||''}</div>
             </div>`;
         });
 
