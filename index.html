@@ -14,7 +14,6 @@
     @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
   </style>
   <script>
-    // default dark
     if (localStorage.theme === 'light') document.documentElement.classList.remove('dark');
     else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; }
     function toggleTheme(){ 
@@ -119,13 +118,13 @@
       <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
         <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
       </a>
-      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
+      <p class="mt-2 text-lg font-semibold">DM Us ON INSTAGRAM</p>
       <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
     </div>
 
     <div class="my-8">
       <a href="https://www.srjahir.in/home" target="_blank">
-        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
+        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transitionTransform duration-300">
       </a>
     </div>
 
@@ -135,82 +134,96 @@
       <img src="sanskrit.png.png" alt="Sanskrit" class="mx-auto w-44 sm:w-52 md:w-64">
     </div>
 
-    <!-- Disclaimer -->
     <p class="text-xs text-gray-500 mt-4">
       Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
     </p>
   </section>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwnt5ky8hA_XIFVQs3QVPNF6Ad8glSPtic_xAS--SwUtDbKJpp66Wu1knTQXeLSf4RRCw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbwXPO8a5ykRsbqJJkinKuWakTs9sYhNuwhEnTZ34lsSxhaTEa6yn8wh5f8R-qC6m7D8/exec";
 
     async function loadData() {
       try {
-        const res = await fetch(url);
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('API fetch failed: ' + res.status);
         const data = await res.json();
 
         // Ticker
+        const newsArray = Array.isArray(data.news) ? data.news : data.News || [];
         const ticker = document.getElementById("tickerText");
-        ticker.innerHTML = data.news.slice(-5).map(n => n.headline).join(" | ");
+        ticker.innerHTML = newsArray.slice(-5).map(n => n.headline || n.Title || n.Headline).join(" | ");
 
-        // News
+        // News - show last 6 reversed
         const newsList = document.getElementById("newsList");
         newsList.innerHTML = "";
-        (data.news.slice(-5).reverse()).forEach(n => {
+        newsArray.slice(-6).reverse().forEach(n => {
+          const headline = n.headline || n.Title || n.Headline || '';
+          const link = n.link || n.Link || '#';
+          const date = n.date || n.Date || '';
           newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <a href="${n.link || '#'}" target="_blank" class="font-medium">${n.headline}</a>
-              <div class="text-xs text-gray-500 mt-1">${n.date || ''}</div>
+              <a href="${link}" target="_blank" class="font-medium">${headline}</a>
+              <div class="text-xs text-gray-500 mt-1">${date}</div>
             </div>`;
         });
 
-        // IPOs (Upcoming)
+        // Upcoming IPOs
+        const iposUpcoming = (data.ipos && data.ipos.upcoming) || (data.upcomingIPOs) || [];
         const ipoUpcoming = document.getElementById("ipoUpcoming");
         ipoUpcoming.innerHTML = "";
-        (data.ipos.upcoming || []).slice(0, 10).forEach(i => {
+        iposUpcoming.slice(0,10).forEach(i => {
           ipoUpcoming.innerHTML += `<tr class="searchable">
-            <td class="border px-2 py-1">${i.name||''}</td>
-            <td class="border px-2 py-1">${i.listing||''}</td>
-            <td class="border px-2 py-1">${i.mcap||''}</td>
-            <td class="border px-2 py-1">${i.roce||''}</td>
+            <td class="border px-2 py-1">${i.name||i.Name||''}</td>
+            <td class="border px-2 py-1">${i.listing||i.Listing||i.open||''}</td>
+            <td class="border px-2 py-1">${i.mcap||i.MCap||''}</td>
+            <td class="border px-2 py-1">${i.roce||i.ROCE||''}</td>
           </tr>`;
         });
 
-        // IPOs (Recent)
-        const ipoRecent = document.getElementById("ipoRecent");
-        ipoRecent.innerHTML = "";
-        (data.ipos.recent || []).slice(0, 10).forEach(i => {
-          ipoRecent.innerHTML += `<tr class="searchable">
-            <td class="border px-2 py-1">${i.name||''}</td>
-            <td class="border px-2 py-1">${i.listing||''}</td>
-            <td class="border px-2 py-1">${i.mcap||''}</td>
-            <td class="border px-2 py-1">${i.price||''}</td>
-            <td class="border px-2 py-1">${i.change||''}</td>
+        // Recent IPOs
+        const iposRecent = (data.ipos && data.ipos.recent) || (data.recentIPOs) || [];
+        const recentTbl = document.getElementById("ipoRecent");
+        recentTbl.innerHTML = "";
+        iposRecent.slice(0,10).forEach(i => {
+          recentTbl.innerHTML += `<tr class="searchable">
+            <td class="border px-2 py-1">${i.name||i.Name||''}</td>
+            <td class="border px-2 py-1">${i.listing||i.Listing||i.listingDate||''}</td>
+            <td class="border px-2 py-1">${i.mcap||i.MCap||''}</td>
+            <td class="border px-2 py-1">${i.price||i.Price||''}</td>
+            <td class="border px-2 py-1">${i.change||i.Change||''}</td>
           </tr>`;
         });
 
         // Movers
+        const movers = data.movers || data.Movers || [];
         const moversList = document.getElementById("moversList");
         moversList.innerHTML = "";
-        (data.movers.slice(-10).reverse()).forEach(m => {
-          const cls = (m.type && m.type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
+        movers.slice(-10).reverse().forEach(m => {
+          const type = m.type || m.Type || '';
+          const stock = m.stock || m.Name || m.name || '';
+          const change = m.change || m.Change || '';
+          const cls = (type.toLowerCase && type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
           moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-              <strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span>
-              <div class="text-xs mt-1">${m.type||''}</div>
+              <strong>${stock}</strong> <span class="text-sm">(${change})</span>
+              <div class="text-xs mt-1">${type}</div>
             </div>`;
         });
 
         // Picks
+        const picks = data.picks || data.Picks || [];
         const picksList = document.getElementById("picksList");
         picksList.innerHTML = "";
-        (data.picks.slice(-4).reverse()).forEach(p => {
+        picks.slice(-8).reverse().forEach(p => {
+          const stock = p.stock || p.Stock || p.Name || '';
+          const reason = p.reason || p.Reason || p.type || '';
           picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <strong>${p.stock}</strong>
-              <div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div>
+              <strong>${stock}</strong>
+              <div class="text-xs mt-1">${reason}</div>
             </div>`;
         });
 
       } catch (err) {
         console.error(err);
+        document.getElementById("newsList").innerHTML = '<div class="text-red-500">Unable to load data right now.</div>';
       }
     }
 
@@ -223,5 +236,6 @@
 
     window.onload = loadData;
   </script>
+
 </body>
 </html>
