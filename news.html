@@ -1,43 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>All News - Stock Portal</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6">
+  <div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-4">All News</h1>
+    <div id="list"></div>
 
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4">📢 All News</h1>
-    <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-    <div class="mt-6"><a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">← Back to Home</a></div>
+    <div class="flex justify-between items-center mt-6">
+      <button id="prev" class="px-3 py-1 bg-gray-200 rounded">Prev</button>
+      <div id="pageinfo"></div>
+      <button id="next" class="px-3 py-1 bg-gray-200 rounded">Next</button>
+    </div>
   </div>
 
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbzSS-wYQ-ObZAFP0ksWNJrSMQV3PZ7UPuJVA1V_lLiPBCqZLsAc66DtpozzFRQaUiUggA/exec";
-    
-    async function loadNews() {
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        const newsList = document.getElementById("newsList");
-        newsList.innerHTML = "";
-        data.news.forEach(n => {
-          const link = n.link || "#";
-          newsList.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <a href="${link}" target="_blank" class="font-medium hover:underline">${n.headline || ''}</a>
-              <div class="text-xs text-gray-500 mt-1">${n.date || ''}</div>
-            </div>`;
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbwXPO8a5ykRsbqJJkinKuWakTs9sYhNuwhEnTZ34lsSxhaTEa6yn8wh5f8R-qC6m7D8/exec";
+  let currentPage = 1, perPage = 20, dataset = [];
 
-    window.onload = loadNews;
-  </script>
+  async function loadAll() {
+    try {
+      const r = await fetch(API_URL);
+      const json = await r.json();
+      dataset = json.news || json.News || [];
+      renderPage();
+    } catch (e) {
+      document.getElementById('list').innerHTML = '<div class="text-red-500">Failed to load news.</div>';
+      console.error(e);
+    }
+  }
+
+  function renderPage(){
+    const start = (currentPage-1)*perPage;
+    const page = dataset.slice(start, start+perPage);
+    const html = page.map(n=>{
+      const title = n.headline||n.Title||n.Headline||'';
+      const link = n.link||n.Link||'#';
+      const date = n.date || n.Date || '';
+      return `<div class="p-3 bg-white dark:bg-gray-800 rounded mb-2">
+        <a href="${link}" target="_blank" class="font-medium">${title}</a>
+        <div class="text-xs text-gray-500 mt-1">${date}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('list').innerHTML = html || '<div>No news found.</div>';
+    document.getElementById('pageinfo').innerText = `Page ${currentPage} of ${Math.max(1, Math.ceil(dataset.length/perPage))}`;
+  }
+
+  document.getElementById('prev').addEventListener('click', ()=>{ if(currentPage>1){ currentPage--; renderPage(); }});
+  document.getElementById('next').addEventListener('click', ()=>{ if(currentPage*perPage < dataset.length){ currentPage++; renderPage(); }});
+
+  loadAll();
+</script>
 </body>
 </html>
