@@ -12,8 +12,15 @@
     .ticker-wrap { overflow: hidden; background: #facc15; }
     .ticker { display: inline-block; padding-left: 100%; animation: ticker 40s linear infinite; white-space: nowrap; font-weight: bold; }
     @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    .line-clamp-2 { 
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;  
+      overflow: hidden;
+    }
   </style>
   <script>
+    // default dark mode
     if (localStorage.theme === 'light') document.documentElement.classList.remove('dark');
     else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; }
     function toggleTheme(){ 
@@ -57,10 +64,8 @@
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
-      <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-      <div class="text-center mt-4">
-        <a href="news.html" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-800 transition">View All News →</a>
-      </div>
+      <div id="newsList" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">Loading...</div>
+      <div class="text-right mt-4"><a href="news.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All News →</a></div>
     </section>
 
     <!-- IPOs -->
@@ -120,68 +125,71 @@
   </section>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec";
+    const url = "YOUR_APPSCRIPT_URL"; // replace with your latest Apps Script exec link
 
     async function loadData() {
       try {
         const res = await fetch(url);
         const data = await res.json();
 
-        // Ticker
-        document.getElementById("tickerText").innerHTML = data.news.slice(-6).map(n => n.Title).join(" | ");
+        // Ticker (last 5 news)
+        const ticker = document.getElementById("tickerText");
+        ticker.innerHTML = data.news.slice(-5).map(n => n.Title).join(" | ");
 
-        // News
+        // News (6 cards)
         const newsList = document.getElementById("newsList");
         newsList.innerHTML = "";
-        (data.news.slice(-6).reverse()).forEach(n => {
-          newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
-              <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
+        data.news.slice(-6).reverse().forEach(n => {
+          newsList.innerHTML += `
+            <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
+              <a href="${n.Link || '#'}" target="_blank" class="font-medium line-clamp-2">${n.Title}</a>
+              <div class="text-xs text-gray-500 mt-1">ET Markets</div>
             </div>`;
         });
 
-        // IPOs (Upcoming)
+        // IPO Upcoming
         const ipoUpcoming = document.getElementById("ipoUpcoming");
         ipoUpcoming.innerHTML = "";
-        (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+        (data.ipos.upcoming || []).slice(0, 10).forEach(i => {
           ipoUpcoming.innerHTML += `<tr>
-            <td class="border px-2 py-1">${i.Name||''}</td>
-            <td class="border px-2 py-1">${i["Listing Date"]||''}</td>
-            <td class="border px-2 py-1">${i["MCap"]||''}</td>
-            <td class="border px-2 py-1">${i["ROCE"]||''}</td>
+            <td class="border px-2 py-1">${i.name||''}</td>
+            <td class="border px-2 py-1">${i.listing||''}</td>
+            <td class="border px-2 py-1">${i.mcap||''}</td>
+            <td class="border px-2 py-1">${i.roce||''}</td>
           </tr>`;
         });
 
-        // IPOs (Recent)
+        // IPO Recent
         const ipoRecent = document.getElementById("ipoRecent");
         ipoRecent.innerHTML = "";
-        (data.ipos_recent || []).slice(0, 10).forEach(i => {
+        (data.ipos.recent || []).slice(0, 10).forEach(i => {
           ipoRecent.innerHTML += `<tr>
-            <td class="border px-2 py-1">${i.Name||''}</td>
-            <td class="border px-2 py-1">${i["Listing Date"]||''}</td>
-            <td class="border px-2 py-1">${i["MCap"]||''}</td>
-            <td class="border px-2 py-1">${i["Price"]||''}</td>
-            <td class="border px-2 py-1">${i["Change"]||''}</td>
+            <td class="border px-2 py-1">${i.name||''}</td>
+            <td class="border px-2 py-1">${i.listing||''}</td>
+            <td class="border px-2 py-1">${i.mcap||''}</td>
+            <td class="border px-2 py-1">${i.price||''}</td>
+            <td class="border px-2 py-1">${i.change||''}</td>
           </tr>`;
         });
 
         // Movers
         const moversList = document.getElementById("moversList");
         moversList.innerHTML = "";
-        (data.movers || []).slice(-10).reverse().forEach(m => {
-          const cls = (m.Type && m.Type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
+        (data.movers.slice(-10).reverse()).forEach(m => {
+          const cls = (m.type && m.type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
           moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-              <strong>${m.Name}</strong> <span class="text-sm">(${m.Change||''})</span>
-              <div class="text-xs mt-1">${m.Type||''}</div>
+              <strong>${m.stock}</strong> <span class="text-sm">(${m.change||''})</span>
+              <div class="text-xs mt-1">${m.type||''}</div>
             </div>`;
         });
 
         // Picks
         const picksList = document.getElementById("picksList");
         picksList.innerHTML = "";
-        (data.picks || []).slice(-4).reverse().forEach(p => {
+        (data.picks.slice(-4).reverse()).forEach(p => {
           picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
-              <strong>${p.Stock}</strong>
-              <div class="text-xs mt-1">${p.Reason||''}</div>
+              <strong>${p.stock}</strong>
+              <div class="text-xs mt-1">${p.type||''} • ${p.reason||''}</div>
             </div>`;
         });
 
