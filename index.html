@@ -58,7 +58,9 @@
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
       <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-      <div class="text-right mt-4"><a href="news.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All News →</a></div>
+      <div class="text-center mt-4">
+        <a href="news.html" class="px-6 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-800 transition">View All News →</a>
+      </div>
     </section>
 
     <!-- IPOs -->
@@ -114,116 +116,77 @@
 
   <!-- ABOUT -->
   <section id="about" class="bg-white text-black text-center py-10">
-    <div class="mb-6">
-      <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
-        <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
-      </a>
-      <p class="mt-2 text-lg font-semibold">DM Us ON INSTAGRAM</p>
-      <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
-    </div>
-
-    <div class="my-8">
-      <a href="https://www.srjahir.in/home" target="_blank">
-        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transitionTransform duration-300">
-      </a>
-    </div>
-
     <p class="text-sm text-gray-700">©️ 2025 SRJ Ahir Technologies</p>
-
-    <div class="mt-4">
-      <img src="sanskrit.png.png" alt="Sanskrit" class="mx-auto w-44 sm:w-52 md:w-64">
-    </div>
-
-    <p class="text-xs text-gray-500 mt-4">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
   </section>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbwXPO8a5ykRsbqJJkinKuWakTs9sYhNuwhEnTZ34lsSxhaTEa6yn8wh5f8R-qC6m7D8/exec";
+    const url = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec";
 
     async function loadData() {
       try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error('API fetch failed: ' + res.status);
+        const res = await fetch(url);
         const data = await res.json();
 
         // Ticker
-        const newsArray = Array.isArray(data.news) ? data.news : data.News || [];
-        const ticker = document.getElementById("tickerText");
-        ticker.innerHTML = newsArray.slice(-5).map(n => n.headline || n.Title || n.Headline).join(" | ");
+        document.getElementById("tickerText").innerHTML = data.news.slice(-6).map(n => n.Title).join(" | ");
 
-        // News - show last 6 reversed
+        // News
         const newsList = document.getElementById("newsList");
         newsList.innerHTML = "";
-        newsArray.slice(-6).reverse().forEach(n => {
-          const headline = n.headline || n.Title || n.Headline || '';
-          const link = n.link || n.Link || '#';
-          const date = n.date || n.Date || '';
-          newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <a href="${link}" target="_blank" class="font-medium">${headline}</a>
-              <div class="text-xs text-gray-500 mt-1">${date}</div>
+        (data.news.slice(-6).reverse()).forEach(n => {
+          newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
+              <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
             </div>`;
         });
 
-        // Upcoming IPOs
-        const iposUpcoming = (data.ipos && data.ipos.upcoming) || (data.upcomingIPOs) || [];
+        // IPOs (Upcoming)
         const ipoUpcoming = document.getElementById("ipoUpcoming");
         ipoUpcoming.innerHTML = "";
-        iposUpcoming.slice(0,10).forEach(i => {
-          ipoUpcoming.innerHTML += `<tr class="searchable">
-            <td class="border px-2 py-1">${i.name||i.Name||''}</td>
-            <td class="border px-2 py-1">${i.listing||i.Listing||i.open||''}</td>
-            <td class="border px-2 py-1">${i.mcap||i.MCap||''}</td>
-            <td class="border px-2 py-1">${i.roce||i.ROCE||''}</td>
+        (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+          ipoUpcoming.innerHTML += `<tr>
+            <td class="border px-2 py-1">${i.Name||''}</td>
+            <td class="border px-2 py-1">${i["Listing Date"]||''}</td>
+            <td class="border px-2 py-1">${i["MCap"]||''}</td>
+            <td class="border px-2 py-1">${i["ROCE"]||''}</td>
           </tr>`;
         });
 
-        // Recent IPOs
-        const iposRecent = (data.ipos && data.ipos.recent) || (data.recentIPOs) || [];
-        const recentTbl = document.getElementById("ipoRecent");
-        recentTbl.innerHTML = "";
-        iposRecent.slice(0,10).forEach(i => {
-          recentTbl.innerHTML += `<tr class="searchable">
-            <td class="border px-2 py-1">${i.name||i.Name||''}</td>
-            <td class="border px-2 py-1">${i.listing||i.Listing||i.listingDate||''}</td>
-            <td class="border px-2 py-1">${i.mcap||i.MCap||''}</td>
-            <td class="border px-2 py-1">${i.price||i.Price||''}</td>
-            <td class="border px-2 py-1">${i.change||i.Change||''}</td>
+        // IPOs (Recent)
+        const ipoRecent = document.getElementById("ipoRecent");
+        ipoRecent.innerHTML = "";
+        (data.ipos_recent || []).slice(0, 10).forEach(i => {
+          ipoRecent.innerHTML += `<tr>
+            <td class="border px-2 py-1">${i.Name||''}</td>
+            <td class="border px-2 py-1">${i["Listing Date"]||''}</td>
+            <td class="border px-2 py-1">${i["MCap"]||''}</td>
+            <td class="border px-2 py-1">${i["Price"]||''}</td>
+            <td class="border px-2 py-1">${i["Change"]||''}</td>
           </tr>`;
         });
 
         // Movers
-        const movers = data.movers || data.Movers || [];
         const moversList = document.getElementById("moversList");
         moversList.innerHTML = "";
-        movers.slice(-10).reverse().forEach(m => {
-          const type = m.type || m.Type || '';
-          const stock = m.stock || m.Name || m.name || '';
-          const change = m.change || m.Change || '';
-          const cls = (type.toLowerCase && type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
+        (data.movers || []).slice(-10).reverse().forEach(m => {
+          const cls = (m.Type && m.Type.toLowerCase().includes('gainer')) ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900';
           moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-              <strong>${stock}</strong> <span class="text-sm">(${change})</span>
-              <div class="text-xs mt-1">${type}</div>
+              <strong>${m.Name}</strong> <span class="text-sm">(${m.Change||''})</span>
+              <div class="text-xs mt-1">${m.Type||''}</div>
             </div>`;
         });
 
         // Picks
-        const picks = data.picks || data.Picks || [];
         const picksList = document.getElementById("picksList");
         picksList.innerHTML = "";
-        picks.slice(-8).reverse().forEach(p => {
-          const stock = p.stock || p.Stock || p.Name || '';
-          const reason = p.reason || p.Reason || p.type || '';
-          picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-              <strong>${stock}</strong>
-              <div class="text-xs mt-1">${reason}</div>
+        (data.picks || []).slice(-4).reverse().forEach(p => {
+          picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700 hover:shadow-lg transition">
+              <strong>${p.Stock}</strong>
+              <div class="text-xs mt-1">${p.Reason||''}</div>
             </div>`;
         });
 
       } catch (err) {
         console.error(err);
-        document.getElementById("newsList").innerHTML = '<div class="text-red-500">Unable to load data right now.</div>';
       }
     }
 
@@ -236,6 +199,5 @@
 
     window.onload = loadData;
   </script>
-
 </body>
 </html>
