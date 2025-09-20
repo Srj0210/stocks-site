@@ -3,77 +3,63 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>News - srjahir.in</title>
+  <title>All News - Stock Portal</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
-  <style>
-    .line-clamp-2 { 
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;  
-      overflow: hidden;
-    }
-  </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
-  <div class="max-w-5xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-6">📢 All News</h1>
-    <div id="newsContainer" class="space-y-4">Loading...</div>
+  <div class="max-w-4xl mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">📢 All News</h1>
+    <div id="newsList" class="space-y-3">Loading...</div>
 
     <!-- Pagination -->
-    <div class="flex justify-center mt-6 space-x-4">
-      <button onclick="prevPage()" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded hover:bg-gray-400 dark:hover:bg-gray-600">← Previous</button>
-      <button onclick="nextPage()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">Next →</button>
+    <div class="flex justify-center items-center space-x-3 mt-6">
+      <button id="prevBtn" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded disabled:opacity-50">Prev</button>
+      <span id="pageInfo" class="text-sm"></span>
+      <button id="nextBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">Next</button>
     </div>
   </div>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec"; // replace with Apps Script link
+    const url = "https://script.google.com/macros/s/AKfycbwYZkPrhsuVjBW__0b9QJGXyCq4pf6uSCV1utTEv4znLMnxfNt6bMGNlYNvm4UCK8bT/exec";
+    let data = [];
     let currentPage = 1;
     const perPage = 10;
-    let allNews = [];
 
     async function loadNews() {
-      const res = await fetch(url);
-      const data = await res.json();
-      allNews = data.news;
-      renderPage();
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        data = json.news || [];
+        renderPage();
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     function renderPage() {
-      const container = document.getElementById("newsContainer");
-      container.innerHTML = "";
-
       const start = (currentPage - 1) * perPage;
       const end = start + perPage;
-      const pageNews = allNews.slice(start, end);
+      const pageData = data.slice(start, end);
 
-      pageNews.forEach(n => {
-        container.innerHTML += `
-          <div class="p-4 border rounded bg-white dark:bg-gray-800 hover:shadow">
-            <a href="${n.Link}" target="_blank" class="font-semibold line-clamp-2">${n.Title}</a>
-            <div class="text-xs text-gray-500 mt-1">ET Markets</div>
+      const newsList = document.getElementById("newsList");
+      newsList.innerHTML = "";
+      pageData.forEach(n => {
+        newsList.innerHTML += `<div class="p-3 border rounded bg-white dark:bg-gray-800">
+            <a href="${n.Link||'#'}" target="_blank" class="font-medium">${n.Title}</a>
           </div>`;
       });
+
+      document.getElementById("pageInfo").innerText = `Page ${currentPage} of ${Math.ceil(data.length / perPage)}`;
+      document.getElementById("prevBtn").disabled = currentPage === 1;
+      document.getElementById("nextBtn").disabled = currentPage === Math.ceil(data.length / perPage);
     }
 
-    function nextPage() {
-      if ((currentPage * perPage) < allNews.length) {
-        currentPage++;
-        renderPage();
-      }
-    }
+    document.getElementById("prevBtn").onclick = () => { if (currentPage > 1) { currentPage--; renderPage(); } };
+    document.getElementById("nextBtn").onclick = () => { if (currentPage < Math.ceil(data.length / perPage)) { currentPage++; renderPage(); } };
 
-    function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        renderPage();
-      }
-    }
-
-    loadNews();
+    window.onload = loadNews;
   </script>
 </body>
 </html>
