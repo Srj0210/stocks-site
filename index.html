@@ -16,7 +16,6 @@
     @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
   </style>
   <script>
-    // Default dark mode
     if (localStorage.theme === 'light') {
       document.documentElement.classList.remove('dark');
     } else {
@@ -57,9 +56,14 @@
     </div>
   </nav>
 
-  <!-- Ticker -->
+  <!-- News Ticker -->
   <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
     <div class="ticker" id="tickerText">Loading latest news...</div>
+  </div>
+
+  <!-- Movers Bulletin -->
+  <div class="ticker-wrap bg-gray-100 dark:bg-gray-700 mt-1">
+    <div class="ticker" id="bulletinTicker">Loading movers...</div>
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
@@ -147,16 +151,13 @@
       </a>
     </div>
 
-    <!-- Sanskrit with link -->
-    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer" aria-label="Open Sanskrit image source (Pinterest)">
+    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
       <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
     </a>
 
-    <!-- Disclaimer -->
     <p class="text-xs text-gray-500 mt-4">
       Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
     </p>
-
     <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
   </section>
 
