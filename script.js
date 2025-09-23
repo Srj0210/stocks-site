@@ -5,21 +5,45 @@ function renderMoversTicker(movers) {
   const ticker = document.getElementById("moversTicker");
   if (!ticker) return;
 
+  // Ensure Type is set (fallback: based on Change sign)
+  movers.forEach(m => {
+    if (!m.Type) {
+      let changeVal = parseFloat((m.Change || "0").toString().replace("%", ""));
+      if (!isNaN(changeVal)) {
+        m.Type = changeVal >= 0 ? "Gainer" : "Loser";
+      }
+    }
+  });
+
   // Top 5 gainers & 5 losers
   const gainers = movers.filter(m => m.Type && m.Type.toLowerCase().includes("gainer")).slice(0, 5);
   const losers = movers.filter(m => m.Type && m.Type.toLowerCase().includes("loser")).slice(0, 5);
 
-  // Format each entry
+  // Agar data hi nahi mila
+  if (gainers.length === 0 && losers.length === 0) {
+    ticker.innerHTML = "<span class='text-gray-400'>No movers data available</span>";
+    return;
+  }
+
+  // Format with arrows
   const gainerText = gainers.map(g =>
-    `<span class="text-green-600 dark:text-green-400 font-semibold">${g.Name} ₹${g.CMP} ⬆ ${g.Change || ''}%</span>`
+    `<span class="text-green-600 dark:text-green-400 font-semibold">
+      ${g.Name} ₹${g.CMP} ⬆ ${g.Change || '0'}%
+    </span>`
   ).join(" | ");
 
   const loserText = losers.map(l =>
-    `<span class="text-red-600 dark:text-red-400 font-semibold">${l.Name} ₹${l.CMP} ⬇ ${l.Change || ''}%</span>`
+    `<span class="text-red-600 dark:text-red-400 font-semibold">
+      ${l.Name} ₹${l.CMP} ⬇ ${l.Change || '0'}%
+    </span>`
   ).join(" | ");
 
-  // Join both
-  ticker.innerHTML = gainerText + " || " + loserText;
+  // Show both if available
+  if (gainerText && loserText) {
+    ticker.innerHTML = gainerText + " || " + loserText;
+  } else {
+    ticker.innerHTML = gainerText || loserText;
+  }
 }
 
 // ===== MAIN LOAD FUNCTION =====
