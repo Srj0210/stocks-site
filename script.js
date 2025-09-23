@@ -51,34 +51,37 @@ if (newsList) {
       </div>`;
   });
 }
-    // ===== IPOs (Upcoming) =====
-    const ipoUpcoming = document.getElementById("ipoUpcoming");
-    if (ipoUpcoming) {
-      ipoUpcoming.innerHTML = "";
-      (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
-        ipoUpcoming.innerHTML += `<tr class="searchable">
-          <td class="border px-2 py-1">${i.Name || ''}</td>
-          <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-          <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-          <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-        </tr>`;
-      });
-    }
+// ===== IPOs (Upcoming) =====
+const ipoUpcoming = document.getElementById("ipoUpcoming");
+if (ipoUpcoming) {
+  ipoUpcoming.innerHTML = "";
+  (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+    ipoUpcoming.innerHTML += `<tr class="searchable">
+      <td class="border px-2 py-1">${i.Name || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+    </tr>`;
+  });
+}
 
-    // ===== IPOs (Recent) =====
-    const ipoRecent = document.getElementById("ipoRecent");
-    if (ipoRecent) {
-      ipoRecent.innerHTML = "";
-      (data.ipos_recent || []).slice(0, 10).forEach(i => {
-        ipoRecent.innerHTML += `<tr class="searchable">
-          <td class="border px-2 py-1">${i.Name || ''}</td>
-          <td class="border px-2 py-1">${formatDate(i["Listing Date"])}</td>
-          <td class="border px-2 py-1">${i["MCap (Cr)"] || ''}</td>
-          <td class="border px-2 py-1">${i["IPO Price"] || ''}</td>
-          <td class="border px-2 py-1">${i["% Change"] || ''}</td>
-        </tr>`;
-      });
-    }
+// ===== IPOs (Recent) =====
+const ipoRecent = document.getElementById("ipoRecent");
+if (ipoRecent) {
+  ipoRecent.innerHTML = "";
+  (data.ipos_recent || []).slice(0, 10).forEach(i => {
+    ipoRecent.innerHTML += `<tr class="searchable">
+      <td class="border px-2 py-1">${i.Name || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+    </tr>`;
+  });
+}
 
     // ===== Movers (Cards + Ticker) =====
     const moversList = document.getElementById("moversList");
