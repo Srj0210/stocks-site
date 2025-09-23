@@ -3,67 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upcoming IPOs</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <title>Upcoming IPOs - Stock Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <h1>📊 Upcoming IPOs</h1>
-  </header>
-
-  <main>
-    <table id="upcomingIposTable" border="1" cellspacing="0" cellpadding="8">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Open Date</th>
-          <th>Close Date</th>
-          <th>Price Band</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <button id="viewMoreUpcoming">View More</button>
-  </main>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
-    let upcomingData = [];
-    let upcomingVisible = 10;
-
-    async function loadUpcomingIPOs() {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        upcomingData = data.ipos_upcoming || [];
-        renderUpcomingTable();
-      } catch (err) {
-        console.error("Error fetching Upcoming IPOs:", err);
-      }
-    }
-
-    function renderUpcomingTable() {
-      const tbody = document.querySelector("#upcomingIposTable tbody");
-      tbody.innerHTML = "";
-
-      upcomingData.slice(0, upcomingVisible).forEach(item => {
-        const row = `<tr>
-          <td>${item.Name || "-"}</td>
-          <td>${item["Open Date"] || "-"}</td>
-          <td>${item["Close Date"] || "-"}</td>
-          <td>${item["Price Band"] || "-"}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    document.getElementById("viewMoreUpcoming").addEventListener("click", () => {
-      upcomingVisible += 10;
-      renderUpcomingTable();
-    });
-
-    loadUpcomingIPOs();
-  </script>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">📊 Upcoming IPOs</h1>
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">Issue Type</th>
+            <th class="border px-2 py-1">Price Band</th>
+            <th class="border px-2 py-1">Open Date</th>
+            <th class="border px-2 py-1">Close Date</th>
+            <th class="border px-2 py-1">Issue Size</th>
+          </tr>
+        </thead>
+        <tbody id="ipoUpcomingFull">Loading...</tbody>
+      </table>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
