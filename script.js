@@ -1,112 +1,171 @@
-const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stock Portal - srjahir.in</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    .ticker-wrap { overflow: hidden; background: #facc15; }
+    .ticker { display: inline-block; padding-left: 100%; animation: ticker 75s linear infinite; white-space: nowrap; font-weight: bold; }
+    @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+  </style>
+  <script>
+    // Default dark mode
+    if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    }
+    function toggleTheme(){ 
+      if(document.documentElement.classList.contains('dark')){
+        document.documentElement.classList.remove('dark'); 
+        localStorage.theme='light';
+      } else {
+        document.documentElement.classList.add('dark'); 
+        localStorage.theme='dark';
+      } 
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
-// ===== Movers Bulletin =====
-function renderMoversTicker(movers) {
-  const ticker = document.getElementById("moversTicker");
-  if (!ticker) return;
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
+      <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
+        <span>Stock Portal</span>
+        <img src="logo.png.png" alt="logo" class="w-8 h-8">
+      </a>
+      <ul class="flex space-x-4 text-sm">
+        <li><a href="#news" class="hover:underline">News</a></li>
+        <li><a href="#ipos" class="hover:underline">IPOs</a></li>
+        <li><a href="#gainers" class="hover:underline">Movers</a></li>
+        <li><a href="#picks" class="hover:underline">Picks</a></li>
+        <li><a href="#about" class="hover:underline">About</a></li>
+      </ul>
+      <div class="flex items-center space-x-2">
+        <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
+        <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
+      </div>
+    </div>
+  </nav>
 
-  // Format sabhi movers ko
-  const items = movers.map(m => {
-    const isGainer = m.Type && m.Type.toLowerCase().includes("gainer");
-    const arrow = isGainer
-      ? `<span class="text-green-600 dark:text-green-400">⬆</span>`
-      : `<span class="text-red-600 dark:text-red-400">⬇</span>`;
-    const cls = isGainer
-      ? `text-green-600 dark:text-green-400 font-semibold`
-      : `text-red-600 dark:text-red-400 font-semibold`;
+  <!-- News Ticker -->
+  <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
+    <div class="ticker" id="tickerText">Loading latest news...</div>
+  </div>
 
-    return `<span class="${cls}">${m.Name} ₹${m.CMP} ${arrow} ${m.Change || ''}%</span>`;
-  });
+  <!-- Movers Bulletin -->
+  <div class="ticker-wrap bg-gray-200 dark:bg-gray-700 dark:text-white">
+    <div class="ticker" id="moversTicker">Loading movers...</div>
+  </div>
 
-  // Join with separator
-  ticker.innerHTML = items.join(" | ");
-}
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- News -->
+    <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
+      <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+      <div class="text-right mt-4">
+        <a href="news.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All News →</a>
+      </div>
+    </section>
 
-// ===== MAIN LOAD FUNCTION =====
-async function loadData() {
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
+    <!-- IPOs -->
+    <section id="ipos" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📊 Upcoming IPOs</h2>
+      <div class="overflow-x-auto mb-6">
+        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+          <thead class="bg-gray-200 dark:bg-gray-700">
+            <tr>
+              <th class="border px-2 py-1">Name</th>
+              <th class="border px-2 py-1">Open Date</th>
+              <th class="border px-2 py-1">Close Date</th>
+              <th class="border px-2 py-1">Price Band</th>
+            </tr>
+          </thead>
+          <tbody id="ipoUpcoming"></tbody>
+        </table>
+      </div>
+      <div class="text-right mb-6">
+        <a href="ipos_upcoming.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View More Upcoming IPOs →</a>
+      </div>
 
-    // ===== News Ticker =====
-    const ticker = document.getElementById("tickerText");
-    ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
+      <h2 class="text-xl font-bold mb-3">📈 Recent IPOs</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+          <thead class="bg-gray-200 dark:bg-gray-700">
+            <tr>
+              <th class="border px-2 py-1">Name</th>
+              <th class="border px-2 py-1">Listing Date</th>
+              <th class="border px-2 py-1">MCap (Cr)</th>
+              <th class="border px-2 py-1">IPO Price</th>
+              <th class="border px-2 py-1">% Change</th>
+            </tr>
+          </thead>
+          <tbody id="ipoRecent"></tbody>
+        </table>
+      </div>
+      <div class="text-right mt-3">
+        <a href="ipos_recent.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View More Recent IPOs →</a>
+      </div>
+    </section>
 
-    // ===== News Section =====
-    const newsList = document.getElementById("newsList");
-    newsList.innerHTML = "";
-    (data.news.slice(0, 6)).forEach(n => {
-      newsList.innerHTML += `
-        <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-          <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
-          <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
-        </div>`;
-    });
+    <!-- Movers -->
+    <section id="gainers" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📈 Top Movers</h2>
+      <div id="moversList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+      <div class="text-right mt-3">
+        <a href="movers.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Movers →</a>
+      </div>
+    </section>
 
-    // ===== IPOs (Upcoming) =====
-    const ipoUpcoming = document.getElementById("ipoUpcoming");
-    ipoUpcoming.innerHTML = "";
-    (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
-      ipoUpcoming.innerHTML += `<tr class="searchable">
-        <td class="border px-2 py-1">${i.Name || ''}</td>
-        <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
-        <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
-        <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-      </tr>`;
-    });
+    <!-- Picks -->
+    <section id="picks" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-10">
+      <h2 class="text-xl font-bold mb-3">🎯 Stock Picks</h2>
+      <div id="picksList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+      <div class="text-right mt-3">
+        <a href="picks.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Picks →</a>
+      </div>
+    </section>
+  </main>
 
-    // ===== IPOs (Recent) =====
-    const ipoRecent = document.getElementById("ipoRecent");
-    ipoRecent.innerHTML = "";
-    (data.ipos_recent || []).slice(0, 10).forEach(i => {
-      ipoRecent.innerHTML += `<tr class="searchable">
-        <td class="border px-2 py-1">${i.Name || ''}</td>
-        <td class="border px-2 py-1">${i["Listing Date"] || ''}</td>
-        <td class="border px-2 py-1">${i["MCap (Cr)"] || ''}</td>
-        <td class="border px-2 py-1">${i["IPO Price"] || ''}</td>
-        <td class="border px-2 py-1">${i["% Change"] || ''}</td>
-      </tr>`;
-    });
+  <!-- ABOUT -->
+  <section id="about" class="bg-white text-black text-center py-10">
+    <div class="mb-6">
+      <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
+        <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
+      </a>
+      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
+      <p class="mt-1 text-sm text-gray-600">Only available on Instagram</p>
+    </div>
 
-    // ===== Movers (Cards + Ticker) =====
-    const moversList = document.getElementById("moversList");
-    moversList.innerHTML = "";
-    (data.movers.slice(0, 10)).forEach(m => {
-      const cls = (m.Type && m.Type.toLowerCase().includes('gainer'))
-        ? 'bg-green-50 dark:bg-green-900'
-        : 'bg-red-50 dark:bg-red-900';
-      moversList.innerHTML += `
-        <div class="searchable p-3 border rounded ${cls}">
-          <strong>${m.Name}</strong> 
-          <span class="text-sm">₹${m.CMP} (${m.Change || ''}%)</span>
-          <div class="text-xs mt-1">${m.Type || ''}</div>
-        </div>`;
-    });
+    <div class="my-8">
+      <a href="https://www.srjahir.in/home" target="_blank">
+        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
+      </a>
+    </div>
 
-    // ✅ Movers Bulletin (sabhi movers scroll)
-    renderMoversTicker(data.movers);
+    <!-- Sanskrit with link -->
+    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer" aria-label="Open Sanskrit image source (Pinterest)">
+      <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
+    </a>
 
-    // ===== Picks =====
-    const picksList = document.getElementById("picksList");
-    picksList.innerHTML = "";
-    (data.picks.slice(0, 4)).forEach(p => {
-      picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <strong>${p.Stock}</strong>
-        <div class="text-xs mt-1">${p.Reason || ''}</div>
-      </div>`;
-    });
+    <!-- Disclaimer -->
+    <p class="text-xs text-gray-500 mt-4">
+      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
+    </p>
 
-  } catch (err) {
-    console.error("❌ Error loading data:", err);
-  }
-}
+    <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
+  </section>
 
-// ===== SEARCH =====
-function searchContent(){ 
-  let input = document.getElementById("searchBox").value.toLowerCase(); 
-  document.querySelectorAll(".searchable").forEach(el=>{
-    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
-  }); 
-}
-
-window.onload = loadData;
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+</html>
