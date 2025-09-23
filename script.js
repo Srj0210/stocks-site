@@ -49,18 +49,33 @@ async function loadData() {
       `).join("");
     }
 
-    // === Movers (10 cards on homepage) ===
-    const moversList = document.getElementById("moversList");
-    if (moversList) {
-      moversList.innerHTML = data.movers.slice(0, 10).map(m => `
-        <div class="p-3 bg-green-700 text-white rounded shadow">
-          <h3 class="font-bold">${m.Name || "N/A"}</h3>
-          <p>CMP: ${m.CMP || "N/A"}</p>
-          <p>P/E: ${m["P/E"] || "N/A"}</p>
-          <p>MCap: ${m.MCap || "N/A"}</p>
-        </div>
-      `).join("");
-    }
+// Movers Cards (Index Page)
+async function loadMoversCards() {
+  try {
+    let res = await fetch(apiUrl + "?sheet=Movers");
+    let data = await res.json();
+
+    let container = document.getElementById("moversList");
+    container.innerHTML = "";
+
+    // Sirf Top 10 entries dikhana
+    data.slice(0, 10).forEach((row) => {
+      let card = document.createElement("div");
+      card.className = "p-3 bg-green-700 text-white rounded shadow";
+
+      card.innerHTML = `
+        <h3 class="font-bold">${row.Name || "N/A"}</h3>
+        <p>CMP: ${row.CMP || "-"} | P/E: ${row["P/E"] || "-"} | MCap: ${row.MCap || "-"}</p>
+      `;
+      container.appendChild(card);
+    });
+  } catch (err) {
+    console.error("Error loading movers cards:", err);
+    document.getElementById("moversList").innerText = "Failed to load movers.";
+  }
+}
+
+loadMoversCards();
 
     // === Picks (4 on homepage) ===
     const picksList = document.getElementById("picksList");
