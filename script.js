@@ -5,19 +5,17 @@ async function loadData() {
     const res = await fetch(url);
     const data = await res.json();
 
-    // ✅ Ticker (ALL News)
+    // ✅ Ticker (slow 80s)
     const ticker = document.getElementById("tickerText");
-    ticker.innerHTML = (data.news || [])
-      .map(n => `<a href="${n.Link}" target="_blank" rel="noopener noreferrer" class="mx-4">${n.Title}</a>`)
-      .join(" | ");
+    ticker.innerHTML = (data.news || []).map(n => n.Title).join(" | ");
 
-    // ✅ Latest News (only 6 for homepage)
+    // ✅ News
     const newsList = document.getElementById("newsList");
     newsList.innerHTML = "";
     (data.news || []).slice(0, 6).forEach(n => {
       newsList.innerHTML += `
         <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-          <a href="${n.Link}" target="_blank" rel="noopener noreferrer" class="font-medium hover:underline">${n.Title}</a>
+          <a href="${n.Link || "#"}" target="_blank" class="font-medium hover:underline">${n.Title}</a>
           <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
         </div>`;
     });
@@ -49,18 +47,23 @@ async function loadData() {
         </tr>`;
     });
 
-    // ✅ Movers
+    // ✅ Movers (fixed headers)
     const moversList = document.getElementById("moversList");
     moversList.innerHTML = "";
     (data.movers || []).slice(0, 10).forEach(m => {
-      const cls = (m["Type"] && m["Type"].toLowerCase().includes("gainer"))
+      const name = m.Name || m.Stock || "";
+      const change = m.Change || m["% Change"] || "";
+      const type = m.Type || (change.startsWith("-") ? "Loser" : "Gainer");
+
+      const cls = (type.toLowerCase().includes("gainer"))
         ? "bg-green-50 dark:bg-green-900"
         : "bg-red-50 dark:bg-red-900";
+
       moversList.innerHTML += `
         <div class="searchable p-3 border rounded ${cls}">
-          <strong>${m.Name || m.Stock || ""}</strong> 
-          <span class="text-sm">(${m.Change || ""})</span>
-          <div class="text-xs mt-1">${m.Type || ""}</div>
+          <strong>${name}</strong>
+          <span class="text-sm">(${change})</span>
+          <div class="text-xs mt-1">${type}</div>
         </div>`;
     });
 
@@ -72,7 +75,7 @@ async function loadData() {
         <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
           <strong>${p.Stock || ""}</strong>
           <div class="text-xs mt-1">${p.Reason || ""}</div>
-          <a href="${p.Link}" target="_blank" rel="noopener noreferrer" class="text-blue-500 text-xs hover:underline">Read More</a>
+          <a href="${p.Link || "#"}" target="_blank" class="text-blue-500 text-xs">Read More</a>
         </div>`;
     });
 
@@ -81,9 +84,10 @@ async function loadData() {
   }
 }
 
-function searchContent(){ 
-  let input=document.getElementById("searchBox").value.toLowerCase(); 
-  document.querySelectorAll(".searchable").forEach(el=>{
+// ✅ Search function
+function searchContent() { 
+  let input = document.getElementById("searchBox").value.toLowerCase(); 
+  document.querySelectorAll(".searchable").forEach(el => {
     el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
   }); 
 }
