@@ -54,37 +54,36 @@ async function loadData() {
 
     // ===== IPOs FULL (View More Pages) =====
 function renderFullIPOs(data) {
-  // Recent IPOs Full
-  const ipoRecentFull = document.getElementById("ipoRecentFull");
-  if (ipoRecentFull) {
-    ipoRecentFull.innerHTML = "";
-    (data.ipos_recent || []).forEach(i => {
-      ipoRecentFull.innerHTML += `<tr>
-        <td class="border px-2 py-1">${i.Name || ''}</td>
-        <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
-        <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-        <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-        <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-        <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
-      </tr>`;
-    });
-  }
+// ===== IPOs (Upcoming) =====
+const ipoUpcoming = document.getElementById("ipoUpcoming");
+if (ipoUpcoming) {
+  ipoUpcoming.innerHTML = "";
+  (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+    ipoUpcoming.innerHTML += `<tr class="searchable">
+      <td class="border px-2 py-1">${i.Name || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+    </tr>`;
+  });
+}
 
-  // Upcoming IPOs Full
-  const ipoUpcomingFull = document.getElementById("ipoUpcomingFull");
-  if (ipoUpcomingFull) {
-    ipoUpcomingFull.innerHTML = "";
-    (data.ipos_upcoming || []).forEach(i => {
-      ipoUpcomingFull.innerHTML += `<tr>
-        <td class="border px-2 py-1">${i.Name || ''}</td>
-        <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
-        <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-        <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-        <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-        <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
-      </tr>`;
-    });
-  }
+// ===== IPOs (Recent) =====
+const ipoRecent = document.getElementById("ipoRecent");
+if (ipoRecent) {
+  ipoRecent.innerHTML = "";
+  (data.ipos_recent || []).slice(0, 10).forEach(i => {
+    ipoRecent.innerHTML += `<tr class="searchable">
+      <td class="border px-2 py-1">${i.Name || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+    </tr>`;
+  });
 }
 
 // Date ko dd-mm-yyyy me convert karna
