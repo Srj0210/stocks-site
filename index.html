@@ -11,9 +11,18 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    .ticker-wrap { overflow: hidden; }
-    .ticker { display: inline-block; padding-left: 100%; animation: ticker 80s linear infinite; white-space: nowrap; font-weight: bold; }
-    @keyframes ticker { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    .ticker-wrap { overflow: hidden; background: #facc15; }
+    .ticker { 
+      display: inline-block; 
+      padding-left: 100%; 
+      animation: ticker 120s linear infinite; /* Slow scroll */
+      white-space: nowrap; 
+      font-weight: bold; 
+    }
+    @keyframes ticker { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
   </style>
   <script>
     // Default dark mode
@@ -58,13 +67,13 @@
   </nav>
 
   <!-- News Ticker -->
-  <div class="ticker-wrap bg-yellow-300 dark:bg-yellow-600 dark:text-white">
+  <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
     <div class="ticker" id="tickerText">Loading latest news...</div>
   </div>
 
   <!-- Movers Ticker -->
-  <div class="ticker-wrap bg-gray-200 dark:bg-gray-700">
-    <div class="ticker" id="moversTicker">Loading top movers...</div>
+  <div class="ticker-wrap bg-gray-200 dark:bg-gray-700 dark:text-white">
+    <div class="ticker" id="moversTicker">Loading movers...</div>
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
