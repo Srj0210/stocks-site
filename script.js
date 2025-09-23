@@ -28,19 +28,91 @@ function loadBulletin(data) {
   document.getElementById("bulletinTicker").innerHTML = items.join(" | ");
 }
 
-// ================= MOVERS =================
-function loadMovers(data) {
-  const moversList = document.getElementById("moversList");
-  moversList.innerHTML = "";
-  (data.movers || []).slice(0, 10).forEach(m => {
-    let isGainer = m.Type && m.Type.toLowerCase().includes("gainer");
-    let arrow = isGainer ? "🟢 ▲" : "🔴 ▼";
-    let cls = isGainer ? "bg-green-50 dark:bg-green-900" : "bg-red-50 dark:bg-red-900";
-    moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-      <strong>${m.Name}</strong> <span class="text-sm">${arrow} ${m.CMP}</span>
-      <div class="text-xs mt-1">${m.Type} | Change: ${m.Change}</div>
-    </div>`;
-  });
+// ================= MOVERS (Top Gainers / Losers) =================
+async function loadMovers() {
+  try {
+    const res = await fetch(API_URL + "?type=movers"); // AppScript URL + movers param
+    const data = await res.json();
+
+    // Homepage cards
+    const list = document.getElementById("moversList");
+    if (list) {
+      list.innerHTML = "";
+      data.slice(0, 10).forEach(row => {
+        const name = row["Name"] || "N/A";
+        const cmp = row["CMP"] || "-";
+        const pe = row["P/E"] || "-";
+        const mcap = row["MCap"] || "-";
+        const change = parseFloat(row["Change"] || "0");
+
+        let arrow = "";
+        let cardColor = "";
+        if (change > 0) {
+          arrow = `<span class="text-green-400 font-bold">↑ ${change}%</span>`;
+          cardColor = "bg-green-700";
+        } else if (change < 0) {
+          arrow = `<span class="text-red-400 font-bold">↓ ${change}%</span>`;
+          cardColor = "bg-red-700";
+        } else {
+          arrow = `<span class="text-gray-400 font-bold">0%</span>`;
+          cardColor = "bg-gray-600";
+        }
+
+        const card = `
+          <div class="p-3 rounded shadow ${cardColor} text-white">
+            <h3 class="font-semibold">${name}</h3>
+            <p class="text-sm">CMP: ₹${cmp}</p>
+            <p class="text-sm">P/E: ${pe}</p>
+            <p class="text-sm">MCap: ${mcap}</p>
+            <p class="mt-1">${arrow}</p>
+          </div>
+        `;
+        list.innerHTML += card;
+      });
+    }
+
+    // Movers.html table
+    const moversTable = document.getElementById("moversTable");
+    if (moversTable) {
+      moversTable.innerHTML = "";
+      data.forEach((row, i) => {
+        const name = row["Name"] || "N/A";
+        const cmp = row["CMP"] || "-";
+        const pe = row["P/E"] || "-";
+        const mcap = row["MCap"] || "-";
+        const change = parseFloat(row["Change"] || "0");
+
+        let arrow = "";
+        let colorClass = "";
+        if (change > 0) {
+          arrow = `<span class="text-green-500 font-bold">↑ ${change}%</span>`;
+          colorClass = "bg-green-50 dark:bg-green-900";
+        } else if (change < 0) {
+          arrow = `<span class="text-red-500 font-bold">↓ ${change}%</span>`;
+          colorClass = "bg-red-50 dark:bg-red-900";
+        } else {
+          arrow = `<span class="text-gray-500 font-bold">0%</span>`;
+          colorClass = "bg-gray-50 dark:bg-gray-800";
+        }
+
+        moversTable.innerHTML += `
+          <tr class="${colorClass}">
+            <td class="border px-2 py-1">${i + 1}</td>
+            <td class="border px-2 py-1">${name}</td>
+            <td class="border px-2 py-1">₹${cmp}</td>
+            <td class="border px-2 py-1">${pe}</td>
+            <td class="border px-2 py-1">${mcap}</td>
+            <td class="border px-2 py-1">${arrow}</td>
+          </tr>
+        `;
+      });
+    }
+
+  } catch (err) {
+    console.error("Movers load error:", err);
+    const list = document.getElementById("moversList");
+    if (list) list.innerHTML = "<p class='text-red-500'>Failed to load movers.</p>";
+  }
 }
 
 // ================= IPOs =================
