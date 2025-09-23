@@ -1,85 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Top Movers - srjahir.in</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="script.js" defer></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
 
   <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
-    <div class="max-w-6xl mx-auto flex justify-between items-center px-4 py-3">
-      <a href="index.html" class="text-xl font-bold">← Back</a>
-      <span class="font-semibold">Top Movers</span>
-    </div>
+  <nav class="sticky top-0 bg-blue-900 text-white shadow-md p-4 flex justify-between items-center">
+    <a href="index.html" class="text-xl font-bold">⬅ Back</a>
+    <h1 class="text-lg">📈 All Movers</h1>
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <h2 class="text-2xl font-bold mb-6">📈 All Movers</h2>
-
-    <div class="grid md:grid-cols-2 gap-6">
-      <!-- Gainers -->
-      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-        <h3 class="text-lg font-semibold mb-3">Top Gainers</h3>
+    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+      <h2 class="text-xl font-bold mb-3">📋 Gainers & Losers Table</h2>
+      <div class="overflow-x-auto">
         <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-          <thead class="bg-green-200 dark:bg-green-700">
+          <thead class="bg-gray-200 dark:bg-gray-700">
             <tr>
-              <th class="border px-3 py-2">Stock</th>
-              <th class="border px-3 py-2">Change %</th>
+              <th class="border px-2 py-1">Stock</th>
+              <th class="border px-2 py-1">Type</th>
+              <th class="border px-2 py-1">Change</th>
             </tr>
           </thead>
-          <tbody id="gainersTable"></tbody>
+          <tbody id="moversTable">
+            <!-- Data will load here -->
+          </tbody>
         </table>
       </div>
-
-      <!-- Losers -->
-      <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-        <h3 class="text-lg font-semibold mb-3">Top Losers</h3>
-        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-          <thead class="bg-red-200 dark:bg-red-700">
-            <tr>
-              <th class="border px-3 py-2">Stock</th>
-              <th class="border px-3 py-2">Change %</th>
-            </tr>
-          </thead>
-          <tbody id="losersTable"></tbody>
-        </table>
-      </div>
-    </div>
+    </section>
   </main>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbzSS-wYQ-ObZAFP0ksWNJrSMQV3PZ7UPuJVA1V_lLiPBCqZLsAc66DtpozzFRQaUiUggA/exec";
+    // Movers in table format
+    async function renderMoversTable() {
+      const container = document.getElementById("moversTable");
+      if (!container) return;
+      container.innerHTML = `<tr><td colspan="3">Loading...</td></tr>`;
 
-    async function loadMovers() {
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
+      const res = await fetch("https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec");
+      const data = await res.json();
 
-        const gTable = document.getElementById("gainersTable");
-        gTable.innerHTML = "";
-        data.movers.filter(m => m.type === "Gainer").forEach(m => {
-          gTable.innerHTML += `<tr>
-            <td class="border px-3 py-2">${m.stock || ""}</td>
-            <td class="border px-3 py-2">${m.change || ""}</td>
-          </tr>`;
-        });
-
-        const lTable = document.getElementById("losersTable");
-        lTable.innerHTML = "";
-        data.movers.filter(m => m.type === "Loser").forEach(m => {
-          lTable.innerHTML += `<tr>
-            <td class="border px-3 py-2">${m.stock || ""}</td>
-            <td class="border px-3 py-2">${m.change || ""}</td>
-          </tr>`;
-        });
-      } catch (err) {
-        console.error(err);
-      }
+      container.innerHTML = (data.movers || [])
+        .map(m => `
+          <tr class="${m.Type?.toLowerCase().includes('gainer') ? 'bg-green-50 dark:bg-green-900' : 'bg-red-50 dark:bg-red-900'}">
+            <td class="border px-2 py-1">${m.Stock}</td>
+            <td class="border px-2 py-1">${m.Type}</td>
+            <td class="border px-2 py-1">${m.Change}</td>
+          </tr>
+        `).join("");
     }
-    window.onload = loadMovers;
+
+    document.addEventListener("DOMContentLoaded", renderMoversTable);
   </script>
 </body>
 </html>
