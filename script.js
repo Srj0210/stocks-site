@@ -5,45 +5,21 @@ function renderMoversTicker(movers) {
   const ticker = document.getElementById("moversTicker");
   if (!ticker) return;
 
-  // Ensure Type is set (fallback: based on Change sign)
-  movers.forEach(m => {
-    if (!m.Type) {
-      let changeVal = parseFloat((m.Change || "0").toString().replace("%", ""));
-      if (!isNaN(changeVal)) {
-        m.Type = changeVal >= 0 ? "Gainer" : "Loser";
-      }
-    }
+  // Format sabhi movers ko
+  const items = movers.map(m => {
+    const isGainer = m.Type && m.Type.toLowerCase().includes("gainer");
+    const arrow = isGainer
+      ? `<span class="text-green-600 dark:text-green-400">⬆</span>`
+      : `<span class="text-red-600 dark:text-red-400">⬇</span>`;
+    const cls = isGainer
+      ? `text-green-600 dark:text-green-400 font-semibold`
+      : `text-red-600 dark:text-red-400 font-semibold`;
+
+    return `<span class="${cls}">${m.Name} ₹${m.CMP} ${arrow} ${m.Change || ''}%</span>`;
   });
 
-  // Top 5 gainers & 5 losers
-  const gainers = movers.filter(m => m.Type && m.Type.toLowerCase().includes("gainer")).slice(0, 5);
-  const losers = movers.filter(m => m.Type && m.Type.toLowerCase().includes("loser")).slice(0, 5);
-
-  // Agar data hi nahi mila
-  if (gainers.length === 0 && losers.length === 0) {
-    ticker.innerHTML = "<span class='text-gray-400'>No movers data available</span>";
-    return;
-  }
-
-  // Format with arrows
-  const gainerText = gainers.map(g =>
-    `<span class="text-green-600 dark:text-green-400 font-semibold">
-      ${g.Name} ₹${g.CMP} ⬆ ${g.Change || '0'}%
-    </span>`
-  ).join(" | ");
-
-  const loserText = losers.map(l =>
-    `<span class="text-red-600 dark:text-red-400 font-semibold">
-      ${l.Name} ₹${l.CMP} ⬇ ${l.Change || '0'}%
-    </span>`
-  ).join(" | ");
-
-  // Show both if available
-  if (gainerText && loserText) {
-    ticker.innerHTML = gainerText + " || " + loserText;
-  } else {
-    ticker.innerHTML = gainerText || loserText;
-  }
+  // Join with separator
+  ticker.innerHTML = items.join(" | ");
 }
 
 // ===== MAIN LOAD FUNCTION =====
@@ -54,7 +30,7 @@ async function loadData() {
 
     // ===== News Ticker =====
     const ticker = document.getElementById("tickerText");
-    ticker.innerHTML = data.news.slice(0, 6).map(n => n.Title).join(" | ");
+    ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
 
     // ===== News Section =====
     const newsList = document.getElementById("newsList");
@@ -107,7 +83,7 @@ async function loadData() {
         </div>`;
     });
 
-    // ✅ Movers Bulletin
+    // ✅ Movers Bulletin (sabhi movers scroll)
     renderMoversTicker(data.movers);
 
     // ===== Picks =====
