@@ -1,92 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Latest News - srjahir.in</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
+<section id="movers" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+  <h2 class="text-xl font-bold mb-3">📈 All Movers</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+      <thead class="bg-gray-200 dark:bg-gray-700">
+        <tr>
+          <th class="border px-2 py-1">S.No</th>
+          <th class="border px-2 py-1">Name</th>
+          <th class="border px-2 py-1">CMP</th>
+          <th class="border px-2 py-1">P/E</th>
+          <th class="border px-2 py-1">MCap</th>
+          <th class="border px-2 py-1">Change</th>
+        </tr>
+      </thead>
+      <tbody id="moversTable"></tbody>
+    </table>
+  </div>
 
-    let currentPage = 1;
-    const perPage = 12;
-    let allNews = [];
-
-    async function loadNews() {
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        allNews = data.news || [];
-        renderNews();
-      } catch (err) {
-        console.error("❌ Error loading news:", err);
-      }
-    }
-
-    function renderNews() {
-      const container = document.getElementById("newsContainer");
-      container.innerHTML = "";
-
-      const start = (currentPage - 1) * perPage;
-      const end = start + perPage;
-      const pageNews = allNews.slice(start, end);
-
-      pageNews.forEach(n => {
-        container.innerHTML += `
-          <div class="p-4 border rounded bg-white dark:bg-gray-800 shadow hover:shadow-lg transition">
-            <a href="${n["Link"] || "#"}" target="_blank" class="font-semibold text-blue-700 dark:text-blue-400 hover:underline block">
-              ${n["Title"] || ""}
-            </a>
-            <p class="text-xs text-gray-500 mt-2">${n["Published"] || ""}</p>
-          </div>
-        `;
-      });
-
-      updatePagination();
-    }
-
-    function updatePagination() {
-      const totalPages = Math.ceil(allNews.length / perPage);
-      document.getElementById("pagination").innerHTML = `
-        <button onclick="prevPage()" class="px-4 py-2 mx-1 rounded bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600" ${currentPage === 1 ? "disabled" : ""}>
-          ⬅ Prev
-        </button>
-        <span class="px-2">Page ${currentPage} of ${totalPages}</span>
-        <button onclick="nextPage()" class="px-4 py-2 mx-1 rounded bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600" ${currentPage === totalPages ? "disabled" : ""}>
-          Next ➡
-        </button>
-      `;
-    }
-
-    function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        renderNews();
-      }
-    }
-
-    function nextPage() {
-      if (currentPage < Math.ceil(allNews.length / perPage)) {
-        currentPage++;
-        renderNews();
-      }
-    }
-
-    window.onload = loadNews;
-  </script>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4">📢 Latest Stock Market News</h1>
-
-    <div id="newsContainer" class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="p-4 border rounded bg-white dark:bg-gray-800">Loading...</div>
-    </div>
-
-    <!-- Pagination -->
-    <div id="pagination" class="flex justify-center items-center mt-6"></div>
-  </main>
-</body>
-</html>
+  <!-- Pagination -->
+  <div class="flex justify-between items-center mt-4">
+    <button id="prevPage" class="px-3 py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50">⬅ Prev</button>
+    <span id="pageInfo" class="font-semibold">Page 1</span>
+    <button id="nextPage" class="px-3 py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50">Next ➡</button>
+  </div>
+</section>
