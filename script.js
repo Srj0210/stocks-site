@@ -1,104 +1,184 @@
-const url = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
+// ============= CONFIG =============
+const API_URL = "https://script.google.com/macros/s/AKfycbwWuKCYHmv4CVs_NKKYmJhzCpwHEGQolrvIIM0z6s9p1UZZX21Dq7mvHFP_cEEwVsLG/exec";
 
-async function loadData() {
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
+// ============= SEARCH FUNCTION =============
+function searchContent() {
+  const input = document.getElementById("searchBox").value.toLowerCase();
+  const sections = ["newsList", "ipoUpcoming", "ipoRecent", "moversList", "picksList"];
 
-    // === Ticker ===
-    const ticker = document.getElementById("tickerText");
-    if (ticker) {
-      ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
+  sections.forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    const items = section.getElementsByTagName("div");
+
+    for (let i = 0; i < items.length; i++) {
+      const text = items[i].innerText.toLowerCase();
+      items[i].style.display = text.includes(input) ? "" : "none";
     }
+  });
+}
 
-    // === News (6 on homepage) ===
+// ============= LOAD NEWS =============
+async function loadNews() {
+  try {
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    const data = json.news || [];
     const newsList = document.getElementById("newsList");
-    if (newsList) {
-      newsList.innerHTML = data.news.slice(0, 6).map(n => `
-        <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-          <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
-          <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
-        </div>
-      `).join("");
+    const ticker = document.getElementById("tickerText");
+
+    newsList.innerHTML = "";
+    if (!data.length) {
+      newsList.innerHTML = "<p>No news available.</p>";
+      return;
     }
 
-    // === IPO Upcoming ===
-    const ipoUpcoming = document.getElementById("ipoUpcoming");
-    if (ipoUpcoming) {
-      ipoUpcoming.innerHTML = data.ipos_upcoming.slice(0, 10).map(i => `
-        <tr>
-          <td class="border px-2 py-1">${i.Name || ""}</td>
-          <td class="border px-2 py-1">${i["Open Date"] || ""}</td>
-          <td class="border px-2 py-1">${i["Close Date"] || ""}</td>
-          <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
-        </tr>
-      `).join("");
-    }
+    data.slice(0, 6).forEach(item => {
+      const div = document.createElement("div");
+      div.className = "p-3 border rounded bg-gray-100 dark:bg-gray-700 hover:scale-105 transition-transform";
+      div.innerHTML = `
+        <a href="${item.Link}" target="_blank" class="font-semibold hover:underline">${item.Title}</a>
+        <p class="text-xs mt-1">${item.Published}</p>
+      `;
+      newsList.appendChild(div);
+    });
 
-    // === IPO Recent ===
-    const ipoRecent = document.getElementById("ipoRecent");
-    if (ipoRecent) {
-      ipoRecent.innerHTML = data.ipos_recent.slice(0, 10).map(i => `
-        <tr>
-          <td class="border px-2 py-1">${i.Name || ""}</td>
-          <td class="border px-2 py-1">${i["Listing Date"] || ""}</td>
-          <td class="border px-2 py-1">${i["MCap (Cr)"] || ""}</td>
-          <td class="border px-2 py-1">${i["IPO Price"] || ""}</td>
-          <td class="border px-2 py-1">${i["% Change"] || ""}</td>
-        </tr>
-      `).join("");
-    }
+    // Ticker (sab news concatenate karke)
+    ticker.innerText = data.map(n => n.Title).join(" ⚡ ");
+  } catch (e) {
+    console.error("News load error:", e);
+  }
+}
 
-// Movers Cards (Index Page)
-async function loadMoversCards() {
+// ============= LOAD PICKS =============
+async function loadPicks() {
   try {
-    let res = await fetch(apiUrl + "?sheet=Movers");
-    let data = await res.json();
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    const data = json.picks || [];
+    const picksList = document.getElementById("picksList");
 
-    let container = document.getElementById("moversList");
-    container.innerHTML = "";
+    picksList.innerHTML = "";
+    if (!data.length) {
+      picksList.innerHTML = "<p>No picks available.</p>";
+      return;
+    }
 
-    // Sirf Top 10 entries dikhana
-    data.slice(0, 10).forEach((row) => {
-      let card = document.createElement("div");
-      card.className = "p-3 bg-green-700 text-white rounded shadow";
+    data.slice(0, 6).forEach(item => {
+      const div = document.createElement("div");
+      div.className = "p-3 border rounded bg-gray-100 dark:bg-gray-700 hover:scale-105 transition-transform";
+      div.innerHTML = `
+        <a href="${item.Link}" target="_blank" class="font-semibold hover:underline">${item.Stock}</a>
+        <p class="text-xs mt-1">${item.Reason}</p>
+      `;
+      picksList.appendChild(div);
+    });
+  } catch (e) {
+    console.error("Picks load error:", e);
+  }
+}
+
+// ============= LOAD MOVERS =============
+async function loadMovers() {
+  try {
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    const data = json.movers || json.GainersLosers || [];
+    const moversList = document.getElementById("moversList");
+
+    moversList.innerHTML = "";
+    if (!data.length) {
+      moversList.innerHTML = "<p>Failed to load movers.</p>";
+      return;
+    }
+
+    data.slice(0, 10).forEach(row => {
+      let changeVal = parseFloat(row["%Change"] || row.change || "0");
+      let isGainer = changeVal >= 0;
+
+      const card = document.createElement("div");
+      card.className = `p-3 rounded shadow hover:scale-105 transition-transform ${
+        isGainer ? "bg-green-600 text-white" : "bg-red-600 text-white"
+      }`;
 
       card.innerHTML = `
-        <h3 class="font-bold">${row.Name || "N/A"}</h3>
-        <p>CMP: ${row.CMP || "-"} | P/E: ${row["P/E"] || "-"} | MCap: ${row.MCap || "-"}</p>
+        <strong>${row.Name || "N/A"}</strong><br>
+        CMP: ${row.CMP || "-"} | P/E: ${row["P/E"] || "-"} | MCap: ${row.MCap || "-"}<br>
+        Change: ${row["%Change"] || "-"}%
       `;
-      container.appendChild(card);
+
+      moversList.appendChild(card);
     });
-  } catch (err) {
-    console.error("Error loading movers cards:", err);
-    document.getElementById("moversList").innerText = "Failed to load movers.";
+  } catch (e) {
+    console.error("Movers load error:", e);
+    document.getElementById("moversList").innerHTML = "<p>Failed to load movers.</p>";
   }
 }
 
-loadMoversCards();
+// ============= LOAD RECENT IPOs =============
+async function loadRecentIPOs() {
+  try {
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    const data = json.ipos_recent || [];
+    const tbody = document.getElementById("ipoRecent");
 
-    // === Picks (4 on homepage) ===
-    const picksList = document.getElementById("picksList");
-    if (picksList) {
-      picksList.innerHTML = data.picks.slice(0, 4).map(p => `
-        <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-          <strong>${p.Stock}</strong>
-          <div class="text-xs mt-1">${p.Reason || ""}</div>
-        </div>
-      `).join("");
+    tbody.innerHTML = "";
+    if (!data.length) {
+      tbody.innerHTML = "<tr><td colspan='5'>No recent IPOs.</td></tr>";
+      return;
     }
 
-  } catch (err) {
-    console.error("Error loading data:", err);
+    data.slice(0, 5).forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="border px-2 py-1">${item.Name}</td>
+        <td class="border px-2 py-1">${item["Listing Date"]}</td>
+        <td class="border px-2 py-1">${item["MCap"] || "-"}</td>
+        <td class="border px-2 py-1">${item.Price || "-"}</td>
+        <td class="border px-2 py-1">${item["% Change"] || "-"}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (e) {
+    console.error("Recent IPO load error:", e);
   }
 }
 
-// === Search ===
-function searchContent(){ 
-  let input=document.getElementById("searchBox").value.toLowerCase(); 
-  document.querySelectorAll(".searchable").forEach(el=>{
-    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
-  }); 
+// ============= LOAD UPCOMING IPOs =============
+async function loadUpcomingIPOs() {
+  try {
+    const res = await fetch(API_URL);
+    const json = await res.json();
+    const data = json.ipos_upcoming || [];
+    const tbody = document.getElementById("ipoUpcoming");
+
+    tbody.innerHTML = "";
+    if (!data.length) {
+      tbody.innerHTML = "<tr><td colspan='4'>No upcoming IPOs.</td></tr>";
+      return;
+    }
+
+    data.slice(0, 5).forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="border px-2 py-1">${item.Name}</td>
+        <td class="border px-2 py-1">${item["Open Date"]}</td>
+        <td class="border px-2 py-1">${item["Close Date"]}</td>
+        <td class="border px-2 py-1">${item["Price Band"]}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (e) {
+    console.error("Upcoming IPO load error:", e);
+  }
 }
 
-window.onload = loadData;
+// ============= INIT =============
+document.addEventListener("DOMContentLoaded", () => {
+  loadNews();
+  loadPicks();
+  loadMovers();
+  loadRecentIPOs();
+  loadUpcomingIPOs();
+});
