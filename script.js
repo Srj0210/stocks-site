@@ -4,11 +4,11 @@ const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mM
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${dd}-${mm}-${yyyy}`;
+  if (isNaN(d.getTime())) return dateStr; // fallback
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${day}-${month}-${year}`;
 }
 
 // ===== Movers Bulletin =====
@@ -32,56 +32,56 @@ async function loadData() {
     const res = await fetch(url);
     const data = await res.json();
 
-// ===== News Ticker =====
-const ticker = document.getElementById("tickerText");
-if (ticker) {
-  // ⚡ Ab sari news sheet se dikhayenge (jitni bhi ho)
-  ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
-}
+    // ===== News Ticker (all news scroll) =====
+    const ticker = document.getElementById("tickerText");
+    if (ticker) {
+      ticker.innerHTML = (data.news || []).map(n => n.Title).join(" | ");
+    }
 
-// ===== News Section (sirf 6 latest cards) =====
-const newsList = document.getElementById("newsList");
-if (newsList) {
-  newsList.innerHTML = "";
-  (data.news.slice(0, 6)).forEach(n => {
-    newsList.innerHTML += `
-      <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
-        <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
-      </div>`;
-  });
-}
-// ===== IPOs (Upcoming) =====
-const ipoUpcoming = document.getElementById("ipoUpcoming");
-if (ipoUpcoming) {
-  ipoUpcoming.innerHTML = "";
-  (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
-    ipoUpcoming.innerHTML += `<tr class="searchable">
-      <td class="border px-2 py-1">${i.Name || ''}</td>
-      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
-      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
-      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
-      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
-    </tr>`;
-  });
-}
+    // ===== News Section (only 6 news on home) =====
+    const newsList = document.getElementById("newsList");
+    if (newsList) {
+      newsList.innerHTML = "";
+      (data.news.slice(0, 6)).forEach(n => {
+        newsList.innerHTML += `
+          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+            <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
+            <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
+          </div>`;
+      });
+    }
 
-// ===== IPOs (Recent) =====
-const ipoRecent = document.getElementById("ipoRecent");
-if (ipoRecent) {
-  ipoRecent.innerHTML = "";
-  (data.ipos_recent || []).slice(0, 10).forEach(i => {
-    ipoRecent.innerHTML += `<tr class="searchable">
-      <td class="border px-2 py-1">${i.Name || ''}</td>
-      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
-      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
-      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
-      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
-    </tr>`;
-  });
-}
+    // ===== IPOs (Upcoming) =====
+    const ipoUpcoming = document.getElementById("ipoUpcoming");
+    if (ipoUpcoming) {
+      ipoUpcoming.innerHTML = "";
+      (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+        ipoUpcoming.innerHTML += `<tr class="searchable">
+          <td class="border px-2 py-1">${i.Name || ''}</td>
+          <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+          <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+          <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
+          <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
+          <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+        </tr>`;
+      });
+    }
+
+    // ===== IPOs (Recent) =====
+    const ipoRecent = document.getElementById("ipoRecent");
+    if (ipoRecent) {
+      ipoRecent.innerHTML = "";
+      (data.ipos_recent || []).slice(0, 10).forEach(i => {
+        ipoRecent.innerHTML += `<tr class="searchable">
+          <td class="border px-2 py-1">${i.Name || ''}</td>
+          <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+          <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+          <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
+          <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
+          <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+        </tr>`;
+      });
+    }
 
     // ===== Movers (Cards + Ticker) =====
     const moversList = document.getElementById("moversList");
