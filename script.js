@@ -1,14 +1,14 @@
-const url = "https://script.google.com/macros/s/AKfycbyzP9HHmuL-xxJXcmS67A5ZwvzaRFJ4tHWr64UB8Vz8qFzsKzkqMGkl7ibtux_E3cud/exec";
+const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
 
-// Format Date -> dd-mm-yyyy
-function formatDate(d) {
-  if (!d) return "";
-  const dt = new Date(d);
-  if (isNaN(dt)) return d;
-  let day = String(dt.getDate()).padStart(2, '0');
-  let month = String(dt.getMonth() + 1).padStart(2, '0');
-  let year = dt.getFullYear();
-  return `${day}-${month}-${year}`;
+// ===== Date Formatter =====
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}-${mm}-${yyyy}`;
 }
 
 // ===== Movers Bulletin =====
@@ -38,11 +38,11 @@ async function loadData() {
       ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
     }
 
-    // ===== News Section =====
+    // ===== News Section (6 latest) =====
     const newsList = document.getElementById("newsList");
     if (newsList) {
       newsList.innerHTML = "";
-      data.news.forEach(n => {
+      data.news.slice(0, 6).forEach(n => {
         newsList.innerHTML += `
           <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
             <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
@@ -58,11 +58,9 @@ async function loadData() {
       (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
         ipoUpcoming.innerHTML += `<tr class="searchable">
           <td class="border px-2 py-1">${i.Name || ''}</td>
-          <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
-          <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
           <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
           <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-          <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+          <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
         </tr>`;
       });
     }
@@ -74,11 +72,10 @@ async function loadData() {
       (data.ipos_recent || []).slice(0, 10).forEach(i => {
         ipoRecent.innerHTML += `<tr class="searchable">
           <td class="border px-2 py-1">${i.Name || ''}</td>
-          <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
-          <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
-          <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-          <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-          <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+          <td class="border px-2 py-1">${formatDate(i["Listing Date"])}</td>
+          <td class="border px-2 py-1">${i["MCap (Cr)"] || ''}</td>
+          <td class="border px-2 py-1">${i["IPO Price"] || ''}</td>
+          <td class="border px-2 py-1">${i["% Change"] || ''}</td>
         </tr>`;
       });
     }
@@ -87,7 +84,7 @@ async function loadData() {
     const moversList = document.getElementById("moversList");
     if (moversList) {
       moversList.innerHTML = "";
-      (data.movers || []).slice(0, 10).forEach(m => {
+      (data.movers.slice(0, 10)).forEach(m => {
         const change = m.Change ? parseFloat(m.Change) : 0;
         const cls = change >= 0
           ? 'bg-green-50 dark:bg-green-900'
@@ -107,7 +104,7 @@ async function loadData() {
     const picksList = document.getElementById("picksList");
     if (picksList) {
       picksList.innerHTML = "";
-      (data.picks || []).forEach(p => {
+      (data.picks.slice(0, 4)).forEach(p => {
         picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
           <strong>${p.Stock}</strong>
           <div class="text-xs mt-1">${p.Reason || ''}</div>
