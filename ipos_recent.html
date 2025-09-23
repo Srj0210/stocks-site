@@ -3,69 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recent IPOs</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <title>Recent IPOs - Stock Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <header>
-    <h1>📉 Recent IPOs</h1>
-  </header>
-
-  <main>
-    <table id="recentIposTable" border="1" cellspacing="0" cellpadding="8">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Listing Date</th>
-          <th>IPO Price</th>
-          <th>Current Price</th>
-          <th>% Change</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <button id="viewMoreRecent">View More</button>
-  </main>
-
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
-    let recentData = [];
-    let recentVisible = 10;
-
-    async function loadRecentIPOs() {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        recentData = data.ipos_recent || [];
-        renderRecentTable();
-      } catch (err) {
-        console.error("Error fetching Recent IPOs:", err);
-      }
-    }
-
-    function renderRecentTable() {
-      const tbody = document.querySelector("#recentIposTable tbody");
-      tbody.innerHTML = "";
-
-      recentData.slice(0, recentVisible).forEach(item => {
-        const row = `<tr>
-          <td>${item.Name || "-"}</td>
-          <td>${item["Listing Date"] || "-"}</td>
-          <td>${item["IPO Price"] || "-"}</td>
-          <td>${item["Current Price"] || "-"}</td>
-          <td>${item.Change || "-"}</td>
-        </tr>`;
-        tbody.innerHTML += row;
-      });
-    }
-
-    document.getElementById("viewMoreRecent").addEventListener("click", () => {
-      recentVisible += 10;
-      renderRecentTable();
-    });
-
-    loadRecentIPOs();
-  </script>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+  <div class="max-w-6xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">📈 Recent IPOs</h1>
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">Issue Type</th>
+            <th class="border px-2 py-1">Price Band</th>
+            <th class="border px-2 py-1">Open Date</th>
+            <th class="border px-2 py-1">Close Date</th>
+            <th class="border px-2 py-1">Issue Size</th>
+          </tr>
+        </thead>
+        <tbody id="ipoRecentFull">Loading...</tbody>
+      </table>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
