@@ -1,25 +1,118 @@
-<section id="movers" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-3">📈 All Movers</h2>
-  <div class="overflow-x-auto">
-    <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-      <thead class="bg-gray-200 dark:bg-gray-700">
-        <tr>
-          <th class="border px-2 py-1">S.No</th>
-          <th class="border px-2 py-1">Name</th>
-          <th class="border px-2 py-1">CMP</th>
-          <th class="border px-2 py-1">P/E</th>
-          <th class="border px-2 py-1">MCap</th>
-          <th class="border px-2 py-1">Change</th>
-        </tr>
-      </thead>
-      <tbody id="moversTable"></tbody>
-    </table>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All News - Stock Portal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
+  <script>
+    // Dark mode default
+    if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    }
+    function toggleTheme(){
+      if(document.documentElement.classList.contains('dark')){
+        document.documentElement.classList.remove('dark');
+        localStorage.theme='light';
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.theme='dark';
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-  <!-- Pagination -->
-  <div class="flex justify-between items-center mt-4">
-    <button id="prevPage" class="px-3 py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50">⬅ Prev</button>
-    <span id="pageInfo" class="font-semibold">Page 1</span>
-    <button id="nextPage" class="px-3 py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50">Next ➡</button>
-  </div>
-</section>
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
+    <div class="max-w-6xl mx-auto flex justify-between items-center px-4 py-3">
+      <a href="index.html" class="flex items-center space-x-2 text-xl font-bold">
+        <span>Stock Portal</span>
+        <img src="logo.png.png" alt="logo" class="w-8 h-8">
+      </a>
+      <div class="flex items-center space-x-2">
+        <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
+        <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-bold mb-4">📢 All Stock Market News</h2>
+
+    <!-- News List -->
+    <div id="newsContainer" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center space-x-4 mt-6">
+      <button id="prevBtn" onclick="prevPage()" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded disabled:opacity-50">⬅ Prev</button>
+      <button id="nextBtn" onclick="nextPage()" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded disabled:opacity-50">Next ➡</button>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white dark:bg-gray-800 text-center py-6 mt-10">
+    <p class="text-sm text-gray-600 dark:text-gray-400">©️ 2025 SRJ Ahir Technologies</p>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
+
+    let newsData = [];
+    let currentPage = 1;
+    const perPage = 10;
+
+    async function loadNews(){
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        newsData = data.news || [];
+        renderPage();
+      } catch(err){
+        console.error("❌ Error loading news:", err);
+      }
+    }
+
+    function renderPage(){
+      const start = (currentPage-1) * perPage;
+      const end = start + perPage;
+      const items = newsData.slice(start, end);
+
+      const container = document.getElementById("newsContainer");
+      container.innerHTML = "";
+      items.forEach(n => {
+        container.innerHTML += `
+          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+            <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
+            <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
+          </div>
+        `;
+      });
+
+      document.getElementById("prevBtn").disabled = currentPage === 1;
+      document.getElementById("nextBtn").disabled = end >= newsData.length;
+    }
+
+    function nextPage(){ currentPage++; renderPage(); }
+    function prevPage(){ currentPage--; renderPage(); }
+
+    function searchContent(){
+      let input=document.getElementById("searchBox").value.toLowerCase();
+      document.querySelectorAll(".searchable").forEach(el=>{
+        el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
+      });
+    }
+
+    window.onload = loadNews;
+  </script>
+</body>
+</html>
