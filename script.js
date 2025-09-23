@@ -1,120 +1,91 @@
-// ============ CONFIG ============
-const API_URL = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
+const url = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
 
-// ============ FETCH ============
-async function fetchData() {
+async function loadData() {
   try {
-    const res = await fetch(API_URL);
-    return await res.json();
-  } catch (e) {
-    console.error("❌ API fetch error:", e);
-    return {};
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // ✅ Ticker (ALL News)
+    const ticker = document.getElementById("tickerText");
+    ticker.innerHTML = (data.news || [])
+      .map(n => `<a href="${n.Link}" target="_blank" rel="noopener noreferrer" class="mx-4">${n.Title}</a>`)
+      .join(" | ");
+
+    // ✅ Latest News (only 6 for homepage)
+    const newsList = document.getElementById("newsList");
+    newsList.innerHTML = "";
+    (data.news || []).slice(0, 6).forEach(n => {
+      newsList.innerHTML += `
+        <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+          <a href="${n.Link}" target="_blank" rel="noopener noreferrer" class="font-medium hover:underline">${n.Title}</a>
+          <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
+        </div>`;
+    });
+
+    // ✅ IPOs Upcoming
+    const ipoUpcoming = document.getElementById("ipoUpcoming");
+    ipoUpcoming.innerHTML = "";
+    (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+      ipoUpcoming.innerHTML += `
+        <tr class="searchable">
+          <td class="border px-2 py-1">${i.Name || ""}</td>
+          <td class="border px-2 py-1">${i["Open Date"] || ""}</td>
+          <td class="border px-2 py-1">${i["Close Date"] || ""}</td>
+          <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
+        </tr>`;
+    });
+
+    // ✅ IPOs Recent
+    const ipoRecent = document.getElementById("ipoRecent");
+    ipoRecent.innerHTML = "";
+    (data.ipos_recent || []).slice(0, 10).forEach(i => {
+      ipoRecent.innerHTML += `
+        <tr class="searchable">
+          <td class="border px-2 py-1">${i.Name || ""}</td>
+          <td class="border px-2 py-1">${i["Listing Date"] || ""}</td>
+          <td class="border px-2 py-1">${i["MCap (Cr)"] || ""}</td>
+          <td class="border px-2 py-1">${i["IPO Price"] || ""}</td>
+          <td class="border px-2 py-1">${i["% Change"] || ""}</td>
+        </tr>`;
+    });
+
+    // ✅ Movers
+    const moversList = document.getElementById("moversList");
+    moversList.innerHTML = "";
+    (data.movers || []).slice(0, 10).forEach(m => {
+      const cls = (m["Type"] && m["Type"].toLowerCase().includes("gainer"))
+        ? "bg-green-50 dark:bg-green-900"
+        : "bg-red-50 dark:bg-red-900";
+      moversList.innerHTML += `
+        <div class="searchable p-3 border rounded ${cls}">
+          <strong>${m.Name || m.Stock || ""}</strong> 
+          <span class="text-sm">(${m.Change || ""})</span>
+          <div class="text-xs mt-1">${m.Type || ""}</div>
+        </div>`;
+    });
+
+    // ✅ Picks
+    const picksList = document.getElementById("picksList");
+    picksList.innerHTML = "";
+    (data.picks || []).slice(0, 4).forEach(p => {
+      picksList.innerHTML += `
+        <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+          <strong>${p.Stock || ""}</strong>
+          <div class="text-xs mt-1">${p.Reason || ""}</div>
+          <a href="${p.Link}" target="_blank" rel="noopener noreferrer" class="text-blue-500 text-xs hover:underline">Read More</a>
+        </div>`;
+    });
+
+  } catch (err) {
+    console.error("❌ Error loading data:", err);
   }
 }
 
-// ============ RENDER ============
-
-// News
-function renderNews(news) {
-  const container = document.getElementById("newsList");
-  const ticker = document.getElementById("tickerText");
-  if (!container) return;
-
-  container.innerHTML = "";
-  (news || []).slice(0, 6).forEach(n => {
-    container.innerHTML += `
-      <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <a href="${n.Link}" target="_blank" rel="noopener noreferrer" class="font-medium">${n.Title}</a>
-        <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
-      </div>`;
-  });
-
-  if (ticker) {
-    ticker.innerHTML = (news || []).slice(0, 10).map(n => n.Title).join(" 🔸 ");
-  }
+function searchContent(){ 
+  let input=document.getElementById("searchBox").value.toLowerCase(); 
+  document.querySelectorAll(".searchable").forEach(el=>{
+    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
+  }); 
 }
 
-// Picks
-function renderPicks(picks) {
-  const container = document.getElementById("picksList");
-  if (!container) return;
-
-  container.innerHTML = "";
-  (picks || []).slice(0, 6).forEach(p => {
-    container.innerHTML += `
-      <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <strong>${p.Stock}</strong>
-        <div class="text-xs mt-1">${p.Reason || ""}</div>
-      </div>`;
-  });
-}
-
-// Movers
-function renderMovers(movers) {
-  const container = document.getElementById("moversList");
-  if (!container) return;
-
-  container.innerHTML = "";
-  (movers || []).slice(0, 6).forEach(m => {
-    container.innerHTML += `
-      <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <strong>${m.Name}</strong>
-        <div class="text-xs mt-1">CMP: ₹${m.CMP || ""} | P/E: ${m["P/E"] || ""} | MCap: ${m.MCap || ""}</div>
-      </div>`;
-  });
-}
-
-// IPO Recent
-function renderIpoRecent(recent) {
-  const tbody = document.getElementById("ipoRecent");
-  if (!tbody) return;
-
-  tbody.innerHTML = "";
-  (recent || []).slice(0, 6).forEach(r => {
-    tbody.innerHTML += `
-      <tr class="searchable">
-        <td class="border px-2 py-1">${r.Name}</td>
-        <td class="border px-2 py-1">${r["Listing Date"] || ""}</td>
-        <td class="border px-2 py-1">${r["MCap (Cr)"] || ""}</td>
-        <td class="border px-2 py-1">${r["IPO Price"] || ""}</td>
-        <td class="border px-2 py-1">${r["% Change"] || ""}</td>
-      </tr>`;
-  });
-}
-
-// IPO Upcoming
-function renderIpoUpcoming(upcoming) {
-  const tbody = document.getElementById("ipoUpcoming");
-  if (!tbody) return;
-
-  tbody.innerHTML = "";
-  (upcoming || []).slice(0, 6).forEach(u => {
-    tbody.innerHTML += `
-      <tr class="searchable">
-        <td class="border px-2 py-1">${u.Name}</td>
-        <td class="border px-2 py-1">${u["Open Date"] || ""}</td>
-        <td class="border px-2 py-1">${u["Close Date"] || ""}</td>
-        <td class="border px-2 py-1">${u["Price Band"] || ""}</td>
-      </tr>`;
-  });
-}
-
-// ============ SEARCH ============
-function searchContent() {
-  const query = document.getElementById("searchBox").value.toLowerCase();
-  document.querySelectorAll(".searchable").forEach(el => {
-    el.style.display = el.innerText.toLowerCase().includes(query) ? "" : "none";
-  });
-}
-
-// ============ INIT ============
-document.addEventListener("DOMContentLoaded", async () => {
-  const data = await fetchData();
-  if (!data) return;
-
-  renderNews(data.news || []);
-  renderPicks(data.picks || []);
-  renderMovers(data.movers || []);
-  renderIpoRecent(data.ipos_recent || []);
-  renderIpoUpcoming(data.ipos_upcoming || []);
-});
+window.onload = loadData;
