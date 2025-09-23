@@ -6,53 +6,55 @@
   <title>Stock Picks - srjahir.in</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="script.js" defer></script>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
-
-  <!-- NAV -->
-  <nav class="sticky top-0 bg-blue-900 text-white shadow-md p-4 flex justify-between items-center">
-    <a href="index.html" class="text-xl font-bold">⬅ Back</a>
-    <h1 class="text-lg">🎯 All Stock Picks</h1>
-  </nav>
-
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-      <h2 class="text-xl font-bold mb-3">📋 Picks List</h2>
-      <div id="picksContainer" class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <!-- Picks will load here -->
-      </div>
-    </section>
-  </main>
-
   <script>
-    async function renderPicks() {
-      const container = document.getElementById("picksContainer");
-      container.innerHTML = `<p>Loading...</p>`;
+    const url = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
 
+    async function loadPicks() {
       try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec");
+        const res = await fetch(url);
         const data = await res.json();
 
-        if (!data.picks || data.picks.length === 0) {
-          container.innerHTML = `<p>No picks available</p>`;
-          return;
-        }
+        const tbody = document.getElementById("picksTable");
+        tbody.innerHTML = "";
 
-        container.innerHTML = data.picks.map(p => `
-          <div class="p-3 border rounded bg-gray-50 dark:bg-gray-700">
-            <strong>${p.Stock || "N/A"}</strong>
-            <div class="text-xs mt-1">${p.Reason || "N/A"}</div>
-            <a href="${p.Link || "#"}" target="_blank" class="text-blue-600 dark:text-blue-400 text-xs hover:underline mt-2 block">Read More</a>
-          </div>
-        `).join("");
+        (data.picks || []).forEach(row => {
+          tbody.innerHTML += `
+            <tr>
+              <td class="border px-2 py-1">${row["Stock"] || ""}</td>
+              <td class="border px-2 py-1">${row["Reason"] || ""}</td>
+              <td class="border px-2 py-1">
+                <a href="${row["Link"] || "#"}" target="_blank" class="text-blue-600 hover:underline">Read More</a>
+              </td>
+            </tr>
+          `;
+        });
       } catch (err) {
         console.error("Error loading picks:", err);
-        container.innerHTML = `<p class="text-red-500">Failed to load picks.</p>`;
       }
     }
 
-    document.addEventListener("DOMContentLoaded", renderPicks);
+    window.onload = loadPicks;
   </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">🎯 Stock Picks</h1>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="border px-2 py-1">Stock</th>
+            <th class="border px-2 py-1">Reason</th>
+            <th class="border px-2 py-1">Link</th>
+          </tr>
+        </thead>
+        <tbody id="picksTable">
+          <tr><td colspan="3" class="text-center p-3">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 </body>
 </html>
