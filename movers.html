@@ -3,51 +3,107 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>All Movers - srjahir.in</title>
+  <title>Top Movers - srjahir.in</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+
   <div class="max-w-6xl mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold mb-4">📈 All Movers</h1>
+
     <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+      <table class="w-full border border-gray-300 dark:border-gray-700 text-sm rounded-lg">
         <thead class="bg-gray-200 dark:bg-gray-700">
           <tr>
             <th class="border px-2 py-1">S.No</th>
             <th class="border px-2 py-1">Name</th>
             <th class="border px-2 py-1">CMP</th>
-            <th class="border px-2 py-1">Change</th>
-            <th class="border px-2 py-1">Type</th>
+            <th class="border px-2 py-1">P/E</th>
             <th class="border px-2 py-1">MCap</th>
+            <th class="border px-2 py-1">Type</th>
+            <th class="border px-2 py-1">% Change</th>
           </tr>
         </thead>
         <tbody id="moversTable"></tbody>
       </table>
     </div>
-    <div class="text-center mt-4">
-      <a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">← Back to Home</a>
+
+    <!-- Pagination -->
+    <div class="flex justify-center items-center space-x-4 mt-6">
+      <button id="prevPage" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded hover:bg-gray-400 dark:hover:bg-gray-600">⬅ Prev</button>
+      <span id="pageInfo" class="text-sm"></span>
+      <button id="nextPage" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded hover:bg-gray-400 dark:hover:bg-gray-600">Next ➡</button>
     </div>
   </div>
 
   <script>
     const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
+    let moversData = [];
+    let currentPage = 1;
+    const rowsPerPage = 10;
 
-    async function loadMoversTable() {
+    async function loadMovers() {
       try {
         const res = await fetch(url);
         const data = await res.json();
-        const movers = data.movers || [];
-        const tbody = document.getElementById("moversTable");
-        tbody.innerHTML = "";
+        moversData = data.movers || [];
+        renderTable();
+      } catch (err) {
+        console.error("❌ Error loading movers:", err);
+      }
+    }
 
-        movers.forEach(m => {
-          let isGainer = m.Type && m.Type.toLowerCase().includes("gainer");
-          let arrow = isGainer ? "🟢 ▲" : "🔴 ▼";
-          let rowClass = isGainer ? "bg-green-50 dark:bg-green-900" : "bg-red-50 dark:bg-red-900";
+    function renderTable() {
+      const table = document.getElementById("moversTable");
+      table.innerHTML = "";
 
-          tbody.innerHTML += `<tr class="${rowClass}">
-            <td class="border px-2 py-1">${m["S.No"]}</td>
-            <td class="border px-2 py-1">${m.Name}</td>
-            <td class="border px-2 py-1">${m.CMP}</td>
-            <td
+      let start = (currentPage - 1) * rowsPerPage;
+      let end = start + rowsPerPage;
+      let pageData = moversData.slice(start, end);
+
+      pageData.forEach(m => {
+        let rowClass = "";
+        if (m.Type && m.Type.toLowerCase().includes("gainer")) {
+          rowClass = "bg-green-50 dark:bg-green-900";
+        } else if (m.Type && m.Type.toLowerCase().includes("loser")) {
+          rowClass = "bg-red-50 dark:bg-red-900";
+        }
+
+        table.innerHTML += `
+          <tr class="${rowClass}">
+            <td class="border px-2 py-1">${m["S.No"] || ""}</td>
+            <td class="border px-2 py-1">${m.Name || ""}</td>
+            <td class="border px-2 py-1">₹${m.CMP || ""}</td>
+            <td class="border px-2 py-1">${m["P/E"] || ""}</td>
+            <td class="border px-2 py-1">${m.MCap || ""}</td>
+            <td class="border px-2 py-1">${m.Type || ""}</td>
+            <td class="border px-2 py-1">${m.Change || ""}%</td>
+          </tr>`;
+      });
+
+      document.getElementById("pageInfo").innerText = 
+        `Page ${currentPage} of ${Math.ceil(moversData.length / rowsPerPage)}`;
+    }
+
+    document.getElementById("prevPage").addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable();
+      }
+    });
+
+    document.getElementById("nextPage").addEventListener("click", () => {
+      if (currentPage < Math.ceil(moversData.length / rowsPerPage)) {
+        currentPage++;
+        renderTable();
+      }
+    });
+
+    window.onload = loadMovers;
+  </script>
+</body>
+</html>
