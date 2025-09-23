@@ -46,18 +46,46 @@ function renderData(data) {
       </a>`;
   });
 
-  // ✅ MOVERS (CMP, P/E, MCap show karna hai)
-  const moversList = document.getElementById("moversList");
-  moversList.innerHTML = "";
-  (data.movers || []).slice(0, 10).forEach((m, idx) => {
-    moversList.innerHTML += `
-      <div class="searchable p-3 border rounded bg-green-50 dark:bg-green-900">
-        <strong>${idx + 1}. ${m.Name || ""}</strong>
-        <div class="text-sm mt-1">CMP: ₹${m.CMP || "-"}</div>
-        <div class="text-sm">P/E: ${m["P/E"] || "-"}</div>
-        <div class="text-sm">MCap: ${m.MCap || "-"}</div>
-      </div>`;
-  });
+// Movers Section
+async function loadMovers() {
+  try {
+    const response = await fetch(APP_SCRIPT_URL + "?sheet=GainersLosers");
+    const data = await response.json();
+
+    // Movers Cards (Homepage)
+    const moversList = document.getElementById("moversList");
+    moversList.innerHTML = "";
+    data.slice(0, 8).forEach((row, index) => {
+      moversList.innerHTML += `
+        <div class="bg-green-600 text-white p-3 rounded shadow">
+          <h3 class="font-bold text-lg">${row.Name}</h3>
+          <p class="text-sm">CMP: ₹${row.CMP}</p>
+          <p class="text-sm">P/E: ${row["P/E"]}</p>
+          <p class="text-sm">MCap: ₹${row.MCap} Cr</p>
+        </div>
+      `;
+    });
+
+    // Movers Table (movers.html)
+    const moversTable = document.getElementById("moversTable");
+    if (moversTable) {
+      moversTable.innerHTML = "";
+      data.forEach((row, i) => {
+        moversTable.innerHTML += `
+          <tr>
+            <td class="border px-2 py-1">${i + 1}</td>
+            <td class="border px-2 py-1">${row.Name}</td>
+            <td class="border px-2 py-1">₹${row.CMP}</td>
+            <td class="border px-2 py-1">${row["P/E"]}</td>
+            <td class="border px-2 py-1">₹${row.MCap} Cr</td>
+          </tr>
+        `;
+      });
+    }
+  } catch (error) {
+    console.error("Error loading movers:", error);
+  }
+}
 
   // ✅ IPO UPCOMING
   const ipoUpcoming = document.getElementById("ipoUpcoming");
