@@ -1,125 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stock Portal</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Security -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://script.google.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://script.google.com;">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta http-equiv="Referrer-Policy" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://script.google.com https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'self' https://script.google.com;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="Referrer-Policy" content="no-referrer-when-downgrade" />
+
+  <!-- Title & Favicon -->
+  <title>Stock Portal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <!-- Styles -->
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f7f9fc;
+      color: #222;
+    }
+    header {
+      background: #0d47a1;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    h2 {
+      margin-top: 30px;
+      color: #0d47a1;
+    }
+    section {
+      padding: 20px;
+      margin: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #e3f2fd;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    ul li {
+      margin: 5px 0;
+    }
+    a {
+      text-decoration: none;
+      color: #0d47a1;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #0d47a1;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #1565c0;
+    }
+    footer {
+      background: #0d47a1;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
   <header>
-    <nav class="navbar">
-      <div class="logo">
-        <img src="logo.png.png" alt="Logo">
-        <span>Stock Portal</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="news.html">News</a></li>
-        <li><a href="ipos_recent.html">IPOs</a></li>
-        <li><a href="movers.html">Movers</a></li>
-        <li><a href="picks.html">Picks</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
-    </nav>
+    <h1>📊 Stock Portal</h1>
   </header>
 
-  <main>
-    <!-- NEWS -->
-    <section>
-      <h2>📰 Latest News</h2>
-      <ul id="newsList"></ul>
-      <a href="news.html" class="view-more">View All News →</a>
-    </section>
+  <!-- News -->
+  <section>
+    <h2>📰 Latest News</h2>
+    <ul id="news-list"></ul>
+    <button class="btn" data-view-more="news">View All News →</button>
+  </section>
 
-    <!-- PICKS -->
-    <section>
-      <h2>⭐ Stock Picks</h2>
-      <ul id="picksList"></ul>
-      <a href="picks.html" class="view-more">View All Picks →</a>
-    </section>
+  <!-- Picks -->
+  <section>
+    <h2>⭐ Stock Picks</h2>
+    <ul id="picks-list"></ul>
+    <button class="btn" data-view-more="picks">View All Picks →</button>
+  </section>
 
-    <!-- MOVERS -->
-    <section>
-      <h2>📊 Top Movers</h2>
-      <table id="moversTable">
-        <thead>
-          <tr>
-            <th>S.No</th>
-            <th>Name</th>
-            <th>CMP</th>
-            <th>P/E</th>
-            <th>MCap</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <a href="movers.html" class="view-more">View More Movers →</a>
-    </section>
+  <!-- Movers -->
+  <section>
+    <h2>📈 Top Movers</h2>
+    <table id="movers-table">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>CMP</th>
+          <th>P/E</th>
+          <th>MCap</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn" data-view-more="movers">View All Movers →</button>
+  </section>
 
-    <!-- RECENT IPOs -->
-    <section>
-      <h2>📈 Recent IPOs</h2>
-      <table id="recentTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Listing Date</th>
-            <th>IPO Price</th>
-            <th>Current Price</th>
-            <th>% Change</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <a href="ipos_recent.html" class="view-more">View More Recent IPOs →</a>
-    </section>
+  <!-- Recent IPOs -->
+  <section>
+    <h2>📊 Recent IPOs</h2>
+    <table id="recent-ipo-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Listing Date</th>
+          <th>IPO Price</th>
+          <th>Current Price</th>
+          <th>% Change</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn" data-view-more="recent">View More Recent IPOs →</button>
+  </section>
 
-    <!-- UPCOMING IPOs -->
-    <section>
-      <h2>📅 Upcoming IPOs</h2>
-      <table id="upcomingTable">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Open Date</th>
-            <th>Close Date</th>
-            <th>Price Band</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <a href="ipos_upcoming.html" class="view-more">View More Upcoming IPOs →</a>
-    </section>
-  </main>
+  <!-- Upcoming IPOs -->
+  <section>
+    <h2>📅 Upcoming IPOs</h2>
+    <table id="upcoming-ipo-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Open Date</th>
+          <th>Close Date</th>
+          <th>Price Band</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button class="btn" data-view-more="upcoming">View More Upcoming IPOs →</button>
+  </section>
 
   <footer>
-    <div class="footer-content">
-      <div>
-        <h3>📷 Follow me</h3>
-        <a href="instagram-qr.png.png" target="_blank">
-          <img src="instagram-qr.png.png" alt="Instagram QR" width="100">
-        </a>
-      </div>
-      <div>
-        <h3>📜 Sanskrit</h3>
-        <a href="https://pin.it/7IW2OrGOT" target="_blank">
-          <img src="sanskrit.png.png" alt="Sanskrit" width="100">
-        </a>
-      </div>
-      <div>
-        <h3>⚠️ Disclaimer</h3>
-        <p>This site is for educational purposes only. Not financial advice.</p>
-      </div>
-    </div>
+    <p>© 2025 Stock Portal | All Rights Reserved</p>
   </footer>
+
+  <!-- Script -->
+  <script src="script.js"></script>
 </body>
 </html>
