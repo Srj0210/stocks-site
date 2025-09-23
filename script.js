@@ -32,25 +32,25 @@ async function loadData() {
     const res = await fetch(url);
     const data = await res.json();
 
-    // ===== News Ticker (all news) =====
-    const ticker = document.getElementById("tickerText");
-    if (ticker) {
-      ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
-    }
+// ===== News Ticker =====
+const ticker = document.getElementById("tickerText");
+if (ticker) {
+  // ⚡ Ab sari news sheet se dikhayenge (jitni bhi ho)
+  ticker.innerHTML = data.news.map(n => n.Title).join(" | ");
+}
 
-    // ===== News Section (6 latest) =====
-    const newsList = document.getElementById("newsList");
-    if (newsList) {
-      newsList.innerHTML = "";
-      data.news.slice(0, 6).forEach(n => {
-        newsList.innerHTML += `
-          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-            <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
-            <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
-          </div>`;
-      });
-    }
-
+// ===== News Section (sirf 6 latest cards) =====
+const newsList = document.getElementById("newsList");
+if (newsList) {
+  newsList.innerHTML = "";
+  (data.news.slice(0, 6)).forEach(n => {
+    newsList.innerHTML += `
+      <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+        <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
+        <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
+      </div>`;
+  });
+}
     // ===== IPOs (Upcoming) =====
     const ipoUpcoming = document.getElementById("ipoUpcoming");
     if (ipoUpcoming) {
