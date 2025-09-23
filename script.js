@@ -41,48 +41,37 @@ async function loadData() {
       });
     }
 
-<!-- IPOs -->
-<section id="ipos" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-3">📊 Upcoming IPOs</h2>
-  <div class="overflow-x-auto mb-6">
-    <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-      <thead class="bg-gray-200 dark:bg-gray-700">
-        <tr>
-          <th class="border px-2 py-1">Name</th>
-          <th class="border px-2 py-1">Issue Type</th>
-          <th class="border px-2 py-1">Price Band</th>
-          <th class="border px-2 py-1">Open Date</th>
-          <th class="border px-2 py-1">Close Date</th>
-          <th class="border px-2 py-1">Issue Size</th>
-        </tr>
-      </thead>
-      <tbody id="ipoUpcoming"></tbody>
-    </table>
-  </div>
-  <div class="text-right mb-6">
-    <a href="ipos_upcoming.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View More Upcoming IPOs →</a>
-  </div>
+// ===== IPOs (Upcoming) =====
+const ipoUpcoming = document.getElementById("ipoUpcoming");
+if (ipoUpcoming) {
+  ipoUpcoming.innerHTML = "";
+  (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+    ipoUpcoming.innerHTML += `<tr class="searchable">
+      <td class="border px-2 py-1">${i.Name || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+    </tr>`;
+  });
+}
 
-  <h2 class="text-xl font-bold mb-3">📈 Recent IPOs</h2>
-  <div class="overflow-x-auto">
-    <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-      <thead class="bg-gray-200 dark:bg-gray-700">
-        <tr>
-          <th class="border px-2 py-1">Name</th>
-          <th class="border px-2 py-1">Issue Type</th>
-          <th class="border px-2 py-1">Price Band</th>
-          <th class="border px-2 py-1">Open Date</th>
-          <th class="border px-2 py-1">Close Date</th>
-          <th class="border px-2 py-1">Issue Size</th>
-        </tr>
-      </thead>
-      <tbody id="ipoRecent"></tbody>
-    </table>
-  </div>
-  <div class="text-right mt-3">
-    <a href="ipos_recent.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View More Recent IPOs →</a>
-  </div>
-</section>
+// ===== IPOs (Recent) =====
+const ipoRecent = document.getElementById("ipoRecent");
+if (ipoRecent) {
+  ipoRecent.innerHTML = "";
+  (data.ipos_recent || []).slice(0, 10).forEach(i => {
+    ipoRecent.innerHTML += `<tr class="searchable">
+      <td class="border px-2 py-1">${i.Name || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Type"] || ''}</td>
+      <td class="border px-2 py-1">${i["Price Band"] || ''}</td>
+      <td class="border px-2 py-1">${i["Open Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Close Date"] || ''}</td>
+      <td class="border px-2 py-1">${i["Issue Size"] || ''}</td>
+    </tr>`;
+  });
+}
     
     // ✅ Movers Bulletin
     renderMoversTicker(data.movers);
