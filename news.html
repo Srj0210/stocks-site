@@ -1,118 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>All News - srjahir.in</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
-
-  <!-- Security headers -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com https://script.google.com; script-src 'self' https://cdn.tailwindcss.com https://script.google.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;">
-  <meta name="referrer" content="no-referrer" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Latest News - Stock Portal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+<body class="bg-gray-900 text-white">
 
-  <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
-    <div class="max-w-6xl mx-auto flex justify-between items-center px-4 py-3">
-      <a href="index.html" class="flex items-center space-x-2 text-xl font-bold">
-        <span>Stock Portal</span>
-        <img src="logo.png.png" alt="logo" class="w-8 h-8">
-      </a>
-      <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
-    </div>
-  </nav>
+  <!-- Navbar -->
+  <header class="bg-gray-800 p-4 flex justify-between items-center">
+    <a href="index.html" class="text-xl font-bold">📊 Stock Portal</a>
+    <nav>
+      <a href="news.html" class="mx-2">News</a>
+      <a href="ipos_recent.html" class="mx-2">Recent IPOs</a>
+      <a href="ipos_upcoming.html" class="mx-2">Upcoming IPOs</a>
+      <a href="movers.html" class="mx-2">Movers</a>
+      <a href="picks.html" class="mx-2">Picks</a>
+    </nav>
+  </header>
 
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
-      <h2 class="text-xl font-bold mb-4">📢 All News</h2>
-      <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-
-      <!-- Pagination -->
-      <div class="flex justify-center space-x-4 mt-6">
-        <button onclick="prevPage()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300">⬅ Prev</button>
-        <button onclick="nextPage()" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300">Next ➡</button>
-      </div>
-    </section>
+  <!-- Main -->
+  <main class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">📰 Latest Stock Market News</h1>
+    <div id="newsList" class="grid gap-4"></div>
   </main>
 
-  <!-- ABOUT (same as index) -->
-  <section id="about" class="bg-white text-black text-center py-10">
-    <div class="mb-6">
-      <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
-        <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
-      </a>
-      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
-      <p class="mt-1 text-sm text-gray-600">only available on Instagram</p>
-    </div>
+  <!-- Footer -->
+  <footer class="bg-gray-800 p-4 text-center mt-10">
+    <p>© 2025 Stock Portal | Disclaimer: This is only for educational purposes.</p>
+  </footer>
 
-    <div class="my-8">
-      <a href="https://www.srjahir.in/home" target="_blank">
-        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
-      </a>
-    </div>
-
-    <div class="mt-6">
-      <a href="https://pin.it/7IW2OrGOT" target="_blank">
-        <img src="sanskrit.png.png" alt="Sanskrit" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
-      </a>
-    </div>
-
-    <p class="text-sm text-gray-700 mt-6">©️ 2025 SRJ Ahir Technologies</p>
-    <p class="text-xs text-gray-500 mt-4">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
-  </section>
-
-  <!-- Script -->
   <script src="script.js"></script>
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
-    let allNews = [];
-    let currentPage = 1;
-    const perPage = 6;
-
-    async function loadNews() {
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-        allNews = data.news || [];
-        renderPage();
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function renderPage() {
-      const start = (currentPage - 1) * perPage;
-      const end = start + perPage;
-      const list = document.getElementById("newsList");
-      list.innerHTML = "";
-      allNews.slice(start, end).forEach(n => {
-        list.innerHTML += `<div class="p-3 border rounded bg-gray-50 dark:bg-gray-700">
-          <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
-          <div class="text-xs text-gray-500 mt-1">${n.Published || ''}</div>
-        </div>`;
-      });
-    }
-
-    function prevPage() {
-      if (currentPage > 1) {
-        currentPage--;
-        renderPage();
-      }
-    }
-
-    function nextPage() {
-      if ((currentPage * perPage) < allNews.length) {
-        currentPage++;
-        renderPage();
-      }
-    }
-
-    window.onload = loadNews;
-  </script>
 </body>
 </html>
