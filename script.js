@@ -1,4 +1,4 @@
-const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
+const url = "https://script.google.com/macros/s/AKfycbyzP9HHmuL-xxJXcmS67A5ZwvzaRFJ4tHWr64UB8Vz8qFzsKzkqMGkl7ibtux_E3cud/exec";
 
 // ===== Movers Bulletin =====
 function renderMoversTicker(movers) {
