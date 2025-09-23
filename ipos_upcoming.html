@@ -1,60 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Upcoming IPOs - srjahir.in</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' }</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upcoming IPOs</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+<body>
+  <header>
+    <h1>📊 Upcoming IPOs</h1>
+  </header>
 
-  <div class="max-w-6xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4">📊 Upcoming IPOs</h1>
-
-    <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-        <thead class="bg-gray-200 dark:bg-gray-700">
-          <tr>
-            <th class="border px-2 py-1">Name</th>
-            <th class="border px-2 py-1">Listing Date</th>
-            <th class="border px-2 py-1">MCap (Cr)</th>
-            <th class="border px-2 py-1">ROCE</th>
-          </tr>
-        </thead>
-        <tbody id="ipoUpcoming"></tbody>
-      </table>
-    </div>
-    <div class="mt-6">
-      <a href="index.html#ipos" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">← Back to Home</a>
-    </div>
-  </div>
+  <main>
+    <table id="upcomingIposTable" border="1" cellspacing="0" cellpadding="8">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Open Date</th>
+          <th>Close Date</th>
+          <th>Price Band</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button id="viewMoreUpcoming">View More</button>
+  </main>
 
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwnt5ky8hA_XIFVQs3QVPNF6Ad8glSPtic_xAS--SwUtDbKJpp66Wu1knTQXeLSf4RRCw/exec";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
+    let upcomingData = [];
+    let upcomingVisible = 10;
 
-    async function loadUpcoming() {
+    async function loadUpcomingIPOs() {
       try {
-        const res = await fetch(url);
+        const res = await fetch(API_URL);
         const data = await res.json();
-
-        const tbody = document.getElementById("ipoUpcoming");
-        tbody.innerHTML = "";
-        (data.ipos.upcoming || []).forEach(i => {
-          tbody.innerHTML += `<tr>
-            <td class="border px-2 py-1">${i.name||''}</td>
-            <td class="border px-2 py-1">${i.listing||''}</td>
-            <td class="border px-2 py-1">${i.mcap||''}</td>
-            <td class="border px-2 py-1">${i.roce||''}</td>
-          </tr>`;
-        });
+        upcomingData = data.ipos_upcoming || [];
+        renderUpcomingTable();
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching Upcoming IPOs:", err);
       }
     }
 
-    window.onload = loadUpcoming;
+    function renderUpcomingTable() {
+      const tbody = document.querySelector("#upcomingIposTable tbody");
+      tbody.innerHTML = "";
+
+      upcomingData.slice(0, upcomingVisible).forEach(item => {
+        const row = `<tr>
+          <td>${item.Name || "-"}</td>
+          <td>${item["Open Date"] || "-"}</td>
+          <td>${item["Close Date"] || "-"}</td>
+          <td>${item["Price Band"] || "-"}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    document.getElementById("viewMoreUpcoming").addEventListener("click", () => {
+      upcomingVisible += 10;
+      renderUpcomingTable();
+    });
+
+    loadUpcomingIPOs();
   </script>
 </body>
 </html>
