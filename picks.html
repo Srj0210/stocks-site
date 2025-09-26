@@ -2,26 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stock Picks - srjahir.in</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stock Picks - Stock Portal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-  <div class="p-4">
-    <a href="index.html" class="text-blue-400">← Back</a>
-    <h1 class="text-2xl font-bold mb-4">Stock Picks</h1>
-    <input id="searchBox" type="text" placeholder="Search picks..." class="w-full p-2 mb-4 text-black rounded">
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
+    <a href="index.html" class="text-xl font-bold">← Back</a>
+    <span class="font-semibold">Stock Picks</span>
+  </nav>
 
-    <div id="picksList" class="grid sm:grid-cols-2 gap-3">⏳ Data is loading...</div>
-    <div id="pagination" class="flex justify-center mt-4"></div>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div id="picksList" class="grid sm:grid-cols-2 gap-4">⏳ Loading...</div>
+  </main>
 
-    <p class="text-xs text-gray-400 mt-10 text-center">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
-  </div>
+  <footer class="text-center text-xs text-gray-500 py-4">
+    Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
+  </footer>
 
   <script src="common.js"></script>
-  <script src="script-picks.js"></script>
+  <script src="picks.js"></script>
 </body>
 </html>
