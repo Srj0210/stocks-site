@@ -1,73 +1,78 @@
 document.addEventListener("DOMContentLoaded", async () => {
+  showLoader("newsList");
+  showLoader("ipoUpcoming");
+  showLoader("ipoRecent");
+  showLoader("moversList");
+  showLoader("picksList");
+
   try {
-    // ========== NEWS ==========
-    const resNews = await fetch(API_URL + "?type=news");
-    const dataNews = await resNews.json();
-    console.log("News API Response:", dataNews);
-    const newsArray = Array.isArray(dataNews.news) ? dataNews.news : [];
-    document.getElementById("newsList").innerHTML = newsArray.slice(0, 6).map(n => `
-      <div class="p-3 border rounded bg-gray-100 dark:bg-gray-700">
-        <a href="${n.Link}" target="_blank" class="font-semibold hover:underline">${n.Title}</a>
-        <p class="text-xs text-gray-500">${n.Published}</p>
-      </div>
-    `).join("") || "<p>No news available</p>";
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    console.log("Home API Response:", data);
 
-    // ========== IPO UPCOMING ==========
-    const resUpcoming = await fetch(API_URL + "?type=ipos_upcoming");
-    const dataUpcoming = await resUpcoming.json();
-    console.log("Upcoming IPOs API Response:", dataUpcoming);
-    const upcomingArray = Array.isArray(dataUpcoming.ipos) ? dataUpcoming.ipos : [];
-    document.getElementById("ipoUpcoming").innerHTML = upcomingArray.slice(0, 5).map(i => `
-      <tr>
-        <td class="border px-2 py-1">${i.Name}</td>
-        <td class="border px-2 py-1">${i["Issue Type"]}</td>
-        <td class="border px-2 py-1">${i["Price Band"]}</td>
-        <td class="border px-2 py-1">${i["Open Date"]}</td>
-        <td class="border px-2 py-1">${i["Close Date"]}</td>
-        <td class="border px-2 py-1">${i["Issue Size"]}</td>
-      </tr>
-    `).join("") || "<tr><td colspan='6'>No data</td></tr>";
+    // News
+    const news = data.news || [];
+    document.getElementById("newsList").innerHTML =
+      news.slice(0,6).map(n=>`
+        <div class="searchable p-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+          <a href="${n.Link}" target="_blank" class="font-semibold">${n.Title}</a>
+          <p class="text-xs text-gray-400">${n.Published}</p>
+        </div>
+      `).join("");
 
-    // ========== IPO RECENT ==========
-    const resRecent = await fetch(API_URL + "?type=ipos_recent");
-    const dataRecent = await resRecent.json();
-    console.log("Recent IPOs API Response:", dataRecent);
-    const recentArray = Array.isArray(dataRecent.ipos) ? dataRecent.ipos : [];
-    document.getElementById("ipoRecent").innerHTML = recentArray.slice(0, 5).map(i => `
-      <tr>
-        <td class="border px-2 py-1">${i.Name}</td>
-        <td class="border px-2 py-1">${i["Issue Type"]}</td>
-        <td class="border px-2 py-1">${i["Price Band"]}</td>
-        <td class="border px-2 py-1">${i["Open Date"]}</td>
-        <td class="border px-2 py-1">${i["Close Date"]}</td>
-        <td class="border px-2 py-1">${i["Issue Size"]}</td>
-      </tr>
-    `).join("") || "<tr><td colspan='6'>No data</td></tr>";
+    // IPO Upcoming
+    const ipoU = data.ipos_upcoming || [];
+    document.getElementById("ipoUpcoming").innerHTML =
+      ipoU.slice(0,5).map(row=>`
+        <tr>
+          <td class="border px-2 py-1">${row["Name"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Issue Type"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Price Band"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Open Date"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Close Date"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Issue Size"]||"-"}</td>
+        </tr>
+      `).join("");
 
-    // ========== MOVERS ==========
-    const resMovers = await fetch(API_URL + "?type=movers");
-    const dataMovers = await resMovers.json();
-    console.log("Movers API Response:", dataMovers);
-    const moversArray = Array.isArray(dataMovers.movers) ? dataMovers.movers : [];
-    document.getElementById("moversList").innerHTML = moversArray.slice(0, 6).map(m => `
-      <div class="p-3 rounded text-white ${parseFloat(m["Change%"]) > 0 ? "bg-green-600" : (parseFloat(m["Change%"]) < 0 ? "bg-red-600" : "bg-gray-500")}">
-        ${m.Name} ₹${m.CMP} (${m["Change%"]}%)
-      </div>
-    `).join("") || "<p>No movers available</p>";
+    // IPO Recent
+    const ipoR = data.ipos_recent || [];
+    document.getElementById("ipoRecent").innerHTML =
+      ipoR.slice(0,5).map(row=>`
+        <tr>
+          <td class="border px-2 py-1">${row["Name"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Issue Type"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Price Band"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Open Date"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Close Date"]||"-"}</td>
+          <td class="border px-2 py-1">${row["Issue Size"]||"-"}</td>
+        </tr>
+      `).join("");
 
-    // ========== PICKS ==========
-    const resPicks = await fetch(API_URL + "?type=picks");
-    const dataPicks = await resPicks.json();
-    console.log("Picks API Response:", dataPicks);
-    const picksArray = Array.isArray(dataPicks.picks) ? dataPicks.picks : [];
-    document.getElementById("picksList").innerHTML = picksArray.slice(0, 6).map(p => `
-      <div class="p-3 border rounded bg-gray-100 dark:bg-gray-700">
-        <a href="${p.Link}" target="_blank" class="font-semibold hover:underline">${p.Stock}</a>
-        <p class="text-xs text-gray-500">${p.Reason}</p>
-      </div>
-    `).join("") || "<p>No picks available</p>";
+    // Movers
+    const movers = data.movers || [];
+    document.getElementById("moversList").innerHTML =
+      movers.slice(0,6).map(m=>{
+        let color = "bg-gray-200 dark:bg-gray-700";
+        if (parseFloat(m["Change%"]) > 0) color = "bg-green-500 text-white";
+        if (parseFloat(m["Change%"]) < 0) color = "bg-red-500 text-white";
+        return `
+          <div class="searchable ${color} p-2 rounded">
+            ${m.Name} ₹${m.CMP} (${m["Change%"]}%)
+          </div>
+        `;
+      }).join("");
+
+    // Picks
+    const picks = data.picks || [];
+    document.getElementById("picksList").innerHTML =
+      picks.slice(0,6).map(p=>`
+        <div class="searchable p-2 border rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+          <a href="${p.Link}" target="_blank" class="font-semibold">${p.Stock}</a>
+          <p class="text-xs text-gray-400">${p.Reason}</p>
+        </div>
+      `).join("");
 
   } catch (err) {
-    console.error("❌ Error in Home Script:", err);
+    console.error("Home Load Error:", err);
   }
 });
