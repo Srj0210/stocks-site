@@ -1,190 +1,121 @@
+<script>
 // ===== API URL =====
 const url = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
 
-// ===== Pagination Config =====
-const ITEMS_PER_PAGE = 10;
-
-// ===== Generic Pagination Renderer =====
-function renderPagination(containerId, totalItems, currentPage, onPageChange) {
+// ===== Pagination Utility =====
+function paginate(data, pageSize, page, renderFn, containerId, paginationId) {
   const container = document.getElementById(containerId);
+  const pagination = document.getElementById(paginationId);
   if (!container) return;
 
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-  if (totalPages <= 1) {
-    container.innerHTML = "";
-    return;
-  }
+  // Clear old
+  container.innerHTML = "";
 
-  let buttons = "";
-  for (let i = 1; i <= totalPages; i++) {
-    buttons += `<button onclick="(${onPageChange})(${i})"
-      class="mx-1 px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-700'}">
-      ${i}
-    </button>`;
-  }
+  // Current page data
+  const start = (page - 1) * pageSize;
+  const items = data.slice(start, start + pageSize);
 
-  container.innerHTML = `<div class="flex flex-wrap">${buttons}</div>`;
-}
+  // Render items
+  items.forEach(renderFn);
 
-// ===== Search =====
-function searchContent() {
-  let input = document.getElementById("searchBox").value.toLowerCase();
-  document.querySelectorAll(".searchable").forEach(el => {
-    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none";
-  });
-}
-
-// ===== Format Date =====
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr; // fallback
-  const day = String(d.getDate()).padStart(2, "0");
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${day}-${month}-${year}`;
-}
-
-// ===== Main Loader =====
-async function loadData() {
-  try {
-    // Show initial loading message
-    document.querySelectorAll("#newsList, #picksList, #moversList, #ipoRecent, #ipoUpcoming")
-      .forEach(el => { if (el) el.innerHTML = "⏳ Please wait, data will load in ~10 seconds..."; });
-
-    const res = await fetch(url);
-    const data = await res.json();
-
-    // NEWS
-    if (document.getElementById("newsList")) {
-      let currentPage = 1;
-      function renderNews(page = 1) {
-        currentPage = page;
-        const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        const items = data.news.slice(start, end);
-
-        const newsList = document.getElementById("newsList");
-        newsList.innerHTML = items.map(n => `
-          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-800">
-            <a href="${n.Link || '#'}" target="_blank" class="font-medium">${n.Title}</a>
-            <div class="text-xs text-gray-400 mt-1">${n.Published || ""}</div>
-          </div>`).join("");
-
-        renderPagination("newsPagination", data.news.length, currentPage, "renderNews");
-      }
-      window.renderNews = renderNews;
-      renderNews();
+  // Pagination controls
+  if (pagination) {
+    pagination.innerHTML = "";
+    const totalPages = Math.ceil(data.length / pageSize);
+    for (let i = 1; i <= totalPages; i++) {
+      pagination.innerHTML += `
+        <button onclick="paginate(window._data, ${pageSize}, ${i}, ${renderFn.name}, '${containerId}', '${paginationId}')"
+          class="px-3 py-1 mx-1 rounded 
+          ${i === page ? 'bg-blue-600 text-white dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-600 dark:text-white'}">
+          ${i}
+        </button>`;
     }
-
-    // PICKS
-    if (document.getElementById("picksList")) {
-      let currentPage = 1;
-      function renderPicks(page = 1) {
-        currentPage = page;
-        const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        const items = data.picks.slice(start, end);
-
-        const picksList = document.getElementById("picksList");
-        picksList.innerHTML = items.map(p => `
-          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-800">
-            <strong>${p.Stock}</strong>
-            <div class="text-xs mt-1">${p.Reason || ""}</div>
-          </div>`).join("");
-
-        renderPagination("picksPagination", data.picks.length, currentPage, "renderPicks");
-      }
-      window.renderPicks = renderPicks;
-      renderPicks();
-    }
-
-    // MOVERS
-    if (document.getElementById("moversList")) {
-      let currentPage = 1;
-      function renderMovers(page = 1) {
-        currentPage = page;
-        const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        const items = data.movers.slice(start, end);
-
-        const moversList = document.getElementById("moversList");
-        moversList.innerHTML = items.map(m => {
-          const change = m["Change%"] ? parseFloat(m["Change%"]) : 0;
-          const cls = change >= 0
-            ? "bg-green-50 dark:bg-green-900"
-            : "bg-red-50 dark:bg-red-900";
-          return `<tr class="searchable ${cls}">
-            <td class="border px-2 py-1">${m["S.No"] || ""}</td>
-            <td class="border px-2 py-1">${m.Name || ""}</td>
-            <td class="border px-2 py-1">₹${m.CMP || ""}</td>
-            <td class="border px-2 py-1">${m["P/E"] || ""}</td>
-            <td class="border px-2 py-1">${m.MCap || ""}</td>
-            <td class="border px-2 py-1">${m["Change%"] || ""}</td>
-          </tr>`;
-        }).join("");
-
-        renderPagination("moversPagination", data.movers.length, currentPage, "renderMovers");
-      }
-      window.renderMovers = renderMovers;
-      renderMovers();
-    }
-
-    // RECENT IPOs
-    if (document.getElementById("ipoRecent")) {
-      let currentPage = 1;
-      function renderIpoRecent(page = 1) {
-        currentPage = page;
-        const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        const items = data.ipos_recent.slice(start, end);
-
-        const ipoRecent = document.getElementById("ipoRecent");
-        ipoRecent.innerHTML = items.map(i => `
-          <tr class="searchable">
-            <td class="border px-2 py-1">${i.Name || ""}</td>
-            <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
-            <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
-            <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-            <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-            <td class="border px-2 py-1">${i["Issue Size"] || ""}</td>
-          </tr>`).join("");
-
-        renderPagination("ipoRecentPagination", data.ipos_recent.length, currentPage, "renderIpoRecent");
-      }
-      window.renderIpoRecent = renderIpoRecent;
-      renderIpoRecent();
-    }
-
-    // UPCOMING IPOs
-    if (document.getElementById("ipoUpcoming")) {
-      let currentPage = 1;
-      function renderIpoUpcoming(page = 1) {
-        currentPage = page;
-        const start = (page - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        const items = data.ipos_upcoming.slice(start, end);
-
-        const ipoUpcoming = document.getElementById("ipoUpcoming");
-        ipoUpcoming.innerHTML = items.map(i => `
-          <tr class="searchable">
-            <td class="border px-2 py-1">${i.Name || ""}</td>
-            <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
-            <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
-            <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-            <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-            <td class="border px-2 py-1">${i["Issue Size"] || ""}</td>
-          </tr>`).join("");
-
-        renderPagination("ipoUpcomingPagination", data.ipos_upcoming.length, currentPage, "renderIpoUpcoming");
-      }
-      window.renderIpoUpcoming = renderIpoUpcoming;
-      renderIpoUpcoming();
-    }
-
-  } catch (err) {
-    console.error("❌ Error loading data:", err);
   }
 }
 
-window.onload = loadData;
+// ===== Render Functions =====
+
+// News
+function renderNewsItem(n) {
+  const container = document.getElementById("newsList");
+  container.innerHTML += `
+    <div class="searchable p-3 border rounded bg-white dark:bg-gray-800 dark:text-gray-200">
+      <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${n.Published || ""}</div>
+    </div>`;
+}
+
+// IPO (Upcoming / Recent)
+function renderIPO(i) {
+  const container = window._ipoTarget;
+  container.innerHTML += `
+    <tr class="border-b bg-white dark:bg-gray-800 dark:text-gray-200">
+      <td class="border px-2 py-1">${i.Name}</td>
+      <td class="border px-2 py-1">${i.Type}</td>
+      <td class="border px-2 py-1">${i.Price}</td>
+      <td class="border px-2 py-1">${i.Open}</td>
+      <td class="border px-2 py-1">${i.Close}</td>
+      <td class="border px-2 py-1">${i.Size}</td>
+    </tr>`;
+}
+
+// Movers
+function renderMover(m) {
+  const container = document.getElementById("moversList");
+  const change = Number(m.Change?.toString().replace("%","").trim()) || 0;
+  const cls = change >= 0 ? "bg-green-900" : "bg-red-900";
+  container.innerHTML += `
+    <tr class="border-b ${cls} text-white">
+      <td class="border px-2 py-1">${m.Name}</td>
+      <td class="border px-2 py-1">₹${m.CMP}</td>
+      <td class="border px-2 py-1">${m.Volume}</td>
+      <td class="border px-2 py-1">${m.Value}</td>
+      <td class="border px-2 py-1">${change}%</td>
+    </tr>`;
+}
+
+// Picks
+function renderPick(p) {
+  const container = document.getElementById("picksList");
+  container.innerHTML += `
+    <div class="searchable p-3 border rounded bg-white dark:bg-gray-800 dark:text-gray-200">
+      <a href="${p.Link}" target="_blank" class="font-medium">${p.Title}</a>
+      <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">${p.Source || ""}</div>
+    </div>`;
+}
+
+// ===== Load Functions =====
+
+// News
+async function loadNews() {
+  const res = await fetch(url);
+  const data = await res.json();
+  window._data = data.news || [];
+  paginate(window._data, 10, 1, renderNewsItem, "newsList", "newsPagination");
+}
+
+// IPO
+async function loadIPO(type) {
+  const res = await fetch(url);
+  const data = await res.json();
+  window._ipoTarget = document.getElementById(type === "upcoming" ? "ipoUpcoming" : "ipoRecent");
+  window._data = type === "upcoming" ? (data.ipoUpcoming || []) : (data.ipoRecent || []);
+  paginate(window._data, 10, 1, renderIPO, type === "upcoming" ? "ipoUpcoming" : "ipoRecent", "ipoPagination");
+}
+
+// Movers
+async function loadMovers() {
+  const res = await fetch(url);
+  const data = await res.json();
+  window._data = data.movers || [];
+  paginate(window._data, 10, 1, renderMover, "moversList", "moversPagination");
+}
+
+// Picks
+async function loadPicks() {
+  const res = await fetch(url);
+  const data = await res.json();
+  window._data = data.picks || [];
+  paginate(window._data, 10, 1, renderPick, "picksList", "picksPagination");
+}
+</script>
