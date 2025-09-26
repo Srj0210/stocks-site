@@ -21,7 +21,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 
 // ===== SEARCH =====
 function searchContent(){ 
-  let input = document.getElementById("searchBox").value.toLowerCase(); 
+  let input = document.getElementById("searchBox")?.value.toLowerCase() || ""; 
   document.querySelectorAll(".searchable").forEach(el=>{
     el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
   }); 
@@ -30,16 +30,5 @@ function searchContent(){
 // ===== Loader =====
 function showLoader(elId){
   const el=document.getElementById(elId);
-  if(el){el.innerHTML="<p class='text-center text-gray-400'>⏳ Please wait, loading data...</p>";}
-}
-
-// ===== Fetch Helper =====
-async function fetchData(sheetName) {
-  try {
-    const res = await fetch(`${API_URL}?sheet=${sheetName}`);
-    return await res.json();
-  } catch (err) {
-    console.error(`Error fetching ${sheetName}:`, err);
-    return [];
-  }
+  if(el){el.innerHTML="<p class='text-center text-gray-400'>⏳ Loading data, please wait...</p>";}
 }
