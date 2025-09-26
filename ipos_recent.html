@@ -8,36 +8,36 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
 
-  <!-- NAV -->
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
     <a href="index.html" class="text-xl font-bold">← Back</a>
     <span class="font-semibold">Recent IPOs</span>
   </nav>
 
-  <main class="max-w-6xl mx-auto px-4 py-6 overflow-x-auto">
-    <div id="loader" class="text-center text-gray-500 py-4">⏳ Please wait, loading data...</div>
-    <table class="w-full border border-gray-300 dark:border-gray-600 text-sm hidden" id="ipoTable">
-      <thead class="bg-gray-200 dark:bg-gray-700">
-        <tr>
-          <th class="border px-2 py-1">Name</th>
-          <th class="border px-2 py-1">Issue Type</th>
-          <th class="border px-2 py-1">Price Band</th>
-          <th class="border px-2 py-1">Open Date</th>
-          <th class="border px-2 py-1">Close Date</th>
-          <th class="border px-2 py-1">Issue Size</th>
-        </tr>
-      </thead>
-      <tbody id="ipoRecent"></tbody>
-    </table>
-    <div class="flex justify-center mt-6 space-x-2" id="pagination"></div>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search IPOs..."
+      class="w-full px-3 py-2 mb-4 rounded text-black" />
+
+    <div class="overflow-x-auto">
+      <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
+          <tr>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">Issue Type</th>
+            <th class="border px-2 py-1">Price Band</th>
+            <th class="border px-2 py-1">Open Date</th>
+            <th class="border px-2 py-1">Close Date</th>
+            <th class="border px-2 py-1">Issue Size</th>
+          </tr>
+        </thead>
+        <tbody id="ipoRecent">⌛ Please wait, loading data (10s)...</tbody>
+      </table>
+    </div>
   </main>
 
-  <footer class="bg-white dark:bg-gray-800 text-center py-6 mt-10">
-    <p class="text-xs text-gray-500 max-w-2xl mx-auto">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
+  <footer class="text-center text-xs text-gray-500 mt-8">
+    Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
   </footer>
 
   <script src="script.js"></script>
