@@ -12,26 +12,13 @@
   <style>
     html { scroll-behavior: smooth; }
     .ticker-wrap { overflow: hidden; background: #facc15; }
-    .ticker { 
-      display: inline-block; 
-      padding-left: 100%; 
-      white-space: nowrap; 
-      font-weight: bold; 
-    }
+    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; font-weight: bold; }
     #tickerText { animation: tickerNews 80s linear infinite; }
     #moversTicker { animation: tickerMovers 75s linear infinite; }
-
-    @keyframes tickerNews { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-    @keyframes tickerMovers { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
+    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
   </style>
   <script>
-    // Default dark mode
     if (localStorage.theme === 'light') {
       document.documentElement.classList.remove('dark');
     } else {
@@ -40,11 +27,9 @@
     }
     function toggleTheme(){ 
       if(document.documentElement.classList.contains('dark')){
-        document.documentElement.classList.remove('dark'); 
-        localStorage.theme='light';
+        document.documentElement.classList.remove('dark'); localStorage.theme='light';
       } else {
-        document.documentElement.classList.add('dark'); 
-        localStorage.theme='dark';
+        document.documentElement.classList.add('dark'); localStorage.theme='dark';
       } 
     }
   </script>
@@ -171,18 +156,16 @@
       <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
     </div>
 
-    <!-- Sanskrit with link -->
-    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer" aria-label="Open Sanskrit image source (Pinterest)">
+    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
       <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
     </a>
 
-    <!-- Disclaimer -->
     <p class="text-xs text-gray-500 mt-4">
       Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
     </p>
   </section>
 
   <!-- JS -->
-  <script src="script.js"></script>
+  <script src="script-home.js"></script>
 </body>
 </html>
