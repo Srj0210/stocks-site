@@ -1,66 +1,77 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  console.log("Home JS Loaded ✅");
+// script-home.js
 
-  // Helper: Date format DD-MM-YYYY
+document.addEventListener("DOMContentLoaded", async () => {
+  // Common.js se API_URL aata hai
+
   function formatDate(dateStr) {
     if (!dateStr) return "";
     const d = new Date(dateStr);
-    if (isNaN(d)) return dateStr; // fallback
+    if (isNaN(d)) return dateStr;
     return d.toLocaleDateString("en-GB");
   }
 
   try {
-    // Fetch all data once
     const response = await fetch(API_URL);
     const data = await response.json();
     console.log("Home API Response: ", data);
 
     // ===== NEWS TICKER =====
-    const newsTicker = document.getElementById("tickerText");
-    if (newsTicker && Array.isArray(data.news)) {
-      newsTicker.innerHTML = data.news
-        .map((item) => `📰 ${item.Title}`)
-        .join(" | ");
-      // speed control
-      newsTicker.style.animationDuration = "75s";
+    const newsTicker = document.getElementById("news-ticker");
+    if (newsTicker && data.news) {
+      newsTicker.innerHTML = `
+        <div class="ticker-wrapper">
+          <div class="ticker" style="animation: tickerNews 75s linear infinite;">
+            ${data.news
+              .map((item) => `<span class="ticker-item">📰 ${item.Title}</span>`)
+              .join("")}
+          </div>
+        </div>
+      `;
     }
 
     // ===== MOVERS TICKER =====
-    const moversTicker = document.getElementById("moversTicker");
-    if (moversTicker && Array.isArray(data.movers)) {
-      moversTicker.innerHTML = data.movers
-        .map((m) => {
-          let change = parseFloat(m["Change%"] || m.Change || 0);
-          let color =
-            change > 0
-              ? "text-green-400"
-              : change < 0
-              ? "text-red-400"
-              : "text-white";
-          return `<span class="${color}">${m.Name} ₹${m.CMP} (${change}%)</span>`;
-        })
-        .join(" | ");
-      moversTicker.style.animationDuration = "80s";
+    const moversTicker = document.getElementById("movers-ticker");
+    if (moversTicker && data.movers) {
+      moversTicker.innerHTML = `
+        <div class="ticker-wrapper">
+          <div class="ticker" style="animation: tickerMovers 80s linear infinite;">
+            ${data.movers
+              .map((m) => {
+                let change = parseFloat(String(m["Change%"]).replace("%", "").trim() || 0);
+                let color =
+                  change > 0
+                    ? "text-green-400"
+                    : change < 0
+                    ? "text-red-400"
+                    : "text-white";
+                return `<span class="ticker-item ${color}">${m.Name} ₹${m.CMP} (${m["Change%"]})</span>`;
+              })
+              .join("")}
+          </div>
+        </div>
+      `;
     }
 
-    // ===== NEWS SECTION (6 only) =====
+    // ===== NEWS SECTION =====
     const newsList = document.getElementById("newsList");
-    if (newsList && Array.isArray(data.news)) {
-      newsList.innerHTML = "";
-      data.news.slice(0, 6).forEach((n) => {
-        newsList.innerHTML += `
-          <div class="searchable p-3 border rounded bg-gray-800">
-            <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
-            <div class="text-xs text-gray-400 mt-1">${n.Published || ""}</div>
-          </div>`;
-      });
+    if (newsList && data.news) {
+      newsList.innerHTML = data.news
+        .slice(0, 6)
+        .map(
+          (item) => `
+        <div class="p-2 border rounded">
+          <a href="${item.Link}" target="_blank" class="font-semibold hover:underline">${item.Title}</a>
+          <p class="text-xs text-gray-400">${item.Published || ""}</p>
+        </div>
+      `
+        )
+        .join("");
     }
 
     // ===== UPCOMING IPOs =====
     const upcomingTable = document.getElementById("ipoUpcoming");
-    if (upcomingTable && Array.isArray(data.ipos_upcoming)) {
+    if (upcomingTable && data.ipos_upcoming) {
       upcomingTable.innerHTML = data.ipos_upcoming
-        .slice(0, 10)
         .map(
           (ipo) => `
         <tr>
@@ -70,16 +81,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>${formatDate(ipo["Open Date"])}</td>
           <td>${formatDate(ipo["Close Date"])}</td>
           <td>${ipo["Issue Size"]}</td>
-        </tr>`
+        </tr>
+      `
         )
         .join("");
     }
 
     // ===== RECENT IPOs =====
     const recentTable = document.getElementById("ipoRecent");
-    if (recentTable && Array.isArray(data.ipos_recent)) {
+    if (recentTable && data.ipos_recent) {
       recentTable.innerHTML = data.ipos_recent
-        .slice(0, 10)
         .map(
           (ipo) => `
         <tr>
@@ -89,18 +100,19 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>${formatDate(ipo["Open Date"])}</td>
           <td>${formatDate(ipo["Close Date"])}</td>
           <td>${ipo["Issue Size"]}</td>
-        </tr>`
+        </tr>
+      `
         )
         .join("");
     }
 
-    // ===== TOP MOVERS (cards) =====
+    // ===== TOP MOVERS (cards home page) =====
     const moversContainer = document.getElementById("moversList");
-    if (moversContainer && Array.isArray(data.movers)) {
+    if (moversContainer && data.movers) {
       moversContainer.innerHTML = data.movers
         .slice(0, 6)
         .map((m) => {
-          let change = parseFloat(m["Change%"] || m.Change || 0);
+          let change = parseFloat(String(m["Change%"]).replace("%", "").trim() || 0);
           let bg =
             change > 0
               ? "bg-green-600"
@@ -109,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               : "bg-gray-600";
           return `
           <div class="p-2 rounded ${bg}">
-            ${m.Name} ₹${m.CMP} (${change}%)
+            ${m.Name} ₹${m.CMP} (${m["Change%"]})
           </div>`;
         })
         .join("");
@@ -117,15 +129,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ===== STOCK PICKS =====
     const picksContainer = document.getElementById("picksList");
-    if (picksContainer && Array.isArray(data.picks)) {
+    if (picksContainer && data.picks) {
       picksContainer.innerHTML = data.picks
-        .slice(0, 4)
         .map(
           (p) => `
-        <div class="p-2 border rounded bg-gray-800">
-          <p>${p.Stock}</p>
-          <small>${p.Reason}</small>
-        </div>`
+        <div class="p-2 border rounded">
+          <a href="${p.Link}" target="_blank" class="font-semibold hover:underline">${p.Stock}</a>
+          <small class="block text-gray-400">${p.Reason}</small>
+        </div>
+      `
         )
         .join("");
     }
