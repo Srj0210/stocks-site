@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<body class="bg-gray-900 text-gray-200">
 
   <!-- NAV -->
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
@@ -17,12 +17,9 @@
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search IPOs..."
-      class="w-full px-3 py-2 mb-4 rounded text-black" />
-
     <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-        <thead class="bg-gray-200 dark:bg-gray-700">
+      <table class="w-full border border-gray-700 text-sm">
+        <thead class="bg-gray-700">
           <tr>
             <th class="border px-2 py-1">Name</th>
             <th class="border px-2 py-1">Issue Type</th>
@@ -32,10 +29,19 @@
             <th class="border px-2 py-1">Issue Size</th>
           </tr>
         </thead>
-        <tbody id="ipoRecent">Loading...</tbody>
+        <tbody id="ipoRecent"></tbody>
       </table>
     </div>
   </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-center text-gray-400 text-sm py-6 mt-10">
+    <div class="mb-2">
+      <a href="mailto:surajmaitra1996@gmail.com" class="hover:underline">📧 surajmaitra1996@gmail.com</a>
+    </div>
+    <p>©️ 2025 SRJ Ahir Technologies</p>
+    <p class="text-xs mt-2">Disclaimer: This website and its data are for educational purposes only.</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
