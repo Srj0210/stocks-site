@@ -1,21 +1,20 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  showLoader("ipoRecent");
+  showLoader("ipoRecentList");
   try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    const ipos = data.ipos_recent || [];
-    document.getElementById("ipoRecent").innerHTML =
-      ipos.map(row=>`
-        <tr>
-          <td class="border px-2 py-1">${row["Name"]||"-"}</td>
-          <td class="border px-2 py-1">${row["Issue Type"]||"-"}</td>
-          <td class="border px-2 py-1">${row["Price Band"]||"-"}</td>
-          <td class="border px-2 py-1">${row["Open Date"]||"-"}</td>
-          <td class="border px-2 py-1">${row["Close Date"]||"-"}</td>
-          <td class="border px-2 py-1">${row["Issue Size"]||"-"}</td>
-        </tr>
-      `).join("");
-  } catch (err) {
-    console.error(err);
+    const data = await fetchData();
+    paginate("ipoRecentList", data.ipos_recent || [],
+      ipo => `<tr class="searchable">
+                <td>${ipo.Name}</td>
+                <td>${ipo["Issue Type"]}</td>
+                <td>${ipo["Price Band"]}</td>
+                <td>${ipo["Open Date"]}</td>
+                <td>${ipo["Close Date"]}</td>
+                <td>${ipo["Issue Size"]}</td>
+              </tr>`,
+      10
+    );
+  } catch {
+    document.getElementById("ipoRecentList").innerHTML =
+      `<p class="text-red-500">❌ Error loading IPOs</p>`;
   }
 });
