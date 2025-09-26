@@ -24,45 +24,31 @@
   <script src="common.js"></script>
   <script>
     async function loadNews(page=1, perPage=10) {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        const news = data.news || [];
-        
-        const start = (page-1) * perPage;
-        const end = start + perPage;
-        const pageData = news.slice(start, end);
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      const news = data.news || [];
 
-        const newsList = document.getElementById("newsList");
-        newsList.innerHTML = "";
-        pageData.forEach(n => {
-          newsList.innerHTML += `
-            <div class="p-3 border rounded bg-gray-800">
-              <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
-              <div class="text-xs text-gray-400 mt-1">${n.Published || ""}</div>
-            </div>`;
-        });
+      const start = (page-1)*perPage, end = start+perPage;
+      const pageData = news.slice(start,end);
 
-        // pagination
-        const totalPages = Math.ceil(news.length / perPage);
-        const pagination = document.getElementById("pagination");
-        pagination.innerHTML = "";
-        for(let i=1; i<=totalPages; i++){
-          pagination.innerHTML += `<button onclick="loadNews(${i})" class="px-3 py-1 mx-1 rounded ${i===page?'bg-blue-600':'bg-gray-600'}">${i}</button>`;
-        }
-      } catch (err) {
-        console.error("❌ Error loading news:", err);
+      const list = document.getElementById("newsList");
+      list.innerHTML = "";
+      pageData.forEach(n=>{
+        list.innerHTML += `
+          <div class="searchable p-3 border rounded bg-gray-800">
+            <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
+            <div class="text-xs text-gray-400 mt-1">${n.Published||""}</div>
+          </div>`;
+      });
+
+      const totalPages = Math.ceil(news.length/perPage);
+      const pag = document.getElementById("pagination");
+      pag.innerHTML = "";
+      for(let i=1;i<=totalPages;i++){
+        pag.innerHTML += `<button onclick="loadNews(${i})" class="px-3 py-1 mx-1 rounded ${i===page?'bg-blue-600':'bg-gray-600'}">${i}</button>`;
       }
     }
-
-    function searchContent(){ 
-      let input = document.getElementById("searchBox").value.toLowerCase(); 
-      document.querySelectorAll(".p-3").forEach(el=>{
-        el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
-      }); 
-    }
-
-    window.onload = () => loadNews();
+    window.onload=()=>loadNews();
   </script>
 </body>
 </html>
