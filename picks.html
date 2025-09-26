@@ -1,27 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Stock Picks - Stock Portal</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>All Picks - Stock Portal</title>
+  <link rel="icon" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
-  <nav class="bg-blue-900 text-white px-4 py-3 flex justify-between items-center">
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+  <nav class="sticky top-0 bg-blue-900 p-4 flex justify-between items-center">
     <a href="index.html" class="text-lg font-bold">← Back</a>
-    <h1 class="text-lg">Stock Picks</h1>
+    <h1 class="font-semibold">Stock Picks</h1>
   </nav>
 
-  <main class="max-w-4xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" placeholder="Search picks..."
-      class="w-full p-2 border rounded text-black mb-4">
-
-    <div id="picksList">⏳ Please wait, loading data...</div>
-    <div id="pagination" class="flex justify-center mt-6 space-x-2"></div>
+  <main class="max-w-5xl mx-auto p-4">
+    <input id="searchBox" onkeyup="searchContent()" placeholder="Search picks..." class="w-full p-2 rounded mb-4 text-black" />
+    <div id="picksList" class="grid sm:grid-cols-2 gap-4"></div>
+    <div id="footerArea" class="mt-8"></div>
   </main>
 
   <script src="common.js"></script>
-  <script src="script-picks.js"></script>
+  <script>
+    // script-picks.js
+    (async function(){
+      showLoader("picksList");
+      try {
+        const data = await fetchData();
+        console.log("Picks API Response: ", data);
+        const list = document.getElementById("picksList");
+        list.innerHTML = "";
+        const picks = data.picks || [];
+        if (picks.length === 0) {
+          list.innerHTML = `<div class="p-4 text-gray-400">No picks found.</div>`;
+        } else {
+          picks.forEach(p => {
+            const stock = p.Stock || p.stock || "";
+            const reason = p.Reason || p.reason || "";
+            const link = p.Link || p.link || "#";
+            const card = document.createElement("div");
+            card.className = "searchable p-4 bg-gray-800 rounded border border-gray-700";
+            card.innerHTML = `<a href="${link}" target="_blank" class="font-medium text-white">${stock}</a>
+                              <div class="text-xs text-gray-400 mt-2">${reason}</div>`;
+            list.appendChild(card);
+          });
+        }
+      } catch (e) {
+        document.getElementById("picksList").innerHTML = `<div class="p-4 text-red-400">Error loading picks: ${e.message}</div>`;
+        console.error(e);
+      } finally {
+        renderFooter("footerArea");
+      }
+    })();
+  </script>
 </body>
 </html>
