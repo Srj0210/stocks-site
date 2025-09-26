@@ -1,31 +1,29 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  showLoader("moversList");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Top Movers - Stock Portal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-  const movers = await fetchData("movers");
-  console.log("Movers:", movers);
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
+    <a href="index.html" class="text-xl font-bold">← Back</a>
+    <span class="font-semibold">Top Movers</span>
+  </nav>
 
-  if (!movers.length) {
-    document.getElementById("moversList").innerHTML =
-      "<p class='text-center text-red-500'>❌ No movers found</p>";
-    return;
-  }
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <div id="moversList" class="grid sm:grid-cols-2 gap-4">⏳ Loading...</div>
+  </main>
 
-  paginate(
-    "moversList",
-    movers,
-    m => {
-      const change = parseFloat(m["Change%"] || 0);
-      const cls = change > 0
-        ? "bg-green-50 dark:bg-green-900"
-        : change < 0
-        ? "bg-red-50 dark:bg-red-900"
-        : "bg-gray-200 dark:bg-gray-700";
+  <footer class="text-center text-xs text-gray-500 py-4">
+    Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
+  </footer>
 
-      return `
-        <div class="searchable p-3 border rounded ${cls}">
-          <strong>${m.Name}</strong>
-          <span class="text-sm">₹${m.CMP} (${change}%)</span>
-        </div>`;
-    }
-  );
-});
+  <script src="common.js"></script>
+  <script src="movers.js"></script>
+</body>
+</html>
