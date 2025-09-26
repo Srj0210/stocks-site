@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Upcoming IPOs - srjahir.in</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Upcoming IPOs - Stock Portal</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
-  <div class="p-4">
-    <a href="index.html" class="text-blue-400">← Back</a>
-    <h1 class="text-2xl font-bold mb-4">Upcoming IPOs</h1>
-    <input id="searchBox" type="text" placeholder="Search upcoming IPOs..." class="w-full p-2 mb-4 text-black rounded">
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
+    <a href="index.html" class="text-xl font-bold">← Back</a>
+    <span class="font-semibold">Upcoming IPOs</span>
+  </nav>
 
-    <table class="w-full border text-sm">
-      <thead class="bg-gray-700">
+  <main class="max-w-6xl mx-auto px-4 py-6 overflow-x-auto">
+    <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+      <thead class="bg-gray-200 dark:bg-gray-700">
         <tr>
           <th class="border px-2 py-1">Name</th>
           <th class="border px-2 py-1">Issue Type</th>
@@ -24,18 +27,15 @@
           <th class="border px-2 py-1">Issue Size</th>
         </tr>
       </thead>
-      <tbody id="ipoUpcomingList">
-        <tr><td colspan="6" class="text-center p-4">⏳ Data is loading...</td></tr>
-      </tbody>
+      <tbody id="ipoUpcoming">⏳ Loading...</tbody>
     </table>
-    <div id="pagination" class="flex justify-center mt-4"></div>
+  </main>
 
-    <p class="text-xs text-gray-400 mt-10 text-center">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
-  </div>
+  <footer class="text-center text-xs text-gray-500 py-4">
+    Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
+  </footer>
 
   <script src="common.js"></script>
-  <script src="script-ipos_upcoming.js"></script>
+  <script src="ipos_upcoming.js"></script>
 </body>
 </html>
