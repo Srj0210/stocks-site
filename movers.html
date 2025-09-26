@@ -1,72 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Top Movers - Stock Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-900 text-gray-200">
-  <nav class="sticky top-0 bg-blue-900 text-white shadow-md p-4 flex justify-between">
-    <a href="index.html" class="text-xl font-bold">← Back</a>
-    <span class="font-semibold">Top Movers</span>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+  <nav class="bg-blue-900 text-white px-4 py-3 flex justify-between items-center">
+    <a href="index.html" class="text-lg font-bold">← Back</a>
+    <h1 class="text-lg">Top Movers</h1>
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search movers..."
-      class="w-full px-3 py-2 mb-4 rounded text-black" />
+    <input id="searchBox" onkeyup="searchContent()" placeholder="Search movers..."
+      class="w-full p-2 border rounded text-black mb-4">
 
-    <div class="overflow-x-auto">
-      <table class="w-full border border-gray-600 text-sm">
-        <thead class="bg-gray-800">
-          <tr>
-            <th class="border px-2 py-1">S.No</th>
-            <th class="border px-2 py-1">Name</th>
-            <th class="border px-2 py-1">CMP</th>
-            <th class="border px-2 py-1">P/E</th>
-            <th class="border px-2 py-1">MCap</th>
-            <th class="border px-2 py-1">Change%</th>
-          </tr>
-        </thead>
-        <tbody id="moversList"></tbody>
-      </table>
-    </div>
-    <div id="pagination" class="text-center mt-6"></div>
+    <div id="moversTable">⏳ Please wait, loading data...</div>
+    <div id="pagination" class="flex justify-center mt-6 space-x-2"></div>
   </main>
 
   <script src="common.js"></script>
-  <script>
-    async function loadMovers(page=1, perPage=20){
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      const movers = data.movers||[];
-
-      const start=(page-1)*perPage, end=start+perPage;
-      const pageData=movers.slice(start,end);
-
-      const list=document.getElementById("moversList");
-      list.innerHTML="";
-      pageData.forEach(m=>{
-        list.innerHTML+=`
-        <tr class="searchable">
-          <td class="border px-2 py-1">${m["S.No"]||""}</td>
-          <td class="border px-2 py-1">${m.Name||""}</td>
-          <td class="border px-2 py-1">₹${m.CMP||""}</td>
-          <td class="border px-2 py-1">${m["P/E"]||""}</td>
-          <td class="border px-2 py-1">${m.MCap||""}</td>
-          <td class="border px-2 py-1">${m["Change%"]||""}</td>
-        </tr>`;
-      });
-
-      const totalPages=Math.ceil(movers.length/perPage);
-      const pag=document.getElementById("pagination");
-      pag.innerHTML="";
-      for(let i=1;i<=totalPages;i++){
-        pag.innerHTML+=`<button onclick="loadMovers(${i})" class="px-3 py-1 mx-1 rounded ${i===page?'bg-blue-600':'bg-gray-600'}">${i}</button>`;
-      }
-    }
-    window.onload=()=>loadMovers();
-  </script>
+  <script src="script-movers.js"></script>
 </body>
 </html>
