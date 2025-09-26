@@ -37,10 +37,10 @@ function renderMoversTicker(movers) {
   if (!ticker) return;
 
   const text = movers.map(m => {
-    const change = m.Change ? parseFloat(m.Change) : 0;
+    const change = m["Change%"] ? parseFloat(m["Change%"]) : 0;
     const arrow = change >= 0 ? "⬆" : "⬇";
     const cls = change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
-    return `<span class="${cls} font-semibold">${m.Name} ₹${m.CMP} ${arrow} ${m.Change || ""}%</span>`;
+    return `<span class="${cls} font-semibold">${m.Name} ₹${m.CMP} ${arrow} ${change}%</span>`;
   }).join(" | ");
 
   ticker.innerHTML = text;
@@ -114,14 +114,14 @@ async function loadData() {
     if (moversList) {
       moversList.innerHTML = "";
       (data.movers || []).slice(0, 10).forEach(m => {
-        const change = m.Change ? parseFloat(m.Change) : 0;
+        const change = m["Change%"] ? parseFloat(m["Change%"]) : 0;
         const cls = change >= 0
           ? "bg-green-50 dark:bg-green-900"
           : "bg-red-50 dark:bg-red-900";
         moversList.innerHTML += `
           <div class="searchable p-3 border rounded ${cls}">
             <strong>${m.Name}</strong> 
-            <span class="text-sm">₹${m.CMP} (${m.Change || ""}%)</span>
+            <span class="text-sm">₹${m.CMP} (${change}%)</span>
           </div>`;
       });
     }
