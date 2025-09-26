@@ -1,6 +1,6 @@
 // ===== GOOGLE ANALYTICS AUTO-INJECT =====
 (function addAnalytics() {
-  const GA_ID = "G-FJGKC63PF4"; // apna GA ID yaha daalna
+  const GA_ID = "G-FJGKC63PF4"; 
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
     const gaScript = document.createElement("script");
     gaScript.async = true;
@@ -18,7 +18,7 @@
 })();
 
 // ===== API URL =====
-const url = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
+const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
 
 // ===== Date Formatter =====
 function formatDate(dateStr) {
@@ -40,19 +40,20 @@ function renderMoversTicker(movers) {
     const change = m["Change%"] ? parseFloat(m["Change%"]) : 0;
     const arrow = change >= 0 ? "⬆" : "⬇";
     const cls = change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
-    return `<span class="${cls} font-semibold">${m.Name} ₹${m.CMP} ${arrow} ${change}%</span>`;
+    return `<span class="${cls} font-semibold">${m.Name} ₹${m.CMP} ${arrow} ${m["Change%"] || ""}%</span>`;
   }).join(" | ");
 
   ticker.innerHTML = text;
 }
 
-// ===== IPO RENDER (for home + view more) =====
-function renderFullIPOs(data) {
+// ===== IPO RENDER =====
+function renderFullIPOs(data, limit = null) {
   // UPCOMING
   const ipoUpcoming = document.getElementById("ipoUpcoming");
   if (ipoUpcoming) {
     ipoUpcoming.innerHTML = "";
-    (data.ipos_upcoming || []).slice(0, 10).forEach(i => {
+    const rows = limit ? (data.ipos_upcoming || []).slice(0, limit) : (data.ipos_upcoming || []);
+    rows.forEach(i => {
       ipoUpcoming.innerHTML += `<tr class="searchable">
         <td class="border px-2 py-1">${i.Name || ""}</td>
         <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
@@ -68,7 +69,8 @@ function renderFullIPOs(data) {
   const ipoRecent = document.getElementById("ipoRecent");
   if (ipoRecent) {
     ipoRecent.innerHTML = "";
-    (data.ipos_recent || []).slice(0, 10).forEach(i => {
+    const rows = limit ? (data.ipos_recent || []).slice(0, limit) : (data.ipos_recent || []);
+    rows.forEach(i => {
       ipoRecent.innerHTML += `<tr class="searchable">
         <td class="border px-2 py-1">${i.Name || ""}</td>
         <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
@@ -87,54 +89,59 @@ async function loadData() {
     const res = await fetch(url);
     const data = await res.json();
 
-    // IPOs render
-    renderFullIPOs(data);
+    const page = window.location.pathname;
 
-    // ===== News Ticker (all news scroll) =====
-    const ticker = document.getElementById("tickerText");
-    if (ticker) {
-      ticker.innerHTML = (data.news || []).map(n => n.Title).join(" | ");
-    }
-
-    // ===== News Section (only 6 on home) =====
+    // ===== News =====
     const newsList = document.getElementById("newsList");
     if (newsList) {
       newsList.innerHTML = "";
-      (data.news || []).slice(0, 6).forEach(n => {
+      const rows = page.includes("news.html") ? (data.news || []) : (data.news || []).slice(0, 6);
+      rows.forEach(n => {
         newsList.innerHTML += `
-          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+          <div class="searchable p-3 border rounded bg-gray-800">
             <a href="${n.Link || "#"}" target="_blank" class="font-medium">${n.Title}</a>
-            <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
+            <div class="text-xs text-gray-400 mt-1">${n.Published || ""}</div>
           </div>`;
       });
     }
 
-    // ===== Movers (Cards + Ticker) =====
+    // ===== IPOs =====
+    renderFullIPOs(data, page.includes("ipos") ? null : 10);
+
+    // ===== Movers =====
     const moversList = document.getElementById("moversList");
     if (moversList) {
       moversList.innerHTML = "";
-      (data.movers || []).slice(0, 10).forEach(m => {
+      const rows = page.includes("movers.html") ? (data.movers || []) : (data.movers || []).slice(0, 10);
+      rows.forEach(m => {
         const change = m["Change%"] ? parseFloat(m["Change%"]) : 0;
         const cls = change >= 0
           ? "bg-green-50 dark:bg-green-900"
           : "bg-red-50 dark:bg-red-900";
         moversList.innerHTML += `
-          <div class="searchable p-3 border rounded ${cls}">
-            <strong>${m.Name}</strong> 
-            <span class="text-sm">₹${m.CMP} (${change}%)</span>
-          </div>`;
+          <tr class="searchable">
+            <td class="border px-2 py-1">${m["S.No"] || ""}</td>
+            <td class="border px-2 py-1">${m.Name || ""}</td>
+            <td class="border px-2 py-1">₹${m.CMP || ""}</td>
+            <td class="border px-2 py-1">${m["P/E"] || ""}</td>
+            <td class="border px-2 py-1">${m.MCap || ""}</td>
+            <td class="border px-2 py-1">${m["Change%"] || ""}%</td>
+          </tr>`;
       });
     }
 
-    // ✅ Movers Bulletin
-    renderMoversTicker(data.movers);
+    // ✅ Movers Bulletin (sirf index.html pe)
+    if (!page.includes("movers.html")) {
+      renderMoversTicker(data.movers || []);
+    }
 
     // ===== Picks =====
     const picksList = document.getElementById("picksList");
     if (picksList) {
       picksList.innerHTML = "";
-      (data.picks || []).slice(0, 4).forEach(p => {
-        picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+      const rows = page.includes("picks.html") ? (data.picks || []) : (data.picks || []).slice(0, 4);
+      rows.forEach(p => {
+        picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-800">
           <strong>${p.Stock}</strong>
           <div class="text-xs mt-1">${p.Reason || ""}</div>
         </div>`;
@@ -148,7 +155,7 @@ async function loadData() {
 
 // ===== SEARCH =====
 function searchContent(){ 
-  let input = document.getElementById("searchBox").value.toLowerCase(); 
+  let input = document.getElementById("searchBox")?.value.toLowerCase() || "";
   document.querySelectorAll(".searchable").forEach(el=>{
     el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
   }); 
