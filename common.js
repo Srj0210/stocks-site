@@ -21,7 +21,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 
 // ===== SEARCH =====
 function searchContent(){ 
-  let input = document.getElementById("searchBox")?.value.toLowerCase() || ""; 
+  let input = document.getElementById("searchBox").value.toLowerCase(); 
   document.querySelectorAll(".searchable").forEach(el=>{
     el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
   }); 
@@ -30,5 +30,5 @@ function searchContent(){
 // ===== Loader =====
 function showLoader(elId){
   const el=document.getElementById(elId);
-  if(el){el.innerHTML="<p class='text-center text-gray-400'>⏳ Loading data, please wait...</p>";}
+  if(el){el.innerHTML="<p class='text-center text-gray-400'>⏳ Please wait, loading data...</p>";}
 }
