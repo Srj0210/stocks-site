@@ -1,72 +1,41 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Upcoming IPOs - Stock Portal</title>
-  <link rel="icon" href="favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upcoming IPOs - srjahir.in</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
-  <nav class="sticky top-0 bg-blue-900 p-4 flex justify-between items-center">
-    <a href="index.html" class="text-lg font-bold">← Back</a>
-    <h1 class="font-semibold">Upcoming IPOs</h1>
-  </nav>
+<body class="bg-gray-900 text-white">
 
-  <main class="max-w-6xl mx-auto p-4">
-    <input id="searchBox" onkeyup="searchContent()" placeholder="Search upcoming IPOs..." class="w-full p-2 rounded mb-4 text-black" />
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-800 text-left">
-          <tr>
-            <th class="px-2 py-2">Name</th>
-            <th class="px-2 py-2">Issue Type</th>
-            <th class="px-2 py-2">Price Band</th>
-            <th class="px-2 py-2">Open Date</th>
-            <th class="px-2 py-2">Close Date</th>
-            <th class="px-2 py-2">Issue Size</th>
-          </tr>
-        </thead>
-        <tbody id="upcomingBody" class="searchable"></tbody>
-      </table>
-    </div>
+  <div class="p-4">
+    <a href="index.html" class="text-blue-400">← Back</a>
+    <h1 class="text-2xl font-bold mb-4">Upcoming IPOs</h1>
+    <input id="searchBox" type="text" placeholder="Search upcoming IPOs..." class="w-full p-2 mb-4 text-black rounded">
 
-    <div id="footerArea" class="mt-8"></div>
-  </main>
+    <table class="w-full border text-sm">
+      <thead class="bg-gray-700">
+        <tr>
+          <th class="border px-2 py-1">Name</th>
+          <th class="border px-2 py-1">Issue Type</th>
+          <th class="border px-2 py-1">Price Band</th>
+          <th class="border px-2 py-1">Open Date</th>
+          <th class="border px-2 py-1">Close Date</th>
+          <th class="border px-2 py-1">Issue Size</th>
+        </tr>
+      </thead>
+      <tbody id="ipoUpcomingList">
+        <tr><td colspan="6" class="text-center p-4">⏳ Data is loading...</td></tr>
+      </tbody>
+    </table>
+    <div id="pagination" class="flex justify-center mt-4"></div>
+
+    <p class="text-xs text-gray-400 mt-10 text-center">
+      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
+    </p>
+  </div>
 
   <script src="common.js"></script>
-  <script>
-    // script-ipos_upcoming.js
-    (async function(){
-      const body = document.getElementById("upcomingBody");
-      showLoader("upcomingBody");
-      try {
-        const data = await fetchData();
-        console.log("Upcoming IPOs API Response: ", data);
-        const rows = data.ipos_upcoming || [];
-        body.innerHTML = "";
-        if (rows.length === 0) {
-          body.innerHTML = `<tr><td colspan="6" class="p-4 text-gray-400">No upcoming IPOs found.</td></tr>`;
-        } else {
-          rows.forEach(r => {
-            body.innerHTML += `<tr class="border-b border-gray-700">
-              <td class="px-2 py-2">${r.Name || ""}</td>
-              <td class="px-2 py-2">${r["Issue Type"] || ""}</td>
-              <td class="px-2 py-2">${r["Price Band"] || ""}</td>
-              <td class="px-2 py-2">${formatDateToDDMMYYYY(r["Open Date"] || "")}</td>
-              <td class="px-2 py-2">${formatDateToDDMMYYYY(r["Close Date"] || "")}</td>
-              <td class="px-2 py-2">${r["Issue Size"] || ""}</td>
-            </tr>`;
-          });
-        }
-      } catch (e) {
-        body.innerHTML = `<tr><td colspan="6" class="p-4 text-red-400">Error loading IPOs: ${e.message}</td></tr>`;
-        console.error(e);
-      } finally {
-        renderFooter("footerArea");
-      }
-    })();
-  </script>
+  <script src="script-ipos_upcoming.js"></script>
 </body>
 </html>
