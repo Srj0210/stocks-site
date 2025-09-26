@@ -1,6 +1,6 @@
 // ===== GOOGLE ANALYTICS AUTO-INJECT =====
 (function addAnalytics() {
-  const GA_ID = "G-FJGKC63PF4";
+  const GA_ID = "G-FJGKC63PF4"; 
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
     const gaScript = document.createElement("script");
     gaScript.async = true;
@@ -18,7 +18,7 @@
 })();
 
 // ===== API URL =====
-const url = "https://script.google.com/macros/s/AKfycbyShXMyUufctA4ByFSNRKO4b5mMwTO6-C0eeiIqQM-hSSDgGGqw1qa_brHGdMq4pLhm/exec";
+const url = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
 
 // ===== Date Formatter =====
 function formatDate(dateStr) {
@@ -31,174 +31,97 @@ function formatDate(dateStr) {
   return `${day}-${month}-${year}`;
 }
 
-// ===== Movers Bulletin =====
-function renderMoversTicker(movers) {
-  const ticker = document.getElementById("moversTicker");
-  if (!ticker) return;
-
-  const text = movers.map(m => {
-    const change = m.Change ? parseFloat(m.Change) : 0;
-    const arrow = change >= 0 ? "⬆" : "⬇";
-    const cls = change >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400";
-    return `<span class="${cls} font-semibold">${m.Name} ₹${m.CMP} ${arrow} ${m.Change || ""}%</span>`;
-  }).join(" | ");
-
-  ticker.innerHTML = text;
-}
-
-// ===== IPOs Render (Home + View More) =====
-function renderFullIPOs(data) {
-  // UPCOMING
-  const ipoUpcoming = document.getElementById("ipoUpcoming");
-  if (ipoUpcoming) {
-    ipoUpcoming.innerHTML = "";
-    (data.ipos_upcoming || []).forEach(i => {
-      ipoUpcoming.innerHTML += `<tr class="searchable">
-        <td class="border px-2 py-1">${i.Name || ""}</td>
-        <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
-        <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
-        <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-        <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-        <td class="border px-2 py-1">${i["Issue Size"] || ""}</td>
-      </tr>`;
-    });
-  }
-
-  // RECENT
-  const ipoRecent = document.getElementById("ipoRecent");
-  if (ipoRecent) {
-    ipoRecent.innerHTML = "";
-    (data.ipos_recent || []).forEach(i => {
-      ipoRecent.innerHTML += `<tr class="searchable">
-        <td class="border px-2 py-1">${i.Name || ""}</td>
-        <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
-        <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
-        <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
-        <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
-        <td class="border px-2 py-1">${i["Issue Size"] || ""}</td>
-      </tr>`;
-    });
-  }
-}
-
-// ===== Movers Render (View More) =====
-function renderMovers(movers) {
-  const moversTable = document.getElementById("moversTable");
-  if (moversTable) {
-    moversTable.innerHTML = "";
-    (movers || []).forEach(m => {
-      const change = m.Change ? parseFloat(m.Change) : 0;
-      const cls = change >= 0 ? "text-green-600" : "text-red-600";
-      moversTable.innerHTML += `<tr class="searchable">
-        <td class="border px-2 py-1">${m["S.No"] || ""}</td>
-        <td class="border px-2 py-1">${m.Name || ""}</td>
-        <td class="border px-2 py-1">${m.CMP || ""}</td>
-        <td class="border px-2 py-1">${m["P/E"] || ""}</td>
-        <td class="border px-2 py-1">${m.MCap || ""}</td>
-        <td class="border px-2 py-1 ${cls}">${m.Change || ""}%</td>
-      </tr>`;
-    });
-  }
-}
-
-// ===== Picks Render (View More) =====
-function renderPicks(picks) {
-  const picksTable = document.getElementById("picksTable");
-  if (picksTable) {
-    picksTable.innerHTML = "";
-    (picks || []).forEach(p => {
-      picksTable.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <strong>${p.Stock || ""}</strong>
-        <div class="text-xs mt-1">${p.Reason || ""}</div>
-      </div>`;
-    });
-  }
-}
-
-// ===== News Render (View More) =====
-function renderNews(news) {
-  const newsList = document.getElementById("newsList");
-  if (newsList) {
-    newsList.innerHTML = "";
-    (news || []).forEach(n => {
-      newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-        <a href="${n.Link || "#"}" target="_blank" class="font-medium">${n.Title}</a>
-        <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
-      </div>`;
-    });
-  }
-}
-
 // ===== MAIN LOAD FUNCTION =====
 async function loadData() {
   try {
+    document.body.insertAdjacentHTML("afterbegin", 
+      `<div id="loadingMsg" class="text-center p-2 bg-yellow-200 dark:bg-yellow-600 text-black dark:text-white">
+        ⏳ Please wait, loading data (10s)...
+      </div>`
+    );
+
     const res = await fetch(url);
     const data = await res.json();
+    document.getElementById("loadingMsg")?.remove();
 
-    // IPOs
-    renderFullIPOs(data);
-
-    // News Ticker (all news)
+    // ===== NEWS =====
     const ticker = document.getElementById("tickerText");
-    if (ticker) {
-      ticker.innerHTML = (data.news || []).map(n => n.Title).join(" | ");
-    }
+    if (ticker) ticker.innerHTML = (data.news || []).map(n => n.Title).join(" | ");
 
-    // News (Home page only 6)
     const newsList = document.getElementById("newsList");
-    if (newsList && document.title.toLowerCase().includes("home")) {
+    if (newsList) {
       newsList.innerHTML = "";
-      (data.news || []).slice(0, 6).forEach(n => {
-        newsList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
-          <a href="${n.Link || "#"}" target="_blank" class="font-medium">${n.Title}</a>
-          <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
-        </div>`;
+      let limit = document.title.includes("All News") ? data.news.length : 6;
+      (data.news || []).slice(0, limit).forEach(n => {
+        newsList.innerHTML += `
+          <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+            <a href="${n.Link || "#"}" target="_blank" class="font-medium">${n.Title}</a>
+            <div class="text-xs text-gray-500 mt-1">${n.Published || ""}</div>
+          </div>`;
       });
     }
 
-    // Movers (Home cards)
+    // ===== IPO UPCOMING =====
+    const ipoUpcoming = document.getElementById("ipoUpcoming");
+    if (ipoUpcoming) {
+      ipoUpcoming.innerHTML = "";
+      let limit = document.title.includes("Upcoming IPOs") ? data.ipos_upcoming.length : 10;
+      (data.ipos_upcoming || []).slice(0, limit).forEach(i => {
+        ipoUpcoming.innerHTML += `<tr class="searchable">
+          <td class="border px-2 py-1">${i.Name || ""}</td>
+          <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
+          <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
+          <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
+          <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
+          <td class="border px-2 py-1">${i["Issue Size"] || ""}</td>
+        </tr>`;
+      });
+    }
+
+    // ===== IPO RECENT =====
+    const ipoRecent = document.getElementById("ipoRecent");
+    if (ipoRecent) {
+      ipoRecent.innerHTML = "";
+      let limit = document.title.includes("Recent IPOs") ? data.ipos_recent.length : 10;
+      (data.ipos_recent || []).slice(0, limit).forEach(i => {
+        ipoRecent.innerHTML += `<tr class="searchable">
+          <td class="border px-2 py-1">${i.Name || ""}</td>
+          <td class="border px-2 py-1">${i["Issue Type"] || ""}</td>
+          <td class="border px-2 py-1">${i["Price Band"] || ""}</td>
+          <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
+          <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
+          <td class="border px-2 py-1">${i["Issue Size"] || ""}</td>
+        </tr>`;
+      });
+    }
+
+    // ===== MOVERS =====
     const moversList = document.getElementById("moversList");
     if (moversList) {
       moversList.innerHTML = "";
-      (data.movers || []).slice(0, 10).forEach(m => {
-        const change = m.Change ? parseFloat(m.Change) : 0;
-        const cls = change >= 0
-          ? "bg-green-50 dark:bg-green-900"
-          : "bg-red-50 dark:bg-red-900";
-        moversList.innerHTML += `<div class="searchable p-3 border rounded ${cls}">
-          <strong>${m.Name}</strong>
-          <span class="text-sm">₹${m.CMP} (${m.Change || ""}%)</span>
-        </div>`;
+      let limit = document.title.includes("Top Movers") ? data.movers.length : 10;
+      (data.movers || []).slice(0, limit).forEach(m => {
+        const change = m["Change%"] ? parseFloat(m["Change%"]) : 0;
+        const cls = change >= 0 ? "bg-green-50 dark:bg-green-900" : "bg-red-50 dark:bg-red-900";
+        moversList.innerHTML += `
+          <div class="searchable p-3 border rounded ${cls}">
+            <strong>${m.Name}</strong> 
+            <span class="text-sm">₹${m.CMP} (${m["Change%"] || "0"}%)</span>
+          </div>`;
       });
     }
 
-    // Movers Bulletin
-    renderMoversTicker(data.movers);
-
-    // Picks (Home cards)
+    // ===== PICKS =====
     const picksList = document.getElementById("picksList");
     if (picksList) {
       picksList.innerHTML = "";
-      (data.picks || []).slice(0, 4).forEach(p => {
+      let limit = document.title.includes("Stock Picks") ? data.picks.length : 4;
+      (data.picks || []).slice(0, limit).forEach(p => {
         picksList.innerHTML += `<div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
           <strong>${p.Stock}</strong>
           <div class="text-xs mt-1">${p.Reason || ""}</div>
         </div>`;
       });
-    }
-
-    // ===== View More Pages =====
-    if (document.title.toLowerCase().includes("news")) {
-      renderNews(data.news);
-    }
-    if (document.title.toLowerCase().includes("ipo")) {
-      renderFullIPOs(data);
-    }
-    if (document.title.toLowerCase().includes("mover")) {
-      renderMovers(data.movers);
-    }
-    if (document.title.toLowerCase().includes("pick")) {
-      renderPicks(data.picks);
     }
 
   } catch (err) {
