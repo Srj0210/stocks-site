@@ -1,56 +1,73 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  // News
-  showLoader("newsList");
-  let news = await fetchData("News");
-  document.getElementById("newsList").innerHTML = news.slice(0,6).map(n=>`
-    <a href="${n.Link}" target="_blank" class="searchable block p-3 rounded bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-600">
-      <h3 class="font-semibold">${n.Title}</h3>
-      <p class="text-sm text-gray-500">${n.Published}</p>
-    </a>`).join("");
+  try {
+    // ========== NEWS ==========
+    const resNews = await fetch(API_URL + "?type=news");
+    const dataNews = await resNews.json();
+    console.log("News API Response:", dataNews);
+    const newsArray = Array.isArray(dataNews.news) ? dataNews.news : [];
+    document.getElementById("newsList").innerHTML = newsArray.slice(0, 6).map(n => `
+      <div class="p-3 border rounded bg-gray-100 dark:bg-gray-700">
+        <a href="${n.Link}" target="_blank" class="font-semibold hover:underline">${n.Title}</a>
+        <p class="text-xs text-gray-500">${n.Published}</p>
+      </div>
+    `).join("") || "<p>No news available</p>";
 
-  // Upcoming IPOs
-  showLoader("ipoUpcoming");
-  let iposUpcoming = await fetchData("IPOs_Upcoming");
-  document.getElementById("ipoUpcoming").innerHTML = iposUpcoming.slice(0,5).map(i=>`
-    <tr class="searchable">
-      <td class="border px-2 py-1">${i.Name}</td>
-      <td class="border px-2 py-1">${i["Issue Type"]}</td>
-      <td class="border px-2 py-1">${i["Price Band"]}</td>
-      <td class="border px-2 py-1">${i["Open Date"]}</td>
-      <td class="border px-2 py-1">${i["Close Date"]}</td>
-      <td class="border px-2 py-1">${i["Issue Size"]}</td>
-    </tr>`).join("");
+    // ========== IPO UPCOMING ==========
+    const resUpcoming = await fetch(API_URL + "?type=ipos_upcoming");
+    const dataUpcoming = await resUpcoming.json();
+    console.log("Upcoming IPOs API Response:", dataUpcoming);
+    const upcomingArray = Array.isArray(dataUpcoming.ipos) ? dataUpcoming.ipos : [];
+    document.getElementById("ipoUpcoming").innerHTML = upcomingArray.slice(0, 5).map(i => `
+      <tr>
+        <td class="border px-2 py-1">${i.Name}</td>
+        <td class="border px-2 py-1">${i["Issue Type"]}</td>
+        <td class="border px-2 py-1">${i["Price Band"]}</td>
+        <td class="border px-2 py-1">${i["Open Date"]}</td>
+        <td class="border px-2 py-1">${i["Close Date"]}</td>
+        <td class="border px-2 py-1">${i["Issue Size"]}</td>
+      </tr>
+    `).join("") || "<tr><td colspan='6'>No data</td></tr>";
 
-  // Recent IPOs
-  showLoader("ipoRecent");
-  let iposRecent = await fetchData("IPOs_Recent");
-  document.getElementById("ipoRecent").innerHTML = iposRecent.slice(0,5).map(i=>`
-    <tr class="searchable">
-      <td class="border px-2 py-1">${i.Name}</td>
-      <td class="border px-2 py-1">${i["Issue Type"]}</td>
-      <td class="border px-2 py-1">${i["Price Band"]}</td>
-      <td class="border px-2 py-1">${i["Open Date"]}</td>
-      <td class="border px-2 py-1">${i["Close Date"]}</td>
-      <td class="border px-2 py-1">${i["Issue Size"]}</td>
-    </tr>`).join("");
+    // ========== IPO RECENT ==========
+    const resRecent = await fetch(API_URL + "?type=ipos_recent");
+    const dataRecent = await resRecent.json();
+    console.log("Recent IPOs API Response:", dataRecent);
+    const recentArray = Array.isArray(dataRecent.ipos) ? dataRecent.ipos : [];
+    document.getElementById("ipoRecent").innerHTML = recentArray.slice(0, 5).map(i => `
+      <tr>
+        <td class="border px-2 py-1">${i.Name}</td>
+        <td class="border px-2 py-1">${i["Issue Type"]}</td>
+        <td class="border px-2 py-1">${i["Price Band"]}</td>
+        <td class="border px-2 py-1">${i["Open Date"]}</td>
+        <td class="border px-2 py-1">${i["Close Date"]}</td>
+        <td class="border px-2 py-1">${i["Issue Size"]}</td>
+      </tr>
+    `).join("") || "<tr><td colspan='6'>No data</td></tr>";
 
-  // Movers
-  showLoader("moversList");
-  let movers = await fetchData("GainersLosers");
-  document.getElementById("moversList").innerHTML = movers.slice(0,6).map(m=>{
-    let change = parseFloat(m["Change%"]);
-    let color = change > 0 ? "bg-green-500" : (change < 0 ? "bg-red-500" : "bg-gray-400");
-    return `<div class="searchable p-3 rounded text-white ${color}">
-      ${m.Name} ₹${m.CMP} (${m["Change%"]}%)
-    </div>`;
-  }).join("");
+    // ========== MOVERS ==========
+    const resMovers = await fetch(API_URL + "?type=movers");
+    const dataMovers = await resMovers.json();
+    console.log("Movers API Response:", dataMovers);
+    const moversArray = Array.isArray(dataMovers.movers) ? dataMovers.movers : [];
+    document.getElementById("moversList").innerHTML = moversArray.slice(0, 6).map(m => `
+      <div class="p-3 rounded text-white ${parseFloat(m["Change%"]) > 0 ? "bg-green-600" : (parseFloat(m["Change%"]) < 0 ? "bg-red-600" : "bg-gray-500")}">
+        ${m.Name} ₹${m.CMP} (${m["Change%"]}%)
+      </div>
+    `).join("") || "<p>No movers available</p>";
 
-  // Picks
-  showLoader("picksList");
-  let picks = await fetchData("Picks");
-  document.getElementById("picksList").innerHTML = picks.slice(0,6).map(p=>`
-    <a href="${p.Link}" target="_blank" class="searchable block p-3 rounded bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-600">
-      <h3 class="font-semibold">${p.Stock}</h3>
-      <p class="text-sm text-gray-500">${p.Reason}</p>
-    </a>`).join("");
+    // ========== PICKS ==========
+    const resPicks = await fetch(API_URL + "?type=picks");
+    const dataPicks = await resPicks.json();
+    console.log("Picks API Response:", dataPicks);
+    const picksArray = Array.isArray(dataPicks.picks) ? dataPicks.picks : [];
+    document.getElementById("picksList").innerHTML = picksArray.slice(0, 6).map(p => `
+      <div class="p-3 border rounded bg-gray-100 dark:bg-gray-700">
+        <a href="${p.Link}" target="_blank" class="font-semibold hover:underline">${p.Stock}</a>
+        <p class="text-xs text-gray-500">${p.Reason}</p>
+      </div>
+    `).join("") || "<p>No picks available</p>";
+
+  } catch (err) {
+    console.error("❌ Error in Home Script:", err);
+  }
 });
