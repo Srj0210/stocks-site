@@ -1,42 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Recent IPOs - Stock Portal</title>
+  <link rel="icon" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
-  <nav class="bg-blue-900 text-white px-4 py-3 flex justify-between items-center">
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+  <nav class="sticky top-0 bg-blue-900 p-4 flex justify-between items-center">
     <a href="index.html" class="text-lg font-bold">← Back</a>
-    <h1 class="text-lg">Recent IPOs</h1>
+    <h1 class="font-semibold">Recent IPOs</h1>
   </nav>
 
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" placeholder="Search recent IPOs..."
-      class="w-full p-2 border rounded text-black mb-4">
-
+  <main class="max-w-6xl mx-auto p-4">
+    <input id="searchBox" onkeyup="searchContent()" placeholder="Search IPOs..." class="w-full p-2 rounded mb-4 text-black" />
     <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-        <thead class="bg-gray-200 dark:bg-gray-700">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-800 text-left">
           <tr>
-            <th class="border px-2 py-1">Name</th>
-            <th class="border px-2 py-1">Issue Type</th>
-            <th class="border px-2 py-1">Price Band</th>
-            <th class="border px-2 py-1">Open Date</th>
-            <th class="border px-2 py-1">Close Date</th>
-            <th class="border px-2 py-1">Issue Size</th>
+            <th class="px-2 py-2">Name</th>
+            <th class="px-2 py-2">Issue Type</th>
+            <th class="px-2 py-2">Price Band</th>
+            <th class="px-2 py-2">Open Date</th>
+            <th class="px-2 py-2">Close Date</th>
+            <th class="px-2 py-2">Issue Size</th>
           </tr>
         </thead>
-        <tbody id="ipoRecent"></tbody>
+        <tbody id="recentBody" class="searchable"></tbody>
       </table>
     </div>
 
-    <div id="pagination" class="flex justify-center mt-6 space-x-2"></div>
+    <div id="footerArea" class="mt-8"></div>
   </main>
 
   <script src="common.js"></script>
-  <script src="script-ipo-recent.js"></script>
+  <script>
+    // script-ipos_recent.js
+    (async function(){
+      const body = document.getElementById("recentBody");
+      showLoader("recentBody");
+      try {
+        const data = await fetchData();
+        console.log("Recent IPOs API Response: ", data);
+        const rows = data.ipos_recent || [];
+        body.innerHTML = "";
+        if (rows.length === 0) {
+          body.innerHTML = `<tr><td colspan="6" class="p-4 text-gray-400">No recent IPOs found.</td></tr>`;
+        } else {
+          rows.forEach(r => {
+            body.innerHTML += `<tr class="border-b border-gray-700">
+              <td class="px-2 py-2">${r.Name || ""}</td>
+              <td class="px-2 py-2">${r["Issue Type"] || ""}</td>
+              <td class="px-2 py-2">${r["Price Band"] || ""}</td>
+              <td class="px-2 py-2">${formatDateToDDMMYYYY(r["Open Date"] || r["Listing Date"] || "")}</td>
+              <td class="px-2 py-2">${formatDateToDDMMYYYY(r["Close Date"] || "")}</td>
+              <td class="px-2 py-2">${r["Issue Size"] || ""}</td>
+            </tr>`;
+          });
+        }
+      } catch (e) {
+        body.innerHTML = `<tr><td colspan="6" class="p-4 text-red-400">Error loading IPOs: ${e.message}</td></tr>`;
+        console.error(e);
+      } finally {
+        renderFooter("footerArea");
+      }
+    })();
+  </script>
 </body>
 </html>
