@@ -4,33 +4,51 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Stock Picks - Stock Portal</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
-  <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
+<body class="bg-gray-900 text-gray-200">
+  <nav class="sticky top-0 bg-blue-900 text-white shadow-md p-4 flex justify-between">
     <a href="index.html" class="text-xl font-bold">← Back</a>
     <span class="font-semibold">Stock Picks</span>
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" 
-      placeholder="Search picks..."
-      class="w-full px-3 py-2 mb-4 rounded text-black dark:text-white dark:bg-gray-700" />
+    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search picks..."
+      class="w-full px-3 py-2 mb-4 rounded text-black" />
 
-    <div id="picksList" class="grid sm:grid-cols-2 gap-4">⏳ Please wait, loading data...</div>
-    <div id="picksPagination" class="flex justify-center mt-4"></div>
+    <div id="picksList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+    <div id="pagination" class="text-center mt-6"></div>
   </main>
 
-  <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 mb-4">
-    Disclaimer: This website and its data are for educational purposes only.  
-    All rights reserved by respective owners.
-  </p>
+  <script src="common.js"></script>
+  <script>
+    async function loadPicks(page=1, perPage=10){
+      const res=await fetch(API_URL);
+      const data=await res.json();
+      const picks=data.picks||[];
 
-  <script src="script-view.js"></script>
-  <script>window.onload = loadPicks;</script>
+      const start=(page-1)*perPage,end=start+perPage;
+      const pageData=picks.slice(start,end);
+
+      const list=document.getElementById("picksList");
+      list.innerHTML="";
+      pageData.forEach(p=>{
+        list.innerHTML+=`
+          <div class="searchable p-3 border rounded bg-gray-800">
+            <strong>${p.Stock}</strong>
+            <div class="text-xs mt-1 text-gray-400">${p.Reason||""}</div>
+          </div>`;
+      });
+
+      const totalPages=Math.ceil(picks.length/perPage);
+      const pag=document.getElementById("pagination");
+      pag.innerHTML="";
+      for(let i=1;i<=totalPages;i++){
+        pag.innerHTML+=`<button onclick="loadPicks(${i})" class="px-3 py-1 mx-1 rounded ${i===page?'bg-blue-600':'bg-gray-600'}">${i}</button>`;
+      }
+    }
+    window.onload=()=>loadPicks();
+  </script>
 </body>
 </html>
