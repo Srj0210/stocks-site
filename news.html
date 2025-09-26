@@ -4,33 +4,65 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>All News - Stock Portal</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
-  <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
+<body class="bg-gray-900 text-gray-200">
+  <nav class="sticky top-0 bg-blue-900 text-white shadow-md p-4 flex justify-between">
     <a href="index.html" class="text-xl font-bold">← Back</a>
     <span class="font-semibold">All News</span>
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" 
-      placeholder="Search news..."
-      class="w-full px-3 py-2 mb-4 rounded text-black dark:text-white dark:bg-gray-700" />
+    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search news..."
+      class="w-full px-3 py-2 mb-4 rounded text-black" />
 
-    <div id="newsList" class="grid sm:grid-cols-2 gap-4">⏳ Please wait, loading data...</div>
-    <div id="newsPagination" class="flex justify-center mt-4"></div>
+    <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+    <div id="pagination" class="text-center mt-6"></div>
   </main>
 
-  <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 mb-4">
-    Disclaimer: This website and its data are for educational purposes only.  
-    All rights reserved by respective owners.
-  </p>
+  <script src="common.js"></script>
+  <script>
+    async function loadNews(page=1, perPage=10) {
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const news = data.news || [];
+        
+        const start = (page-1) * perPage;
+        const end = start + perPage;
+        const pageData = news.slice(start, end);
 
-  <script src="script-view.js"></script>
-  <script>window.onload = loadNews;</script>
+        const newsList = document.getElementById("newsList");
+        newsList.innerHTML = "";
+        pageData.forEach(n => {
+          newsList.innerHTML += `
+            <div class="p-3 border rounded bg-gray-800">
+              <a href="${n.Link}" target="_blank" class="font-medium">${n.Title}</a>
+              <div class="text-xs text-gray-400 mt-1">${n.Published || ""}</div>
+            </div>`;
+        });
+
+        // pagination
+        const totalPages = Math.ceil(news.length / perPage);
+        const pagination = document.getElementById("pagination");
+        pagination.innerHTML = "";
+        for(let i=1; i<=totalPages; i++){
+          pagination.innerHTML += `<button onclick="loadNews(${i})" class="px-3 py-1 mx-1 rounded ${i===page?'bg-blue-600':'bg-gray-600'}">${i}</button>`;
+        }
+      } catch (err) {
+        console.error("❌ Error loading news:", err);
+      }
+    }
+
+    function searchContent(){ 
+      let input = document.getElementById("searchBox").value.toLowerCase(); 
+      document.querySelectorAll(".p-3").forEach(el=>{
+        el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
+      }); 
+    }
+
+    window.onload = () => loadNews();
+  </script>
 </body>
 </html>
