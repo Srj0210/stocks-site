@@ -1,23 +1,22 @@
-async function loadRecentIPOPage(){
-  showLoader("ipoRecent");
-  try{
-    const res=await fetch(API_URL);
-    const data=await res.json();
-    const table=document.getElementById("ipoRecent");
-    if(table){
-      table.innerHTML="";
-      (data.ipos_recent||[]).forEach(i=>{
-        table.innerHTML+=`
-          <tr class="searchable">
-            <td class="border px-2 py-1">${i.Name||""}</td>
-            <td class="border px-2 py-1">${i["Issue Type"]||""}</td>
-            <td class="border px-2 py-1">${i["Price Band"]||""}</td>
-            <td class="border px-2 py-1">${i["Open Date"]||""}</td>
-            <td class="border px-2 py-1">${i["Close Date"]||""}</td>
-            <td class="border px-2 py-1">${i["Issue Size"]||""}</td>
-          </tr>`;
-      });
-    }
-  }catch(err){console.error("❌ Recent IPO load error:",err);}
+// ===== script-ipo-recent.js =====
+async function loadRecentIPOs() {
+  const tbody = document.getElementById("recentIPOs");
+  showLoader("recentWrapper", "⏳ Loading recent IPOs...");
+  try {
+    const data = await fetchAPI();
+    const rows = data.ipos_recent || [];
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    rows.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.className = "searchable";
+      tr.innerHTML = `<td>${r.Name||""}</td><td>${r["Issue Type"]||""}</td><td>${r["Price Band"]||""}</td>
+                      <td>${formatDate(r["Open Date"])}</td><td>${formatDate(r["Close Date"])}</td><td>${r["Issue Size"]||""}</td>`;
+      tbody.appendChild(tr);
+    });
+  } catch (e) {
+    if (document.getElementById("recentWrapper")) document.getElementById("recentWrapper").innerHTML = `<p class="text-red-400">Failed to load recent IPOs.</p>`;
+  }
 }
-window.onload=loadRecentIPOPage;
+
+window.addEventListener("load", loadRecentIPOs);
