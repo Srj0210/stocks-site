@@ -107,21 +107,22 @@ async function loadHome() {
       });
     }
 
-    // === Movers (10 only) ===
-    const moversList = document.getElementById("moversList");
-    if (moversList) {
-      moversList.innerHTML = "";
-      (data.movers || []).slice(0, 10).forEach(m => {
-        const change = parseFloat(m.Change || 0);
-        const cls = change >= 0
-          ? "bg-green-900 text-white"
-          : "bg-red-900 text-white";
-        moversList.innerHTML += `
-          <div class="p-2 rounded ${cls}">
-            <strong>${m.Name}</strong> ₹${m.CMP} (${change}%)
-          </div>`;
-      });
-    }
+ // Movers (10)
+const moversList = document.getElementById("moversList");
+if (moversList) {
+  moversList.innerHTML = "";
+  (data.movers || []).slice(0, 10).forEach(m => {
+    const change = parseFloat(m.Change || 0);
+    const cls = change >= 0 ? "bg-green-800" : "bg-red-800";
+    const sign = change >= 0 ? "+" : "";
+    moversList.innerHTML += `
+      <div class="p-3 rounded ${cls} text-white">
+        <div class="font-semibold">${m.Name}</div>
+        <div class="text-sm">₹${m.CMP} (${sign}${change}%)</div>
+        <div class="text-xs text-gray-200">Vol: ${m.Volume} | Val: ${m.Value}</div>
+      </div>`;
+  });
+}
 
     // === Movers Ticker ===
     renderMoversTicker(data.movers);
