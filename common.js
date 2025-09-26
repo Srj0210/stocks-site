@@ -1,5 +1,5 @@
 // ===== API URL =====
-const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbywczzXfGXecbi3hdcQzBej0cW6jEt-KJ4wiaeHw6Ngg9IBm2mxj752ZNGp0rw_gyxX/exec";
 
 // ===== Google Analytics =====
 (function addAnalytics() {
