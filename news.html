@@ -8,10 +8,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
   <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-blue-900 text-white shadow-md p-4 flex justify-between">
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
     <a href="index.html" class="text-xl font-bold">← Back</a>
     <span class="font-semibold">All News</span>
   </nav>
@@ -20,8 +20,16 @@
     <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search news..."
       class="w-full px-3 py-2 mb-4 rounded text-black" />
 
-    <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
+    <div id="loader" class="text-center text-gray-500 py-4">⏳ Please wait, loading data...</div>
+    <div id="newsList" class="grid sm:grid-cols-2 gap-4 hidden"></div>
+    <div class="flex justify-center mt-6 space-x-2" id="pagination"></div>
   </main>
+
+  <footer class="bg-white dark:bg-gray-800 text-center py-6 mt-10">
+    <p class="text-xs text-gray-500 max-w-2xl mx-auto">
+      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
+    </p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
