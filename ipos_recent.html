@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
   <!-- NAV -->
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
@@ -17,8 +17,9 @@
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search recent IPOs..."
-      class="w-full px-3 py-2 mb-4 rounded text-black" />
+    <input id="searchBox" onkeyup="searchContent()" type="text" 
+      placeholder="Search recent IPOs..."
+      class="w-full px-3 py-2 mb-4 rounded text-black dark:text-white dark:bg-gray-700" />
 
     <div class="overflow-x-auto">
       <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
@@ -35,14 +36,15 @@
         <tbody id="ipoRecent">⏳ Please wait, loading data...</tbody>
       </table>
     </div>
-
-    <div id="ipoRecentPagination" class="flex justify-center mt-4"></div>
+    <div id="ipoPagination" class="flex justify-center mt-4"></div>
   </main>
 
-  <footer class="text-center py-6 text-xs text-gray-400">
-    Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-  </footer>
+  <p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 mb-4">
+    Disclaimer: This website and its data are for educational purposes only.  
+    All rights reserved by respective owners.
+  </p>
 
   <script src="script-view.js"></script>
+  <script>window.onload = () => loadIPO("recent");</script>
 </body>
 </html>
