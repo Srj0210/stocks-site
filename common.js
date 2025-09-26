@@ -87,3 +87,15 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   container.after(pagination);
   renderPage(1);
 }
+
+// ====== Fetch Data (NEW) ======
+async function fetchData(type) {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    return data[type] || [];
+  } catch (e) {
+    console.error(`❌ Error fetching ${type}:`, e);
+    return [];
+  }
+}
