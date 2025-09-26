@@ -1,60 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stock Picks - srjahir.in</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Top Movers - Stock Portal</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbxaiHFAvUOfC5gnP49B0yDLXjD-FE-En-guZUFW8b7n4QptLPRKKiJ_u9l2QSKA1l1D/exec";
-
-    async function loadPicks() {
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        const tbody = document.getElementById("picksTable");
-        tbody.innerHTML = "";
-
-        (data.picks || []).forEach(row => {
-          tbody.innerHTML += `
-            <tr>
-              <td class="border px-2 py-1">${row["Stock"] || ""}</td>
-              <td class="border px-2 py-1">${row["Reason"] || ""}</td>
-              <td class="border px-2 py-1">
-                <a href="${row["Link"] || "#"}" target="_blank" class="text-blue-600 hover:underline">Read More</a>
-              </td>
-            </tr>
-          `;
-        });
-      } catch (err) {
-        console.error("Error loading picks:", err);
-      }
-    }
-
-    window.onload = loadPicks;
-  </script>
+  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<body class="bg-gray-900 text-gray-200">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
+    <a href="index.html" class="text-xl font-bold">← Back</a>
+    <span class="font-semibold">Top Movers</span>
+  </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold mb-4">🎯 Stock Picks</h1>
-    
     <div class="overflow-x-auto">
-      <table class="w-full border border-gray-300 dark:border-gray-700 text-sm">
-        <thead class="bg-gray-200 dark:bg-gray-700">
+      <table class="w-full border border-gray-700 text-sm">
+        <thead class="bg-gray-700">
           <tr>
-            <th class="border px-2 py-1">Stock</th>
-            <th class="border px-2 py-1">Reason</th>
-            <th class="border px-2 py-1">Link</th>
+            <th class="border px-2 py-1">S.No</th>
+            <th class="border px-2 py-1">Name</th>
+            <th class="border px-2 py-1">CMP</th>
+            <th class="border px-2 py-1">P/E</th>
+            <th class="border px-2 py-1">MCap</th>
+            <th class="border px-2 py-1">Change%</th>
           </tr>
         </thead>
-        <tbody id="picksTable">
-          <tr><td colspan="3" class="text-center p-3">Loading...</td></tr>
-        </tbody>
+        <tbody id="moversList"></tbody>
       </table>
     </div>
   </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gray-800 text-center text-gray-400 text-sm py-6 mt-10">
+    <div class="mb-2">
+      <a href="mailto:surajmaitra1996@gmail.com" class="hover:underline">📧 surajmaitra1996@gmail.com</a>
+    </div>
+    <p>©️ 2025 SRJ Ahir Technologies</p>
+    <p class="text-xs mt-2">Disclaimer: This website and its data are for educational purposes only.</p>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
