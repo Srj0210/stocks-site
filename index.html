@@ -11,12 +11,35 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    .ticker-wrap { overflow: hidden; background: #facc15; }
-    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; font-weight: bold; }
-    #tickerText { animation: tickerNews 80s linear infinite; }
-    #moversTicker { animation: tickerMovers 75s linear infinite; }
-    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+
+    /* Common ticker wrapper */
+    .ticker-wrap { 
+      overflow: hidden; 
+      white-space: nowrap; 
+      font-weight: bold; 
+    }
+    .ticker { 
+      display: inline-block; 
+      padding-left: 100%; 
+      white-space: nowrap; 
+    }
+    #tickerText { animation: tickerNews 40s linear infinite; }
+    #moversTicker { animation: tickerMovers 45s linear infinite; }
+
+    /* Animations */
+    @keyframes tickerNews { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
+    @keyframes tickerMovers { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
+
+    /* Colors for movers */
+    .ticker-green { color: #10B981; }   /* +ve */
+    .ticker-red { color: #EF4444; }     /* -ve */
+    .ticker-neutral { color: #F3F4F6; } /* 0% */
   </style>
   <script>
     if (localStorage.theme === 'light') {
@@ -27,9 +50,11 @@
     }
     function toggleTheme(){ 
       if(document.documentElement.classList.contains('dark')){
-        document.documentElement.classList.remove('dark'); localStorage.theme='light';
+        document.documentElement.classList.remove('dark'); 
+        localStorage.theme='light';
       } else {
-        document.documentElement.classList.add('dark'); localStorage.theme='dark';
+        document.documentElement.classList.add('dark'); 
+        localStorage.theme='dark';
       } 
     }
   </script>
@@ -58,7 +83,7 @@
   </nav>
 
   <!-- News Ticker -->
-  <div class="ticker-wrap dark:bg-yellow-600 dark:text-white">
+  <div class="ticker-wrap dark:bg-yellow-600 dark:text-white bg-yellow-400">
     <div class="ticker" id="tickerText">Loading latest news...</div>
   </div>
 
