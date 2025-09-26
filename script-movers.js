@@ -1,12 +1,17 @@
 document.addEventListener("DOMContentLoaded", async () => {
   showLoader("moversList");
-  let movers = await fetchData("GainersLosers");
-  document.getElementById("moversList").innerHTML = movers.map(m=>{
-    let change = parseFloat(m["Change%"]);
-    let color = change > 0 ? "text-green-500" : (change < 0 ? "text-red-500" : "text-gray-400");
-    return `<div class="searchable p-2 border-b border-gray-600">
-      ${m.Name} ₹${m.CMP} | P/E: ${m["P/E"]} | MCap: ${m.MCap} | 
-      <span class="${color}">${m["Change%"]}%</span>
-    </div>`;
-  }).join("");
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    const movers = data.movers || [];
+    document.getElementById("moversList").innerHTML =
+      movers.map(m=>{
+        let color = "bg-gray-200 dark:bg-gray-700";
+        if (parseFloat(m["Change%"]) > 0) color = "bg-green-500 text-white";
+        if (parseFloat(m["Change%"]) < 0) color = "bg-red-500 text-white";
+        return `<div class="searchable ${color} p-2 m-1 rounded">${m.Name} ₹${m.CMP} (${m["Change%"]}%)</div>`;
+      }).join("");
+  } catch (err) {
+    console.error(err);
+  }
 });
