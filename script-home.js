@@ -1,55 +1,44 @@
-// script-home.js
-
 document.addEventListener("DOMContentLoaded", async () => {
-  // Common.js se API_URL aata hai
+  // API_URL common.js se aayega
+  console.log("✅ script-home.js loaded, using API:", API_URL);
 
+  // Helper: Date format DD-MM-YYYY
   function formatDate(dateStr) {
     if (!dateStr) return "";
     const d = new Date(dateStr);
-    if (isNaN(d)) return dateStr;
+    if (isNaN(d)) return dateStr; // fallback
     return d.toLocaleDateString("en-GB");
   }
 
   try {
+    // Fetch all data once
     const response = await fetch(API_URL);
     const data = await response.json();
-    console.log("Home API Response: ", data);
+    console.log("Home API Response:", data);
 
     // ===== NEWS TICKER =====
-    const newsTicker = document.getElementById("news-ticker");
+    const newsTicker = document.getElementById("tickerText");
     if (newsTicker && data.news) {
-      newsTicker.innerHTML = `
-        <div class="ticker-wrapper">
-          <div class="ticker" style="animation: tickerNews 75s linear infinite;">
-            ${data.news
-              .map((item) => `<span class="ticker-item">📰 ${item.Title}</span>`)
-              .join("")}
-          </div>
-        </div>
-      `;
+      newsTicker.innerHTML = data.news
+        .map((item) => `📰 ${item.Title}`)
+        .join(" • ");
     }
 
     // ===== MOVERS TICKER =====
-    const moversTicker = document.getElementById("movers-ticker");
+    const moversTicker = document.getElementById("moversTicker");
     if (moversTicker && data.movers) {
-      moversTicker.innerHTML = `
-        <div class="ticker-wrapper">
-          <div class="ticker" style="animation: tickerMovers 80s linear infinite;">
-            ${data.movers
-              .map((m) => {
-                let change = parseFloat(String(m["Change%"]).replace("%", "").trim() || 0);
-                let color =
-                  change > 0
-                    ? "text-green-400"
-                    : change < 0
-                    ? "text-red-400"
-                    : "text-white";
-                return `<span class="ticker-item ${color}">${m.Name} ₹${m.CMP} (${m["Change%"]})</span>`;
-              })
-              .join("")}
-          </div>
-        </div>
-      `;
+      moversTicker.innerHTML = data.movers
+        .map((m) => {
+          let change = parseFloat(m["Change%"]);
+          let color =
+            change > 0
+              ? "text-green-400"
+              : change < 0
+              ? "text-red-400"
+              : "text-white";
+          return `<span class="${color}">${m.Name} ₹${m.CMP} (${change}%)</span>`;
+        })
+        .join(" • ");
     }
 
     // ===== NEWS SECTION =====
@@ -58,12 +47,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       newsList.innerHTML = data.news
         .slice(0, 6)
         .map(
-          (item) => `
+          (n) => `
         <div class="p-2 border rounded">
-          <a href="${item.Link}" target="_blank" class="font-semibold hover:underline">${item.Title}</a>
-          <p class="text-xs text-gray-400">${item.Published || ""}</p>
-        </div>
-      `
+          <a href="${n.Link}" target="_blank" class="font-semibold hover:underline">
+            ${n.Title}
+          </a>
+          <p class="text-xs text-gray-400">${n.Published}</p>
+        </div>`
         )
         .join("");
     }
@@ -81,8 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>${formatDate(ipo["Open Date"])}</td>
           <td>${formatDate(ipo["Close Date"])}</td>
           <td>${ipo["Issue Size"]}</td>
-        </tr>
-      `
+        </tr>`
         )
         .join("");
     }
@@ -100,8 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <td>${formatDate(ipo["Open Date"])}</td>
           <td>${formatDate(ipo["Close Date"])}</td>
           <td>${ipo["Issue Size"]}</td>
-        </tr>
-      `
+        </tr>`
         )
         .join("");
     }
@@ -112,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       moversContainer.innerHTML = data.movers
         .slice(0, 6)
         .map((m) => {
-          let change = parseFloat(String(m["Change%"]).replace("%", "").trim() || 0);
+          let change = parseFloat(m["Change%"]);
           let bg =
             change > 0
               ? "bg-green-600"
@@ -120,8 +108,8 @@ document.addEventListener("DOMContentLoaded", async () => {
               ? "bg-red-600"
               : "bg-gray-600";
           return `
-          <div class="p-2 rounded ${bg}">
-            ${m.Name} ₹${m.CMP} (${m["Change%"]})
+          <div class="p-2 rounded text-white ${bg}">
+            ${m.Name} ₹${m.CMP} (${change}%)
           </div>`;
         })
         .join("");
@@ -134,10 +122,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         .map(
           (p) => `
         <div class="p-2 border rounded">
-          <a href="${p.Link}" target="_blank" class="font-semibold hover:underline">${p.Stock}</a>
-          <small class="block text-gray-400">${p.Reason}</small>
-        </div>
-      `
+          <a href="${p.Link}" target="_blank" class="font-semibold hover:underline">
+            ${p.Stock}
+          </a>
+          <p class="text-xs text-gray-400">${p.Reason}</p>
+        </div>`
         )
         .join("");
     }
