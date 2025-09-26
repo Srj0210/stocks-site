@@ -1,9 +1,17 @@
 document.addEventListener("DOMContentLoaded", async () => {
   showLoader("picksList");
-  let picks = await fetchData("Picks");
-  document.getElementById("picksList").innerHTML = picks.map(p=>`
-    <a href="${p.Link}" target="_blank" class="searchable block p-3 border-b border-gray-600 hover:bg-gray-700">
-      <h3 class="font-semibold">${p.Stock}</h3>
-      <p class="text-sm text-gray-400">${p.Reason}</p>
-    </a>`).join("");
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    const picks = data.picks || [];
+    document.getElementById("picksList").innerHTML =
+      picks.map(p=>`
+        <div class="searchable p-2 border-b">
+          <a href="${p.Link}" target="_blank" class="font-semibold">${p.Stock}</a>
+          <p class="text-xs text-gray-400">${p.Reason}</p>
+        </div>
+      `).join("");
+  } catch (err) {
+    console.error(err);
+  }
 });
