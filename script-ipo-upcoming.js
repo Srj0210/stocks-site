@@ -1,20 +1,26 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  showLoader("ipoUpcomingList");
-  try {
-    const data = await fetchData();
-    paginate("ipoUpcomingList", data.ipos_upcoming || [],
-      ipo => `<tr class="searchable">
-                <td>${ipo.Name}</td>
-                <td>${ipo["Issue Type"]}</td>
-                <td>${ipo["Price Band"]}</td>
-                <td>${ipo["Open Date"]}</td>
-                <td>${ipo["Close Date"]}</td>
-                <td>${ipo["Issue Size"]}</td>
-              </tr>`,
-      10
-    );
-  } catch {
-    document.getElementById("ipoUpcomingList").innerHTML =
-      `<p class="text-red-500">❌ Error loading IPOs</p>`;
+  showLoader("ipoUpcoming");
+
+  const ipos = await fetchData("ipos_upcoming");
+  console.log("Upcoming IPOs:", ipos);
+
+  if (!ipos.length) {
+    document.getElementById("ipoUpcoming").innerHTML =
+      "<tr><td colspan='6' class='text-center text-red-500'>❌ No upcoming IPOs found</td></tr>";
+    return;
   }
+
+  paginate(
+    "ipoUpcoming",
+    ipos,
+    i => `
+      <tr class="searchable">
+        <td class="border px-2 py-1">${i.Name}</td>
+        <td class="border px-2 py-1">${i["Issue Type"]}</td>
+        <td class="border px-2 py-1">${i["Price Band"]}</td>
+        <td class="border px-2 py-1">${formatDate(i["Open Date"])}</td>
+        <td class="border px-2 py-1">${formatDate(i["Close Date"])}</td>
+        <td class="border px-2 py-1">${i["Issue Size"]}</td>
+      </tr>`
+  );
 });
