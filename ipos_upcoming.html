@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Upcoming IPOs - Stock Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' };</script>
 </head>
-<body class="bg-gray-900 text-gray-200">
-  <nav class="sticky top-0 bg-blue-900 text-white shadow-md p-4 flex justify-between">
-    <a href="index.html" class="text-xl font-bold">← Back</a>
-    <span class="font-semibold">Upcoming IPOs</span>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+  <nav class="bg-blue-900 text-white px-4 py-3 flex justify-between items-center">
+    <a href="index.html" class="text-lg font-bold">← Back</a>
+    <h1 class="text-lg">Upcoming IPOs</h1>
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search IPOs..."
-      class="w-full px-3 py-2 mb-4 rounded text-black" />
+    <input id="searchBox" onkeyup="searchContent()" placeholder="Search upcoming IPOs..."
+      class="w-full p-2 border rounded text-black mb-4">
 
     <div class="overflow-x-auto">
-      <table class="w-full border border-gray-600 text-sm">
-        <thead class="bg-gray-800">
+      <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
+        <thead class="bg-gray-200 dark:bg-gray-700">
           <tr>
             <th class="border px-2 py-1">Name</th>
             <th class="border px-2 py-1">Issue Type</th>
@@ -32,41 +32,11 @@
         <tbody id="ipoUpcoming"></tbody>
       </table>
     </div>
-    <div id="pagination" class="text-center mt-6"></div>
+
+    <div id="pagination" class="flex justify-center mt-6 space-x-2"></div>
   </main>
 
   <script src="common.js"></script>
-  <script>
-    async function loadUpcoming(page=1, perPage=10){
-      const res=await fetch(API_URL);
-      const data=await res.json();
-      const ipos=data.ipos_upcoming||[];
-
-      const start=(page-1)*perPage,end=start+perPage;
-      const pageData=ipos.slice(start,end);
-
-      const list=document.getElementById("ipoUpcoming");
-      list.innerHTML="";
-      pageData.forEach(i=>{
-        list.innerHTML+=`
-          <tr class="searchable">
-            <td class="border px-2 py-1">${i.Name||""}</td>
-            <td class="border px-2 py-1">${i["Issue Type"]||""}</td>
-            <td class="border px-2 py-1">${i["Price Band"]||""}</td>
-            <td class="border px-2 py-1">${i["Open Date"]||""}</td>
-            <td class="border px-2 py-1">${i["Close Date"]||""}</td>
-            <td class="border px-2 py-1">${i["Issue Size"]||""}</td>
-          </tr>`;
-      });
-
-      const totalPages=Math.ceil(ipos.length/perPage);
-      const pag=document.getElementById("pagination");
-      pag.innerHTML="";
-      for(let i=1;i<=totalPages;i++){
-        pag.innerHTML+=`<button onclick="loadUpcoming(${i})" class="px-3 py-1 mx-1 rounded ${i===page?'bg-blue-600':'bg-gray-600'}">${i}</button>`;
-      }
-    }
-    window.onload=()=>loadUpcoming();
-  </script>
+  <script src="script-ipo-upcoming.js"></script>
 </body>
 </html>
