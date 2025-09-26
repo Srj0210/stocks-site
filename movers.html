@@ -1,89 +1,62 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Top Movers - Stock Portal</title>
-  <link rel="icon" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>tailwind.config = { darkMode: 'class' };</script>
-  <style>
-    /* table striping for readability */
-    table tr:nth-child(odd) { background: rgba(255,255,255,0.02); }
-  </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen">
-  <nav class="sticky top-0 bg-blue-900 p-4 flex justify-between items-center">
-    <a href="index.html" class="text-lg font-bold">← Back</a>
-    <h1 class="font-semibold">Top Movers</h1>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 bg-blue-900 dark:bg-gray-800 p-4 flex justify-between text-white">
+    <a href="index.html" class="font-bold">← Back</a>
+    <span>All Movers</span>
   </nav>
 
-  <main class="max-w-6xl mx-auto p-4">
-    <input id="searchBox" onkeyup="searchContent()" placeholder="Search movers..." class="w-full p-2 rounded mb-4 text-black" />
-    <div id="moversTableWrap" class="overflow-x-auto">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-800 text-left">
-          <tr>
-            <th class="px-2 py-2">S.No</th>
-            <th class="px-2 py-2">Name</th>
-            <th class="px-2 py-2">CMP</th>
-            <th class="px-2 py-2">P/E</th>
-            <th class="px-2 py-2">MCap</th>
-            <th class="px-2 py-2">Change %</th>
-          </tr>
-        </thead>
-        <tbody id="moversBody" class="searchable"></tbody>
-      </table>
-    </div>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <input id="searchBox" onkeyup="searchContent()" type="text"
+      placeholder="Search movers..." class="w-full px-3 py-2 mb-4 rounded text-black" />
 
-    <div id="footerArea" class="mt-8"></div>
+    <div id="moversList" class="grid sm:grid-cols-2 gap-4">⏳ Loading...</div>
   </main>
+
+  <!-- Disclaimer -->
+  <footer class="text-center text-xs text-gray-500 p-4">
+    Disclaimer: This website and its data are for educational purposes only. 
+    All rights reserved by respective owners.
+  </footer>
 
   <script src="common.js"></script>
   <script>
-    // script-movers.js
-    (async function(){
-      const body = document.getElementById("moversBody");
-      showLoader("moversTableWrap");
+    document.addEventListener("DOMContentLoaded", async () => {
+      showLoader("moversList");
       try {
-        const data = await fetchData();
-        console.log("Movers API Response: ", data);
-        const movers = data.movers || [];
-        body.innerHTML = "";
-        if (movers.length === 0) {
-          body.innerHTML = `<tr><td colspan="6" class="p-4 text-gray-400">No movers found.</td></tr>`;
-        } else {
-          movers.forEach((m, idx) => {
-            const sno = m["S.No"] || m.SNo || (idx+1);
-            const name = m.Name || m.name || "";
-            const cmp = m.CMP || m.cmp || "";
-            const pe = m["P/E"] || m.pe || "";
-            const mcap = m.MCap || m.mcap || "";
-            const changeRaw = safeGetChange(m);
-            const changeNum = parseFloat(changeRaw) || 0;
-            const changeText = changeRaw ? (changeRaw + "%") : "";
-            let changeClass = "text-white";
-            if (!isNaN(changeNum)) {
-              changeClass = changeNum > 0 ? "text-green-400" : (changeNum < 0 ? "text-red-400" : "text-white");
-            }
-            const tr = document.createElement("tr");
-            tr.className = "border-b border-gray-700";
-            tr.innerHTML = `<td class="px-2 py-2">${sno}</td>
-                            <td class="px-2 py-2 font-medium">${name}</td>
-                            <td class="px-2 py-2">${cmp}</td>
-                            <td class="px-2 py-2">${pe}</td>
-                            <td class="px-2 py-2">${mcap}</td>
-                            <td class="px-2 py-2 ${changeClass}">${changeText}</td>`;
-            body.appendChild(tr);
-          });
-        }
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        console.log("Movers Page Data:", data);
+
+        paginate("moversList", data.movers || data["GainersLosers"], 
+          m => {
+            const change = parseFloat(m["Change%"] || 0);
+            const cls = change > 0 
+              ? "bg-green-900" 
+              : change < 0 
+              ? "bg-red-900" 
+              : "bg-gray-700";
+            return `<div class="searchable p-3 border rounded ${cls}">
+                      <strong>${m.Name}</strong> 
+                      <span>₹${m.CMP} (${change}%)</span>
+                    </div>`;
+          }, 
+          12 // per page
+        );
       } catch (e) {
-        body.innerHTML = `<tr><td colspan="6" class="p-4 text-red-400">Error loading movers: ${e.message}</td></tr>`;
-        console.error(e);
-      } finally {
-        renderFooter("footerArea");
+        document.getElementById("moversList").innerHTML = 
+          `<p class="text-center text-red-500">❌ Error loading movers</p>`;
       }
-    })();
+    });
   </script>
 </body>
 </html>
