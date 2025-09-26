@@ -1,100 +1,89 @@
-// common.js
-// Central helpers, analytics, API URL, search & loader
-
+// ====== API URL ======
 const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
-const GA_ID = "G-FJGKC63PF4";
 
-// ===== Google Analytics auto-inject =====
+// ====== Analytics Auto Inject ======
 (function addAnalytics() {
-  if (!GA_ID) return;
+  const GA_ID = "G-FJGKC63PF4";
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
-    const gaScript = document.createElement("script");
-    gaScript.async = true;
-    gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-    document.head.appendChild(gaScript);
-    gaScript.onload = () => {
+    const ga = document.createElement("script");
+    ga.async = true;
+    ga.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+    document.head.appendChild(ga);
+    ga.onload = () => {
       window.dataLayer = window.dataLayer || [];
       function gtag(){ dataLayer.push(arguments); }
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', GA_ID);
-      console.log("✅ GA loaded");
+      gtag("js", new Date());
+      gtag("config", GA_ID);
     };
   }
 })();
 
-// ===== helpers =====
-function formatDateToDDMMYYYY(dateStr) {
+// ====== Loader ======
+function showLoader(elId) {
+  const el = document.getElementById(elId);
+  if (el) el.innerHTML = `<p class="text-center text-gray-400">⏳ Loading...</p>`;
+}
+
+// ====== Search ======
+function searchContent(){ 
+  let input = document.getElementById("searchBox")?.value.toLowerCase(); 
+  document.querySelectorAll(".searchable").forEach(el=>{
+    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
+  }); 
+}
+
+// ====== Date Formatter ======
+function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (isNaN(d.getTime())) return dateStr;
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${dd}-${mm}-${yyyy}`;
+  if (isNaN(d)) return dateStr;
+  return d.toLocaleDateString("en-GB");
 }
 
-function safeGetChange(obj) {
-  // Try to get change percent from variants
-  const keys = ["Change%", "Change", "% Change", "Change (1d)", "1day"];
-  for (const k of keys) {
-    if (obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== "") {
-      // strip % if present
-      return String(obj[k]).replace("%","").trim();
+// ====== Ticker Renderer ======
+function renderNewsTicker(news) {
+  const ticker = document.getElementById("tickerText");
+  if (!ticker) return;
+  ticker.innerHTML = (news || [])
+    .map(n => `📰 ${n.Title}`)
+    .join(" | ");
+}
+
+function renderMoversTicker(movers) {
+  const ticker = document.getElementById("moversTicker");
+  if (!ticker) return;
+  ticker.innerHTML = (movers || [])
+    .map(m => {
+      const change = parseFloat(m["Change%"] || 0);
+      const color = change > 0 ? "text-green-400" : change < 0 ? "text-red-400" : "text-white";
+      return `<span class="${color} font-semibold">${m.Name} ₹${m.CMP} (${change}%)</span>`;
+    })
+    .join(" | ");
+}
+
+// ====== Pagination Helper ======
+function paginate(containerId, data, renderItem, itemsPerPage = 10) {
+  let currentPage = 1;
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const pagination = document.createElement("div");
+  pagination.className = "flex justify-center mt-4 space-x-2";
+
+  function renderPage(page) {
+    currentPage = page;
+    container.innerHTML = data
+      .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+      .map(renderItem)
+      .join("");
+
+    pagination.innerHTML = "";
+    const totalPages = Math.ceil(data.length / itemsPerPage);
+    for (let i = 1; i <= totalPages; i++) {
+      pagination.innerHTML += `<button onclick="renderPage(${i})"
+        class="px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-300'}">${i}</button>`;
     }
   }
-  // sometimes Change is inside "diff" or "percent"
-  if (obj.diff) return String(obj.diff).replace("%","").trim();
-  if (obj.percentChange) return String(obj.percentChange).replace("%","").trim();
-  return "";
-}
 
-function showLoader(containerId) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = `<div class="p-6 text-center text-gray-400">⏳ Loading data, please wait...</div>`;
-}
-
-function hideLoaderIfEmpty(containerId) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  if (el.innerHTML.trim() === "") {
-    el.innerHTML = `<div class="p-6 text-center text-gray-400">No data found.</div>`;
-  }
-}
-
-// search: hide/show elements with class "searchable"
-function searchContent(){
-  const box = document.getElementById("searchBox");
-  if (!box) return;
-  const input = box.value.toLowerCase();
-  document.querySelectorAll(".searchable").forEach(el => {
-    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none";
-  });
-}
-
-// fetch wrapper with timeout
-async function fetchData(url = API_URL, timeout = 15000) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  try {
-    const r = await fetch(url, { signal: controller.signal, cache: "no-store" });
-    clearTimeout(id);
-    if (!r.ok) throw new Error("Network response not ok: " + r.status);
-    return await r.json();
-  } catch (e) {
-    clearTimeout(id);
-    throw e;
-  }
-}
-
-// common footer (for view-more pages)
-function renderFooter(containerId) {
-  const c = document.getElementById(containerId);
-  if(!c) return;
-  c.innerHTML = `
-    <div class="mt-8 text-center">
-      
-      <p class="text-xs text-gray-500 mt-2">Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.</p>
-    </div>`;
+  container.after(pagination);
+  renderPage(1);
 }
