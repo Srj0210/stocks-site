@@ -1,17 +1,22 @@
 document.addEventListener("DOMContentLoaded", async () => {
   showLoader("picksList");
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    const picks = data.picks || [];
+
+  const picks = await fetchData("picks");
+  console.log("Picks:", picks);
+
+  if (!picks.length) {
     document.getElementById("picksList").innerHTML =
-      picks.map(p=>`
-        <div class="searchable p-2 border-b">
-          <a href="${p.Link}" target="_blank" class="font-semibold">${p.Stock}</a>
-          <p class="text-xs text-gray-400">${p.Reason}</p>
-        </div>
-      `).join("");
-  } catch (err) {
-    console.error(err);
+      "<p class='text-center text-red-500'>❌ No picks found</p>";
+    return;
   }
+
+  paginate(
+    "picksList",
+    picks,
+    p => `
+      <div class="searchable p-3 border rounded bg-gray-50 dark:bg-gray-700">
+        <strong>${p.Stock}</strong>
+        <div class="text-xs mt-1">${p.Reason}</div>
+      </div>`
+  );
 });
