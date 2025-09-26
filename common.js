@@ -3,7 +3,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 
 // ===== Google Analytics =====
 (function addAnalytics() {
-  const GA_ID = "G-FJGKC63PF4"; // apna GA ID yaha daalna
+  const GA_ID = "G-FJGKC63PF4";
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
     const gaScript = document.createElement("script");
     gaScript.async = true;
@@ -15,7 +15,20 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
       function gtag(){ dataLayer.push(arguments); }
       gtag("js", new Date());
       gtag("config", GA_ID);
-      console.log("✅ Google Analytics Loaded");
     };
   }
 })();
+
+// ===== SEARCH =====
+function searchContent(){ 
+  let input = document.getElementById("searchBox").value.toLowerCase(); 
+  document.querySelectorAll(".searchable").forEach(el=>{
+    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none"; 
+  }); 
+}
+
+// ===== Loader =====
+function showLoader(elId){
+  const el=document.getElementById(elId);
+  if(el){el.innerHTML="<p class='text-center text-gray-400'>⏳ Loading data, please wait...</p>";}
+}
