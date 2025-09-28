@@ -40,18 +40,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 // ====== Render Functions ======
 function renderNews(news) {
   paginate("newsContainer", news, n => `
-    <div class="searchable p-2 border-b border-gray-700">
+    <div class="searchable p-3 border rounded bg-gray-800 hover:bg-gray-700">
       <a href="${n.Link}" target="_blank" class="font-semibold hover:underline">${n.Title}</a>
-      <p class="text-sm text-gray-400">${n.Published || ""}</p>
+      <p class="text-xs text-gray-400 mt-1">${n.Published || ""}</p>
     </div>
   `, 10);
 }
 
 function renderPicks(picks) {
   paginate("picksContainer", picks, p => `
-    <div class="searchable p-2 border-b border-gray-700">
+    <div class="searchable p-3 border rounded bg-gray-800 hover:bg-gray-700">
       <a href="${p.Link}" target="_blank" class="font-semibold hover:underline">${p.Stock}</a>
-      <p class="text-sm text-gray-400">${p.Reason || ""}</p>
+      <p class="text-xs text-gray-400 mt-1">${p.Reason || ""}</p>
     </div>
   `, 10);
 }
@@ -60,7 +60,7 @@ function renderMovers(movers) {
   paginate("moversContainer", movers, m => {
     const change = parseFloat(m["Change%"] || 0);
     const color = change > 0 ? "bg-green-600" : change < 0 ? "bg-red-600" : "bg-gray-600";
-    return `<div class="searchable p-2 m-1 rounded text-white ${color}">
+    return `<div class="searchable p-3 rounded text-white ${color}">
       ${m.Name} ₹${m.CMP} (${change}%)
     </div>`;
   }, 20);
