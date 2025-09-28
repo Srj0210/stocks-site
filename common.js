@@ -40,25 +40,16 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-GB");
 }
 
-// ====== Ticker Renderer ======
-function renderNewsTicker(news) {
-  const ticker = document.getElementById("tickerText");
-  if (!ticker) return;
-  ticker.innerHTML = (news || [])
-    .map(n => `📰 ${n.Title}`)
-    .join(" | ");
-}
-
-function renderMoversTicker(movers) {
-  const ticker = document.getElementById("moversTicker");
-  if (!ticker) return;
-  ticker.innerHTML = (movers || [])
-    .map(m => {
-      const change = parseFloat(m["Change%"] || 0);
-      const color = change > 0 ? "text-green-400" : change < 0 ? "text-red-400" : "text-white";
-      return `<span class="${color} font-semibold">${m.Name} ₹${m.CMP} (${change}%)</span>`;
-    })
-    .join(" | ");
+// ====== Fetch Data ======
+async function fetchData(type) {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    return data[type] || [];
+  } catch (e) {
+    console.error(`❌ Error fetching ${type}:`, e);
+    return [];
+  }
 }
 
 // ====== Pagination Helper ======
@@ -86,16 +77,4 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
 
   container.after(pagination);
   renderPage(1);
-}
-
-// ====== Fetch Data (NEW) ======
-async function fetchData(type) {
-  try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
-    return data[type] || [];
-  } catch (e) {
-    console.error(`❌ Error fetching ${type}:`, e);
-    return [];
-  }
 }
