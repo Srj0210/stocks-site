@@ -1,29 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Top Movers - Stock Portal</title>
-  <link rel="icon" type="image/png" href="favicon.png" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config = { darkMode: 'class' };</script>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-
-  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md p-4 flex justify-between">
-    <a href="index.html" class="text-xl font-bold">← Back</a>
-    <span class="font-semibold">Top Movers</span>
-  </nav>
-
-  <main class="max-w-6xl mx-auto px-4 py-6">
-    <div id="moversList" class="grid sm:grid-cols-2 gap-4">⏳ Loading...</div>
-  </main>
-
-  <footer class="text-center text-xs text-gray-500 py-4">
-    Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-  </footer>
-
+  <meta charset="utf-8">
+  <title>Top Movers</title>
   <script src="common.js"></script>
-  <script src="movers.js"></script>
+  <script src="bundle.js"></script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
+  <h1 class="text-2xl font-bold text-center my-4">📈 Top Movers</h1>
+  <div id="moversContainer" class="grid sm:grid-cols-2 gap-4"></div>
+  <p class="text-xs text-gray-500 text-center mt-6">Disclaimer: This website and its data are for educational purposes only.</p>
 </body>
 </html>
