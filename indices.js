@@ -1,93 +1,157 @@
-const YAHOO_API = "https://query1.finance.yahoo.com/v8/finance/chart/";
+// ===============================
+// indices.js
+// अलग फाइल, common.js से independent
+// ===============================
 
-// Indian & Global symbols
-const indices = {
-  nifty50: { symbol: "^NSEI", element: "nifty50Chart", label: "Nifty 50" },
-  sensex: { symbol: "^BSESN", element: "sensexChart", label: "Sensex" },
-  banknifty: { symbol: "^NSEBANK", element: "bankniftyChart", label: "Bank Nifty" },
-  dow: { symbol: "^DJI", element: "dowChart", label: "Dow Jones" },
-  nasdaq: { symbol: "^IXIC", element: "nasdaqChart", label: "NASDAQ" },
-  ftse: { symbol: "^FTSE", element: "ftseChart", label: "FTSE 100" },
+// 🔑 API Keys (yaha apni keys daal)
+const FINNHUB_KEY = "YOUR_FINNHUB_KEY_HERE";
+const TWELVED_KEY = "YOUR_TWELVEDATA_KEY_HERE";
+
+// Indian + Global indices config
+const indices = [
+  { id: "nifty", name: "Nifty 50", symbol_td: "NSE:NIFTY", symbol_fh: "^NSEI", color: "blue" },
+  { id: "sensex", name: "Sensex", symbol_td: "BSE:SENSEX", symbol_fh: "^BSESN", color: "red" },
+  { id: "banknifty", name: "Bank Nifty", symbol_td: "NSE:BANKNIFTY", symbol_fh: "^NSEBANK", color: "green" },
+  { id: "dowjones", name: "Dow Jones", symbol_td: "DJI", symbol_fh: "^DJI", color: "green" },
+  { id: "nasdaq", name: "Nasdaq", symbol_td: "IXIC", symbol_fh: "^IXIC", color: "orange" },
+  { id: "ftse", name: "FTSE 100", symbol_td: "FTSE", symbol_fh: "^FTSE", color: "purple" }
+];
+
+// Time ranges mapping
+const ranges = {
+  "1D": { interval: "5min" },
+  "5D": { interval: "30min" },
+  "1M": { interval: "1day" },
+  "6M": { interval: "1week" },
+  "1Y": { interval: "1month" }
 };
 
-let currentRange = "1d"; // default
+// ===============================
+// Helper functions
+// ===============================
 
-// Store charts so we can update them
-const charts = {};
-
-// Fetch Yahoo data
-async function fetchChartData(symbol, range = "1d", interval = "1d") {
-  try {
-    const url = `${YAHOO_API}${symbol}?range=${range}&interval=${interval}`;
-    const res = await fetch(url);
-    const json = await res.json();
-    const result = json.chart.result[0];
-    const timestamps = result.timestamp || [];
-    const prices = result.indicators.quote[0].close;
-
-    // Format labels as dates
-    const labels = timestamps.map(t =>
-      new Date(t * 1000).toLocaleDateString("en-GB", { month: "short", day: "numeric" })
-    );
-
-    return { labels, prices };
-  } catch (e) {
-    console.error("Error fetching data", symbol, e);
-    return { labels: [], prices: [] };
-  }
+// DOM card create karo
+function createCard(index) {
+  const container = document.getElementById(index.section || (index.id.includes("nifty") || index.id.includes("sensex") ? "indianIndices" : "globalIndices"));
+  const card = document.createElement("div");
+  card.className = "bg-gray-800 rounded-lg shadow p-3 mb-4 min-w-[300px]";
+  card.innerHTML = `
+    <h3 class="font-bold mb-2">${index.name}</h3>
+    <canvas id="chart-${index.id}" height="200"></canvas>
+    <p id="status-${index.id}" class="text-xs text-gray-400 mt-1">Loading...</p>
+  `;
+  container.appendChild(card);
 }
 
-// Render chart
-async function renderChart(index, range) {
-  const { symbol, element, label } = indices[index];
-  const interval = range === "1d" ? "5m" : range === "5d" ? "30m" : "1d";
-  const { labels, prices } = await fetchChartData(symbol, range, interval);
+// Historical data from TwelveData
+async function fetchHistorical(symbol, rangeKey) {
+  const interval = ranges[rangeKey].interval;
+  const url = `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(symbol)}&interval=${interval}&outputsize=100&apikey=${TWELVED_KEY}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  if (!data.values) throw new Error("Data not available");
+  return data.values.reverse(); // reverse for old→new
+}
 
-  const ctx = document.getElementById(element).getContext("2d");
+// Chart render/update
+function renderChart(canvasId, values, label, color) {
+  const ctx = document.getElementById(canvasId).getContext("2d");
+  const labels = values.map(v => v.datetime);
+  const prices = values.map(v => parseFloat(v.close));
 
-  if (charts[element]) {
-    charts[element].destroy();
+  if (window[canvasId]) {
+    window[canvasId].data.labels = labels;
+    window[canvasId].data.datasets[0].data = prices;
+    window[canvasId].update();
+    return;
   }
 
-  charts[element] = new Chart(ctx, {
+  window[canvasId] = new Chart(ctx, {
     type: "line",
     data: {
-      labels,
+      labels: labels,
       datasets: [{
-        label,
+        label: label,
         data: prices,
-        borderColor: "blue",
-        backgroundColor: "rgba(0,0,255,0.2)",
+        borderColor: color,
+        backgroundColor: color + "33",
         borderWidth: 2,
-        pointRadius: 2,
-        tension: 0.3
+        fill: true,
+        pointRadius: 2
       }]
     },
     options: {
       responsive: true,
-      plugins: { legend: { display: true } },
+      maintainAspectRatio: false,
       scales: {
-        x: { ticks: { color: "#aaa" } },
-        y: { ticks: { color: "#aaa" } }
+        x: { ticks: { color: "#ccc" } },
+        y: { ticks: { color: "#ccc" } }
       }
     }
   });
 }
 
-// Load all charts
-function loadAllCharts() {
-  Object.keys(indices).forEach(index => renderChart(index, currentRange));
+// Live update with Finnhub
+function connectFinnhub() {
+  const ws = new WebSocket(`wss://ws.finnhub.io?token=${FINNHUB_KEY}`);
+  ws.onopen = () => {
+    indices.forEach(i => {
+      ws.send(JSON.stringify({ type: "subscribe", symbol: i.symbol_fh }));
+    });
+  };
+  ws.onmessage = (event) => {
+    const msg = JSON.parse(event.data);
+    if (msg.data) {
+      msg.data.forEach(tick => {
+        const id = indices.find(i => i.symbol_fh === tick.s)?.id;
+        if (id && window[`chart-${id}`]) {
+          let chart = window[`chart-${id}`];
+          chart.data.labels.push(new Date(tick.t).toLocaleTimeString());
+          chart.data.datasets[0].data.push(tick.p);
+          if (chart.data.labels.length > 50) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+          }
+          chart.update();
+        }
+      });
+    }
+  };
 }
 
-// Change range
-function changeRange(range) {
-  currentRange = range;
-  document.querySelectorAll(".time-btn").forEach(btn =>
-    btn.classList.remove("active")
-  );
-  document.querySelector(`.time-btn[onclick="changeRange('${range}')"]`).classList.add("active");
-  loadAllCharts();
+// Load all indices
+async function loadIndices(rangeKey = "1D") {
+  for (const idx of indices) {
+    const statusEl = document.getElementById(`status-${idx.id}`);
+    try {
+      const values = await fetchHistorical(idx.symbol_td, rangeKey);
+      renderChart(`chart-${idx.id}`, values, idx.name, idx.color);
+      statusEl.textContent = `Updated (${rangeKey})`;
+    } catch (e) {
+      statusEl.textContent = "⚠️ Failed to load " + idx.name;
+      console.error(idx.name, e);
+    }
+  }
 }
 
-// Initial load
-loadAllCharts();
+// ===============================
+// Initialize
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  // Add cards
+  indices.forEach(createCard);
+
+  // Load default range (1D)
+  loadIndices("1D");
+
+  // Setup range buttons
+  document.querySelectorAll(".range-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const range = btn.dataset.range;
+      loadIndices(range);
+    });
+  });
+
+  // Start live updates
+  connectFinnhub();
+});
