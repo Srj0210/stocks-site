@@ -93,18 +93,24 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-<!-- Put after <main> where you want indices -->
 <!-- Market Indices Section -->
 <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
   <h2 class="text-xl font-bold mb-3">📊 Market Overview — Indices</h2>
 
+  <!-- Time Period Buttons -->
+  <div class="flex space-x-2 mb-4">
+    <button class="time-btn px-3 py-1 rounded bg-blue-600 text-white" data-interval="D">1D</button>
+    <button class="time-btn px-3 py-1 rounded bg-gray-300 dark:bg-gray-700" data-interval="W">1W</button>
+    <button class="time-btn px-3 py-1 rounded bg-gray-300 dark:bg-gray-700" data-interval="M">1M</button>
+  </div>
+
   <!-- Indian Indices -->
   <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
-  <div id="indianIndices" class="flex overflow-x-auto space-x-6 pb-4"></div>
+  <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
 
   <!-- Global Indices -->
   <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
-  <div id="globalIndices" class="flex overflow-x-auto space-x-6 pb-4"></div>
+  <div id="globalIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
 </section>
 
 <!-- TradingView Library -->
@@ -118,19 +124,21 @@
     { symbol: "NSE:NIFTYFIN", name: "Nifty Financial" }
   ];
   const global = [
-    { symbol: "INDEX:DJI", name: "Dow Jones" },
-    { symbol: "NASDAQ:IXIC", name: "Nasdaq" },
-    { symbol: "INDEX:FTSE", name: "FTSE 100" },
+    { symbol: "DJI", name: "Dow Jones" },
+    { symbol: "NASDAQ:NDX", name: "Nasdaq 100" },
+    { symbol: "INDEX:FTSE100", name: "FTSE 100" },
     { symbol: "INDEX:DAX", name: "DAX" },
-    { symbol: "INDEX:NI225", name: "Nikkei 225" }
+    { symbol: "INDEX:NKY", name: "Nikkei 225" }
   ];
 
-  function attachWidget(containerId, tvSymbol, interval="D") {
+  let currentInterval = "D"; // default
+
+  function attachWidget(containerId, tvSymbol) {
     new TradingView.widget({
-      "width": 500,
-      "height": 400,
+      "width": 400,
+      "height": 300,
       "symbol": tvSymbol,
-      "interval": interval,
+      "interval": currentInterval,
       "timezone": "Asia/Kolkata",
       "theme": document.documentElement.classList.contains("dark") ? "dark" : "light",
       "style": "1",
@@ -142,25 +150,36 @@
     });
   }
 
-  function renderIndicesSet(list, parentId, interval="D") {
+  function renderIndicesSet(list, parentId) {
     const parent = document.getElementById(parentId);
     parent.innerHTML = "";
     list.forEach((it, idx) => {
       const id = parentId + "_item_" + idx;
       const wrapper = document.createElement("div");
       wrapper.className = "bg-gray-900 rounded p-3 flex-shrink-0";
-      wrapper.style.minWidth = "500px"; // horizontal scroll card
+      wrapper.style.minWidth = "400px"; // horizontal scroll
       wrapper.innerHTML = `
         <div class="text-sm font-medium mb-2">${it.name}</div>
         <div id="${id}"></div>`;
       parent.appendChild(wrapper);
-      attachWidget(id, it.symbol, interval);
+      attachWidget(id, it.symbol);
     });
   }
 
+  // Time period buttons
+  document.querySelectorAll(".time-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("bg-blue-600","text-white"));
+      btn.classList.add("bg-blue-600","text-white");
+      currentInterval = btn.dataset.interval;
+      renderIndicesSet(indian, "indianIndices");
+      renderIndicesSet(global, "globalIndices");
+    });
+  });
+
   // Initial load
-  renderIndicesSet(indian, "indianIndices", "D");
-  renderIndicesSet(global, "globalIndices", "D");
+  renderIndicesSet(indian, "indianIndices");
+  renderIndicesSet(global, "globalIndices");
 </script>
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
