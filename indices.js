@@ -1,88 +1,37 @@
-// ===============================
-// indices.js
-// अलग फाइल, common.js से independent
-// ===============================
+const API_KEY = "1DN696HA3A109GY3";  // तेरी API Key
 
-// 🔑 API Keys (yaha apni keys daal)
-const FINNHUB_KEY = "YOUR_FINNHUB_KEY_HERE";
-const TWELVED_KEY = "YOUR_TWELVEDATA_KEY_HERE";
-
-// Indian + Global indices config
-const indices = [
-  { id: "nifty", name: "Nifty 50", symbol_td: "NSE:NIFTY", symbol_fh: "^NSEI", color: "blue" },
-  { id: "sensex", name: "Sensex", symbol_td: "BSE:SENSEX", symbol_fh: "^BSESN", color: "red" },
-  { id: "banknifty", name: "Bank Nifty", symbol_td: "NSE:BANKNIFTY", symbol_fh: "^NSEBANK", color: "green" },
-  { id: "dowjones", name: "Dow Jones", symbol_td: "DJI", symbol_fh: "^DJI", color: "green" },
-  { id: "nasdaq", name: "Nasdaq", symbol_td: "IXIC", symbol_fh: "^IXIC", color: "orange" },
-  { id: "ftse", name: "FTSE 100", symbol_td: "FTSE", symbol_fh: "^FTSE", color: "purple" }
+// Yahoo symbols ≠ AlphaVantage symbols
+const indianIndices = [
+  { symbol: "BSE:SENSEX", name: "Sensex", code: "^BSESN" },
+  { symbol: "NSE:NIFTY50", name: "Nifty 50", code: "^NSEI" },
+  { symbol: "NSE:BANKNIFTY", name: "Bank Nifty", code: "^NSEBANK" }
 ];
 
-// Time ranges mapping
-const ranges = {
-  "1D": { interval: "5min" },
-  "5D": { interval: "30min" },
-  "1M": { interval: "1day" },
-  "6M": { interval: "1week" },
-  "1Y": { interval: "1month" }
-};
+const globalIndices = [
+  { symbol: "DJI", name: "Dow Jones", code: "DJI" },
+  { symbol: "IXIC", name: "Nasdaq", code: "IXIC" },
+  { symbol: "FTSE", name: "FTSE 100", code: "FTSE" }
+];
 
-// ===============================
-// Helper functions
-// ===============================
-
-// DOM card create karo
-function createCard(index) {
-  const container = document.getElementById(index.section || (index.id.includes("nifty") || index.id.includes("sensex") ? "indianIndices" : "globalIndices"));
-  const card = document.createElement("div");
-  card.className = "bg-gray-800 rounded-lg shadow p-3 mb-4 min-w-[300px]";
-  card.innerHTML = `
-    <h3 class="font-bold mb-2">${index.name}</h3>
-    <canvas id="chart-${index.id}" height="200"></canvas>
-    <p id="status-${index.id}" class="text-xs text-gray-400 mt-1">Loading...</p>
-  `;
-  container.appendChild(card);
-}
-
-// Historical data from TwelveData
-async function fetchHistorical(symbol, rangeKey) {
-  const interval = ranges[rangeKey].interval;
-  const url = `https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(symbol)}&interval=${interval}&outputsize=100&apikey=${TWELVED_KEY}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  if (!data.values) throw new Error("Data not available");
-  return data.values.reverse(); // reverse for old→new
-}
-
-// Chart render/update
-function renderChart(canvasId, values, label, color) {
-  const ctx = document.getElementById(canvasId).getContext("2d");
-  const labels = values.map(v => v.datetime);
-  const prices = values.map(v => parseFloat(v.close));
-
-  if (window[canvasId]) {
-    window[canvasId].data.labels = labels;
-    window[canvasId].data.datasets[0].data = prices;
-    window[canvasId].update();
-    return;
-  }
-
-  window[canvasId] = new Chart(ctx, {
+// Chart बनाना
+function createChart(ctx, label, dates, prices, color) {
+  return new Chart(ctx, {
     type: "line",
     data: {
-      labels: labels,
+      labels: dates,
       datasets: [{
-        label: label,
+        label,
         data: prices,
         borderColor: color,
         backgroundColor: color + "33",
-        borderWidth: 2,
         fill: true,
+        tension: 0.3,
         pointRadius: 2
       }]
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      plugins: { legend: { display: true } },
       scales: {
         x: { ticks: { color: "#ccc" } },
         y: { ticks: { color: "#ccc" } }
@@ -91,67 +40,47 @@ function renderChart(canvasId, values, label, color) {
   });
 }
 
-// Live update with Finnhub
-function connectFinnhub() {
-  const ws = new WebSocket(`wss://ws.finnhub.io?token=${FINNHUB_KEY}`);
-  ws.onopen = () => {
-    indices.forEach(i => {
-      ws.send(JSON.stringify({ type: "subscribe", symbol: i.symbol_fh }));
-    });
-  };
-  ws.onmessage = (event) => {
-    const msg = JSON.parse(event.data);
-    if (msg.data) {
-      msg.data.forEach(tick => {
-        const id = indices.find(i => i.symbol_fh === tick.s)?.id;
-        if (id && window[`chart-${id}`]) {
-          let chart = window[`chart-${id}`];
-          chart.data.labels.push(new Date(tick.t).toLocaleTimeString());
-          chart.data.datasets[0].data.push(tick.p);
-          if (chart.data.labels.length > 50) {
-            chart.data.labels.shift();
-            chart.data.datasets[0].data.shift();
-          }
-          chart.update();
-        }
-      });
+// Data fetch करना
+async function fetchData(symbol, label, containerId, color, days=7) {
+  const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${API_KEY}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    if (!data["Time Series (Daily)"]) {
+      document.getElementById(containerId).innerHTML += `<p class="text-red-500">⚠️ Failed to load ${label}</p>`;
+      return;
     }
-  };
-}
 
-// Load all indices
-async function loadIndices(rangeKey = "1D") {
-  for (const idx of indices) {
-    const statusEl = document.getElementById(`status-${idx.id}`);
-    try {
-      const values = await fetchHistorical(idx.symbol_td, rangeKey);
-      renderChart(`chart-${idx.id}`, values, idx.name, idx.color);
-      statusEl.textContent = `Updated (${rangeKey})`;
-    } catch (e) {
-      statusEl.textContent = "⚠️ Failed to load " + idx.name;
-      console.error(idx.name, e);
-    }
+    const series = data["Time Series (Daily)"];
+    const dates = Object.keys(series).slice(0, days).reverse();
+    const prices = dates.map(d => parseFloat(series[d]["4. close"]));
+
+    const canvas = document.createElement("canvas");
+    document.getElementById(containerId).appendChild(canvas);
+
+    createChart(canvas.getContext("2d"), label, dates, prices, color);
+  } catch (e) {
+    document.getElementById(containerId).innerHTML += `<p class="text-red-500">⚠️ Error loading ${label}</p>`;
   }
 }
 
-// ===============================
-// Initialize
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  // Add cards
-  indices.forEach(createCard);
+// Load सभी indices
+function loadIndices(days=7) {
+  document.getElementById("indianIndices").innerHTML = "";
+  document.getElementById("globalIndices").innerHTML = "";
 
-  // Load default range (1D)
-  loadIndices("1D");
+  indianIndices.forEach(idx => fetchData(idx.code, idx.name, "indianIndices", "blue", days));
+  globalIndices.forEach(idx => fetchData(idx.code, idx.name, "globalIndices", "green", days));
+}
 
-  // Setup range buttons
-  document.querySelectorAll(".range-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const range = btn.dataset.range;
-      loadIndices(range);
-    });
+// Time period buttons
+document.querySelectorAll(".time-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("bg-blue-600","text-white"));
+    btn.classList.add("bg-blue-600","text-white");
+    loadIndices(parseInt(btn.dataset.range));
   });
-
-  // Start live updates
-  connectFinnhub();
 });
+
+// Initial load
+loadIndices();
