@@ -130,4 +130,12 @@ function renderChart(canvasId, chartData, label) {
   renderChart("sensexChart", await fetchIndex("^BSESN"), "Sensex");
   renderChart("bankNiftyChart", await fetchIndex("^NSEBANK"), "Bank Nifty");
   renderChart("niftyItChart", await fetchIndex("^CNXIT"), "Nifty IT");
-  renderChart("v
+  renderChart("vixChart", await fetchIndex("^INDIAVIX"), "India VIX");
+
+  // Global
+  renderChart("dowChart", await fetchIndex("^DJI"), "Dow Jones");
+  renderChart("spChart", await fetchIndex("^GSPC"), "S&P 500");
+  renderChart("nasdaqChart", await fetchIndex("^IXIC"), "Nasdaq");
+  renderChart("ftseChart", await fetchIndex("^FTSE"), "FTSE 100");
+  renderChart("nikkeiChart", await fetchIndex("^N225"), "Nikkei 225");
+})();
