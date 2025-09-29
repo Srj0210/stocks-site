@@ -11,15 +11,35 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
-    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
+
+    /* Common ticker wrapper */
+    .ticker-wrap { 
+      overflow: hidden; 
+      white-space: nowrap; 
+      font-weight: bold; 
+    }
+    .ticker { 
+      display: inline-block; 
+      padding-left: 100%; 
+      white-space: nowrap; 
+    }
     #tickerText { animation: tickerNews 40s linear infinite; }
     #moversTicker { animation: tickerMovers 45s linear infinite; }
-    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    .ticker-green { color: #10B981; }
-    .ticker-red { color: #EF4444; }
-    .ticker-neutral { color: #F3F4F6; }
+
+    /* Animations */
+    @keyframes tickerNews { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
+    @keyframes tickerMovers { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
+
+    /* Colors for movers */
+    .ticker-green { color: #10B981; }   /* +ve */
+    .ticker-red { color: #EF4444; }     /* -ve */
+    .ticker-neutral { color: #F3F4F6; } /* 0% */
   </style>
   <script>
     if (localStorage.theme === 'light') {
@@ -51,7 +71,6 @@
       <ul class="flex space-x-4 text-sm">
         <li><a href="#news" class="hover:underline">News</a></li>
         <li><a href="#ipos" class="hover:underline">IPOs</a></li>
-        <li><a href="#indices" class="hover:underline">Indices</a></li>
         <li><a href="#gainers" class="hover:underline">Movers</a></li>
         <li><a href="#picks" class="hover:underline">Picks</a></li>
         <li><a href="#about" class="hover:underline">About</a></li>
@@ -185,8 +204,6 @@
       </div>
     </section>
 
- 
-
     <!-- IPOs -->
     <section id="ipos" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📊 Upcoming IPOs</h2>
@@ -258,15 +275,18 @@
       <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
       <p class="mt-1 text-sm text-gray-600">Only available on Instagram</p>
     </div>
+
     <div class="my-8">
       <a href="https://www.srjahir.in/home" target="_blank">
         <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
       </a>
       <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
     </div>
+
     <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
       <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
     </a>
+
     <p class="text-xs text-gray-500 mt-4">
       Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
     </p>
@@ -275,7 +295,5 @@
   <!-- JS -->
   <script src="common.js"></script>
   <script src="script-home.js"></script>
-  <!-- TradingView -->
-  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 </body>
 </html>
