@@ -93,6 +93,108 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
+<!-- Indices -->
+<section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+  <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
+
+  <!-- Indian Indices -->
+  <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
+  <div class="overflow-x-auto flex space-x-4 mb-4">
+    <!-- Nifty 50 -->
+    <div class="tradingview-widget-container min-w-[300px] h-[300px]">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+      {
+        "symbol": "NSE:NIFTY",
+        "width": "300",
+        "height": "300",
+        "locale": "en",
+        "dateRange": "1D",
+        "colorTheme": "dark"
+      }
+      </script>
+    </div>
+
+    <!-- Bank Nifty -->
+    <div class="tradingview-widget-container min-w-[300px] h-[300px]">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+      {
+        "symbol": "NSE:BANKNIFTY",
+        "width": "300",
+        "height": "300",
+        "locale": "en",
+        "dateRange": "1D",
+        "colorTheme": "dark"
+      }
+      </script>
+    </div>
+
+    <!-- Sensex -->
+    <div class="tradingview-widget-container min-w-[300px] h-[300px]">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+      {
+        "symbol": "BSE:SENSEX",
+        "width": "300",
+        "height": "300",
+        "locale": "en",
+        "dateRange": "1D",
+        "colorTheme": "dark"
+      }
+      </script>
+    </div>
+  </div>
+
+  <!-- Global Indices -->
+  <h3 class="text-lg font-semibold mb-2">🌍 Global Indices</h3>
+  <div class="overflow-x-auto flex space-x-4">
+    <!-- Dow Jones -->
+    <div class="tradingview-widget-container min-w-[300px] h-[300px]">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+      {
+        "symbol": "DJI",
+        "width": "300",
+        "height": "300",
+        "locale": "en",
+        "dateRange": "1D",
+        "colorTheme": "dark"
+      }
+      </script>
+    </div>
+
+    <!-- NASDAQ -->
+    <div class="tradingview-widget-container min-w-[300px] h-[300px]">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+      {
+        "symbol": "NASDAQ:IXIC",
+        "width": "300",
+        "height": "300",
+        "locale": "en",
+        "dateRange": "1D",
+        "colorTheme": "dark"
+      }
+      </script>
+    </div>
+
+    <!-- S&P 500 -->
+    <div class="tradingview-widget-container min-w-[300px] h-[300px]">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+      {
+        "symbol": "SP:SPX",
+        "width": "300",
+        "height": "300",
+        "locale": "en",
+        "dateRange": "1D",
+        "colorTheme": "dark"
+      }
+      </script>
+    </div>
+  </div>
+</section>
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
