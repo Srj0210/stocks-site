@@ -11,15 +11,35 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-    .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
-    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
+
+    /* Common ticker wrapper */
+    .ticker-wrap { 
+      overflow: hidden; 
+      white-space: nowrap; 
+      font-weight: bold; 
+    }
+    .ticker { 
+      display: inline-block; 
+      padding-left: 100%; 
+      white-space: nowrap; 
+    }
     #tickerText { animation: tickerNews 40s linear infinite; }
     #moversTicker { animation: tickerMovers 45s linear infinite; }
-    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    .ticker-green { color: #10B981; }
-    .ticker-red { color: #EF4444; }
-    .ticker-neutral { color: #F3F4F6; }
+
+    /* Animations */
+    @keyframes tickerNews { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
+    @keyframes tickerMovers { 
+      0% { transform: translateX(0%);} 
+      100% { transform: translateX(-100%);} 
+    }
+
+    /* Colors for movers */
+    .ticker-green { color: #10B981; }   /* +ve */
+    .ticker-red { color: #EF4444; }     /* -ve */
+    .ticker-neutral { color: #F3F4F6; } /* 0% */
   </style>
   <script>
     if (localStorage.theme === 'light') {
@@ -75,31 +95,25 @@
   <main class="max-w-6xl mx-auto px-4 py-6">
 
     <!-- Market Indices -->
-    <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
 
-      <!-- Range Buttons -->
+      <!-- Time Range Buttons -->
       <div class="flex space-x-2 mb-4">
-        <button onclick="setRange('1d')" class="px-2 py-1 bg-blue-600 text-white rounded">1D</button>
-        <button onclick="setRange('5d')" class="px-2 py-1 bg-gray-600 text-white rounded">5D</button>
-        <button onclick="setRange('1mo')" class="px-2 py-1 bg-gray-600 text-white rounded">1M</button>
-        <button onclick="setRange('6mo')" class="px-2 py-1 bg-gray-600 text-white rounded">6M</button>
-        <button onclick="setRange('1y')" class="px-2 py-1 bg-gray-600 text-white rounded">1Y</button>
+        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="1d">1D</button>
+        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="5d">5D</button>
+        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="1mo">1M</button>
+        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="6mo">6M</button>
+        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="1y">1Y</button>
       </div>
 
-      <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
-      <div class="grid sm:grid-cols-2 gap-4">
-        <div class="h-60"><canvas id="niftyChart"></canvas></div>
-        <div class="h-60"><canvas id="sensexChart"></canvas></div>
-        <div class="h-60"><canvas id="bankNiftyChart"></canvas></div>
-      </div>
+      <!-- Indian Indices -->
+      <h3 class="text-lg mb-2">🇮🇳 Indian Indices</h3>
+      <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-2"></div>
 
-      <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
-      <div class="grid sm:grid-cols-2 gap-4">
-        <div class="h-60"><canvas id="dowChart"></canvas></div>
-        <div class="h-60"><canvas id="nasdaqChart"></canvas></div>
-        <div class="h-60"><canvas id="ftseChart"></canvas></div>
-      </div>
+      <!-- Global Indices -->
+      <h3 class="text-lg mt-4 mb-2">🌍 Global Indices</h3>
+      <div id="globalIndices" class="flex overflow-x-auto space-x-4 pb-2"></div>
     </section>
 
     <!-- News -->
