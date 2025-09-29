@@ -6,10 +6,9 @@
   <title>Stock Portal - srjahir.in</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  tailwind.config = { darkMode: 'class' };
-</script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
   <style>
     html { scroll-behavior: smooth; }
 
@@ -59,6 +58,8 @@
       } 
     }
   </script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
@@ -94,24 +95,34 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-<!-- Indian Indices -->
-<section id="indian-indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-3">🇮🇳 Indian Indices</h2>
-  <div class="flex space-x-4 overflow-x-auto pb-4" id="indianIndicesContainer">
-    <!-- Charts yaha JS se load honge -->
-  </div>
-</section>
 
-<!-- Global Indices -->
-<section id="global-indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-3">🌍 Global Indices</h2>
-  <div class="flex space-x-4 overflow-x-auto pb-4" id="globalIndicesContainer">
-    <!-- Charts yaha JS se load honge -->
-  </div>
-</section>
+    <!-- 📊 Market Indices -->
+    <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
 
-<!-- Add this before </body> -->
-<script src="indices.js"></script>
+      <!-- Indian -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
+        <div class="overflow-x-auto flex space-x-4" id="indianIndices">
+          <!-- Example Chart -->
+          <div class="min-w-[300px] bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow">
+            <canvas id="niftyChart" width="300" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Global -->
+      <div>
+        <h3 class="text-lg font-semibold mb-2">🌍 Global Indices</h3>
+        <div class="overflow-x-auto flex space-x-4" id="globalIndices">
+          <!-- Example Chart -->
+          <div class="min-w-[300px] bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow">
+            <canvas id="dowChart" width="300" height="200"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
@@ -212,5 +223,6 @@
   <!-- JS -->
   <script src="common.js"></script>
   <script src="script-home.js"></script>
+  <script src="indices.js"></script>
 </body>
 </html>
