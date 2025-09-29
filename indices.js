@@ -1,77 +1,93 @@
-// ===== Market Indices (Yahoo Finance + Proxy Fix) =====
+const YAHOO_API = "https://query1.finance.yahoo.com/v8/finance/chart/";
 
-// Proxy to bypass CORS
-const proxy = "https://api.allorigins.win/raw?url=";
+// Indian & Global symbols
+const indices = {
+  nifty50: { symbol: "^NSEI", element: "nifty50Chart", label: "Nifty 50" },
+  sensex: { symbol: "^BSESN", element: "sensexChart", label: "Sensex" },
+  banknifty: { symbol: "^NSEBANK", element: "bankniftyChart", label: "Bank Nifty" },
+  dow: { symbol: "^DJI", element: "dowChart", label: "Dow Jones" },
+  nasdaq: { symbol: "^IXIC", element: "nasdaqChart", label: "NASDAQ" },
+  ftse: { symbol: "^FTSE", element: "ftseChart", label: "FTSE 100" },
+};
 
-// Yahoo Finance chart API
-function YF_API(symbol, range = "5d") {
-  return `${proxy}https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${range}&interval=1d`;
-}
+let currentRange = "1d"; // default
 
-// Chart.js instances
+// Store charts so we can update them
 const charts = {};
 
-async function fetchIndexData(symbol, label, canvasId, range = "5d") {
+// Fetch Yahoo data
+async function fetchChartData(symbol, range = "1d", interval = "1d") {
   try {
-    const res = await fetch(YF_API(symbol, range));
-    const data = await res.json();
-
-    const result = data.chart.result[0];
-    const timestamps = result.timestamp.map(ts =>
-      new Date(ts * 1000).toLocaleDateString("en-GB", { weekday: "short" })
-    );
+    const url = `${YAHOO_API}${symbol}?range=${range}&interval=${interval}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    const result = json.chart.result[0];
+    const timestamps = result.timestamp || [];
     const prices = result.indicators.quote[0].close;
 
-    const ctx = document.getElementById(canvasId).getContext("2d");
+    // Format labels as dates
+    const labels = timestamps.map(t =>
+      new Date(t * 1000).toLocaleDateString("en-GB", { month: "short", day: "numeric" })
+    );
 
-    // Destroy old chart before re-render
-    if (charts[canvasId]) charts[canvasId].destroy();
-
-    charts[canvasId] = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: timestamps,
-        datasets: [{
-          label,
-          data: prices,
-          borderColor: "blue",
-          backgroundColor: "rgba(0, 0, 255, 0.2)",
-          borderWidth: 2,
-          pointRadius: 2,
-          tension: 0.3
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: true } },
-        scales: { x: { display: true }, y: { display: true } }
-      }
-    });
-
-  } catch (err) {
-    console.error("Error fetching index:", symbol, err);
-    document.getElementById(canvasId).parentElement.innerHTML =
-      `<p class="text-red-400">⚠️ Failed to load ${label}</p>`;
+    return { labels, prices };
+  } catch (e) {
+    console.error("Error fetching data", symbol, e);
+    return { labels: [], prices: [] };
   }
 }
 
-// Render all charts
-function renderAllCharts(range = "5d") {
-  fetchIndexData("^NSEI", "Nifty 50", "niftyChart", range);
-  fetchIndexData("^BSESN", "Sensex", "sensexChart", range);
-  fetchIndexData("^NSEBANK", "Bank Nifty", "bankNiftyChart", range);
-  fetchIndexData("^DJI", "Dow Jones", "dowChart", range);
-  fetchIndexData("^IXIC", "Nasdaq", "nasdaqChart", range);
-  fetchIndexData("^FTSE", "FTSE 100", "ftseChart", range);
+// Render chart
+async function renderChart(index, range) {
+  const { symbol, element, label } = indices[index];
+  const interval = range === "1d" ? "5m" : range === "5d" ? "30m" : "1d";
+  const { labels, prices } = await fetchChartData(symbol, range, interval);
+
+  const ctx = document.getElementById(element).getContext("2d");
+
+  if (charts[element]) {
+    charts[element].destroy();
+  }
+
+  charts[element] = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [{
+        label,
+        data: prices,
+        borderColor: "blue",
+        backgroundColor: "rgba(0,0,255,0.2)",
+        borderWidth: 2,
+        pointRadius: 2,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true } },
+      scales: {
+        x: { ticks: { color: "#aaa" } },
+        y: { ticks: { color: "#aaa" } }
+      }
+    }
+  });
 }
 
-// Time range buttons
-function setRange(range) {
-  renderAllCharts(range);
+// Load all charts
+function loadAllCharts() {
+  Object.keys(indices).forEach(index => renderChart(index, currentRange));
 }
 
-// First load
-document.addEventListener("DOMContentLoaded", () => {
-  renderAllCharts("5d");
-});
+// Change range
+function changeRange(range) {
+  currentRange = range;
+  document.querySelectorAll(".time-btn").forEach(btn =>
+    btn.classList.remove("active")
+  );
+  document.querySelector(`.time-btn[onclick="changeRange('${range}')"]`).classList.add("active");
+  loadAllCharts();
+}
+
+// Initial load
+loadAllCharts();
