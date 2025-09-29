@@ -11,36 +11,17 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-
-    /* Common ticker wrapper */
-    .ticker-wrap { 
-      overflow: hidden; 
-      white-space: nowrap; 
-      font-weight: bold; 
-    }
-    .ticker { 
-      display: inline-block; 
-      padding-left: 100%; 
-      white-space: nowrap; 
-    }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
+    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
     #tickerText { animation: tickerNews 40s linear infinite; }
     #moversTicker { animation: tickerMovers 45s linear infinite; }
-
-    /* Animations */
-    @keyframes tickerNews { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-    @keyframes tickerMovers { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-
-    /* Colors for movers */
-    .ticker-green { color: #10B981; }   /* +ve */
-    .ticker-red { color: #EF4444; }     /* -ve */
-    .ticker-neutral { color: #F3F4F6; } /* 0% */
+    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    .ticker-green { color: #10B981; }
+    .ticker-red { color: #EF4444; }
+    .ticker-neutral { color: #F3F4F6; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     if (localStorage.theme === 'light') {
       document.documentElement.classList.remove('dark');
@@ -58,8 +39,6 @@
       } 
     }
   </script>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
@@ -95,32 +74,27 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-
-    <!-- 📊 Market Indices -->
+    
+    <!-- Market Indices -->
     <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
 
-      <!-- Indian -->
-      <div class="mb-6">
-        <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
-        <div class="overflow-x-auto flex space-x-4" id="indianIndices">
-          <!-- Example Chart -->
-          <div class="min-w-[300px] bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow">
-            <canvas id="niftyChart" width="300" height="200"></canvas>
-          </div>
-        </div>
+      <!-- Time Period Selector -->
+      <div class="flex space-x-2 mb-4 overflow-x-auto">
+        <button class="time-btn px-3 py-1 bg-blue-600 text-white rounded" data-period="1d">1D</button>
+        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="5d">5D</button>
+        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="1mo">1M</button>
+        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="6mo">6M</button>
+        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="1y">1Y</button>
       </div>
 
-      <!-- Global -->
-      <div>
-        <h3 class="text-lg font-semibold mb-2">🌍 Global Indices</h3>
-        <div class="overflow-x-auto flex space-x-4" id="globalIndices">
-          <!-- Example Chart -->
-          <div class="min-w-[300px] bg-gray-100 dark:bg-gray-700 p-3 rounded-lg shadow">
-            <canvas id="dowChart" width="300" height="200"></canvas>
-          </div>
-        </div>
-      </div>
+      <!-- Indian Indices -->
+      <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
+      <div class="flex space-x-4 overflow-x-auto pb-2" id="indianIndices"></div>
+
+      <!-- Global Indices -->
+      <h3 class="text-lg font-semibold mt-4 mb-2">🌍 Global Indices</h3>
+      <div class="flex space-x-4 overflow-x-auto pb-2" id="globalIndices"></div>
     </section>
 
     <!-- News -->
