@@ -93,160 +93,45 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-<!-- Market Indices Section -->
+<!-- Market Indices -->
 <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
   <h2 class="text-xl font-bold mb-3">🌐 Market Indices</h2>
-
-  <!-- Indian Indices -->
-  <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
-  <div class="flex overflow-x-auto space-x-4 pb-3">
-    
-    <!-- NIFTY 50 -->
-    <div class="min-w-[320px]">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+  <div class="tradingview-widget-container" style="width: 100%; height: 600px;">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
+    {
+      "colorTheme": "dark",
+      "dateRange": "1D",
+      "showChart": true,
+      "locale": "en",
+      "largeChartUrl": "",
+      "isTransparent": false,
+      "showSymbolLogo": true,
+      "width": "100%",
+      "height": "100%",
+      "tabs": [
         {
-          "symbol": "NSE:NIFTY",
-          "width": "100%",
-          "height": "220",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- SENSEX -->
-    <div class="min-w-[320px]">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          "title": "Indian Indices",
+          "symbols": [
+            { "s": "NSE:NIFTY" },
+            { "s": "BSE:SENSEX" },
+            { "s": "NSE:BANKNIFTY" },
+            { "s": "NSE:INDIAVIX" }
+          ]
+        },
         {
-          "symbol": "BSE:SENSEX",
-          "width": "100%",
-          "height": "220",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
+          "title": "Global Indices",
+          "symbols": [
+            { "s": "DJI" },
+            { "s": "NASDAQ:IXIC" },
+            { "s": "SPX" },
+            { "s": "TVC:NI225" },
+            { "s": "FTSE:UKX" }
+          ]
         }
-        </script>
-      </div>
-    </div>
-
-    <!-- BANKNIFTY (iframe) -->
-    <div class="min-w-[320px]">
-      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_banknifty&symbol=NSE:BANKNIFTY&interval=5&hidesidetoolbar=1&symboledit=1&hideideas=1&theme=dark" 
-              width="100%" height="220" frameborder="0" allowfullscreen></iframe>
-      <p class="text-center text-xs">Bank Nifty - Live Chart</p>
-    </div>
-
-    <!-- NIFTY IT (iframe) -->
-    <div class="min-w-[320px]">
-      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_niftyit&symbol=NSE:CNXIT&interval=5&hidesidetoolbar=1&symboledit=1&hideideas=1&theme=dark" 
-              width="100%" height="220" frameborder="0" allowfullscreen></iframe>
-      <p class="text-center text-xs">Nifty IT - Live Chart</p>
-    </div>
-
-    <!-- INDIA VIX (iframe) -->
-    <div class="min-w-[320px]">
-      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_indiavix&symbol=NSE:INDIAVIX&interval=5&hidesidetoolbar=1&symboledit=1&hideideas=1&theme=dark" 
-              width="100%" height="220" frameborder="0" allowfullscreen></iframe>
-      <p class="text-center text-xs">India VIX - Live Chart</p>
-    </div>
-  </div>
-
-  <!-- Global Indices -->
-  <h3 class="text-lg font-semibold mt-6 mb-2">🌍 Global Indices</h3>
-  <div class="flex overflow-x-auto space-x-4 pb-3">
-    
-    <!-- DOW JONES -->
-    <div class="min-w-[320px]">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "DJI",
-          "width": "100%",
-          "height": "220",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- NASDAQ -->
-    <div class="min-w-[320px]">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "NASDAQ:IXIC",
-          "width": "100%",
-          "height": "220",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- S&P 500 -->
-    <div class="min-w-[320px]">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "SPX",
-          "width": "100%",
-          "height": "220",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- FTSE -->
-    <div class="min-w-[320px]">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "FOREXCOM:UK100",
-          "width": "100%",
-          "height": "220",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- NIKKEI 225 (iframe) -->
-    <div class="min-w-[320px]">
-      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_ni225&symbol=TVC:NI225&interval=5&hidesidetoolbar=1&symboledit=1&hideideas=1&theme=dark" 
-              width="100%" height="220" frameborder="0" allowfullscreen></iframe>
-      <p class="text-center text-xs">Nikkei 225 - Live Chart</p>
-    </div>
+      ]
+    }
+    </script>
   </div>
 </section>
     <!-- News -->
