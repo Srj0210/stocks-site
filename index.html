@@ -11,35 +11,13 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-
-    /* Common ticker wrapper */
-    .ticker-wrap { 
-      overflow: hidden; 
-      white-space: nowrap; 
-      font-weight: bold; 
-    }
-    .ticker { 
-      display: inline-block; 
-      padding-left: 100%; 
-      white-space: nowrap; 
-    }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
+    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
     #tickerText { animation: tickerNews 40s linear infinite; }
     #moversTicker { animation: tickerMovers 45s linear infinite; }
-
-    /* Animations */
-    @keyframes tickerNews { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-    @keyframes tickerMovers { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-
-    /* Colors for movers */
-    .ticker-green { color: #10B981; }   /* +ve */
-    .ticker-red { color: #EF4444; }     /* -ve */
-    .ticker-neutral { color: #F3F4F6; } /* 0% */
+    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    .ticker-green { color: #10B981; } .ticker-red { color: #EF4444; } .ticker-neutral { color: #F3F4F6; }
   </style>
   <script>
     if (localStorage.theme === 'light') {
@@ -58,6 +36,8 @@
       } 
     }
   </script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
@@ -93,184 +73,32 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-<!-- 📊 Indian Indices -->
-<section id="indian-indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-4">🇮🇳 Indian Indices</h2>
-  <div class="flex overflow-x-auto space-x-6 pb-2">
-    
-    <!-- Card -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">NIFTY 50</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "NSE:NIFTY",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
+
+    <!-- 📊 Market Indices -->
+    <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">🌐 Market Indices</h2>
+
+      <!-- Indian Indices -->
+      <h3 class="text-lg font-semibold mb-3">🇮🇳 Indian Indices</h3>
+      <div class="grid sm:grid-cols-2 gap-6 mb-6">
+        <div><h4 class="text-center mb-1">Nifty 50</h4><canvas id="niftyChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">Sensex</h4><canvas id="sensexChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">Bank Nifty</h4><canvas id="bankNiftyChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">Nifty IT</h4><canvas id="niftyItChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">India VIX</h4><canvas id="vixChart" height="200"></canvas></div>
       </div>
-    </div>
 
-    <!-- SENSEX -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">SENSEX</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "BSE:SENSEX",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
+      <!-- Global Indices -->
+      <h3 class="text-lg font-semibold mb-3">🌍 Global Indices</h3>
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div><h4 class="text-center mb-1">Dow Jones</h4><canvas id="dowChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">S&amp;P 500</h4><canvas id="spChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">Nasdaq</h4><canvas id="nasdaqChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">FTSE 100</h4><canvas id="ftseChart" height="200"></canvas></div>
+        <div><h4 class="text-center mb-1">Nikkei 225</h4><canvas id="nikkeiChart" height="200"></canvas></div>
       </div>
-    </div>
+    </section>
 
-    <!-- BANK NIFTY -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">BANK NIFTY</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "NSE:BANKNIFTY",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- INDIA VIX -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">INDIA VIX</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "NSE:INDIAVIX",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- 🌍 Global Indices -->
-<section id="global-indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-4">🌍 Global Indices</h2>
-  <div class="flex overflow-x-auto space-x-6 pb-2">
-
-    <!-- DOW JONES -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">Dow Jones</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "DJI",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- NASDAQ -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">NASDAQ</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "NASDAQ:IXIC",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- S&P 500 -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">S&P 500</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "SPX",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- Nikkei 225 -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">Nikkei 225</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "TVC:NI225",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-    <!-- FTSE 100 -->
-    <div class="min-w-[320px] bg-gray-100 dark:bg-gray-900 rounded-lg shadow hover:shadow-lg transition p-3">
-      <h3 class="text-center font-semibold mb-2">FTSE 100</h3>
-      <div class="tradingview-widget-container h-[300px] md:h-[450px]">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-        {
-          "symbol": "FTSE:UKX",
-          "locale": "en",
-          "dateRange": "1D",
-          "colorTheme": "dark",
-          "isTransparent": false,
-          "autosize": true
-        }
-        </script>
-      </div>
-    </div>
-
-  </div>
-</section>
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
