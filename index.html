@@ -21,7 +21,6 @@
     .ticker-red { color: #EF4444; }
     .ticker-neutral { color: #F3F4F6; }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     if (localStorage.theme === 'light') {
       document.documentElement.classList.remove('dark');
@@ -74,27 +73,33 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    
+
     <!-- Market Indices -->
     <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
 
-      <!-- Time Period Selector -->
-      <div class="flex space-x-2 mb-4 overflow-x-auto">
-        <button class="time-btn px-3 py-1 bg-blue-600 text-white rounded" data-period="1d">1D</button>
-        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="5d">5D</button>
-        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="1mo">1M</button>
-        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="6mo">6M</button>
-        <button class="time-btn px-3 py-1 bg-gray-300 dark:bg-gray-700 rounded" data-period="1y">1Y</button>
+      <!-- Range Buttons -->
+      <div class="flex space-x-2 mb-4">
+        <button onclick="setRange('1d')" class="px-2 py-1 bg-blue-600 text-white rounded">1D</button>
+        <button onclick="setRange('5d')" class="px-2 py-1 bg-gray-600 text-white rounded">5D</button>
+        <button onclick="setRange('1mo')" class="px-2 py-1 bg-gray-600 text-white rounded">1M</button>
+        <button onclick="setRange('6mo')" class="px-2 py-1 bg-gray-600 text-white rounded">6M</button>
+        <button onclick="setRange('1y')" class="px-2 py-1 bg-gray-600 text-white rounded">1Y</button>
       </div>
 
-      <!-- Indian Indices -->
-      <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
-      <div class="flex space-x-4 overflow-x-auto pb-2" id="indianIndices"></div>
+      <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="h-60"><canvas id="niftyChart"></canvas></div>
+        <div class="h-60"><canvas id="sensexChart"></canvas></div>
+        <div class="h-60"><canvas id="bankNiftyChart"></canvas></div>
+      </div>
 
-      <!-- Global Indices -->
-      <h3 class="text-lg font-semibold mt-4 mb-2">🌍 Global Indices</h3>
-      <div class="flex space-x-4 overflow-x-auto pb-2" id="globalIndices"></div>
+      <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="h-60"><canvas id="dowChart"></canvas></div>
+        <div class="h-60"><canvas id="nasdaqChart"></canvas></div>
+        <div class="h-60"><canvas id="ftseChart"></canvas></div>
+      </div>
     </section>
 
     <!-- News -->
@@ -195,6 +200,7 @@
   </section>
 
   <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="common.js"></script>
   <script src="script-home.js"></script>
   <script src="indices.js"></script>
