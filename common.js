@@ -78,3 +78,56 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   container.after(pagination);
   renderPage(1);
 }
+
+// ====== Yahoo Finance Fetch for Indices ======
+async function fetchIndex(symbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=1mo`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const result = data.chart.result[0];
+    const timestamps = result.timestamp || [];
+    const prices = result.indicators.quote[0].close;
+    return {
+      labels: timestamps.map(t => new Date(t * 1000).toLocaleDateString()),
+      data: prices
+    };
+  } catch (err) {
+    console.error("❌ Error fetching index:", symbol, err);
+    return { labels: [], data: [] };
+  }
+}
+
+// ====== Render Chart ======
+function renderChart(canvasId, chartData, label) {
+  const ctx = document.getElementById(canvasId)?.getContext('2d');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartData.labels,
+      datasets: [{
+        label: label,
+        data: chartData.data,
+        borderColor: "#3b82f6",
+        backgroundColor: "rgba(59,130,246,0.1)",
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }},
+      scales: { x: { display: true }, y: { display: true } }
+    }
+  });
+}
+
+// ====== Load All Indices ======
+(async function loadIndices() {
+  // Indian
+  renderChart("niftyChart", await fetchIndex("^NSEI"), "Nifty 50");
+  renderChart("sensexChart", await fetchIndex("^BSESN"), "Sensex");
+  renderChart("bankNiftyChart", await fetchIndex("^NSEBANK"), "Bank Nifty");
+  renderChart("niftyItChart", await fetchIndex("^CNXIT"), "Nifty IT");
+  renderChart("v
