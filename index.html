@@ -94,38 +94,22 @@
 
   <main class="max-w-6xl mx-auto px-4 py-6">
 <!-- Put after <main> where you want indices -->
+<!-- Market Indices Section -->
 <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
   <h2 class="text-xl font-bold mb-3">📊 Market Overview — Indices</h2>
 
-  <div class="mb-4">
-    <div class="flex gap-2 flex-wrap">
-      <button class="time-btn px-3 py-1 rounded bg-blue-600 text-white" data-range="D">1D</button>
-      <button class="time-btn px-3 py-1 rounded bg-gray-300" data-range="W">1W</button>
-      <button class="time-btn px-3 py-1 rounded bg-gray-300" data-range="M">1M</button>
-      <button class="time-btn px-3 py-1 rounded bg-gray-300" data-range="3M">3M</button>
-    </div>
-  </div>
+  <!-- Indian Indices -->
+  <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
+  <div id="indianIndices" class="flex overflow-x-auto space-x-6 pb-4"></div>
 
-  <div class="grid md:grid-cols-2 gap-6">
-    <!-- INDIAN -->
-    <div>
-      <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
-      <div id="indianIndices" class="space-y-4"></div>
-    </div>
-
-    <!-- GLOBAL -->
-    <div>
-      <h3 class="font-semibold mb-2">🌍 Global Indices</h3>
-      <div id="globalIndices" class="space-y-4"></div>
-    </div>
-  </div>
+  <!-- Global Indices -->
+  <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
+  <div id="globalIndices" class="flex overflow-x-auto space-x-6 pb-4"></div>
 </section>
 
-<!-- TradingView script (include once in page) -->
+<!-- TradingView Library -->
 <script src="https://s3.tradingview.com/tv.js"></script>
-
 <script>
-  // list of symbols (change if you want other ones)
   const indian = [
     { symbol: "BSE:SENSEX", name: "Sensex" },
     { symbol: "NSE:NIFTY50", name: "Nifty 50" },
@@ -141,59 +125,42 @@
     { symbol: "INDEX:NI225", name: "Nikkei 225" }
   ];
 
-  // creates a compact TradingView widget for a container id
-  function attachWidget(containerId, tvSymbol) {
-    const widget = new TradingView.widget({
-      "width": "100%",
-      "height": 300,
+  function attachWidget(containerId, tvSymbol, interval="D") {
+    new TradingView.widget({
+      "width": 500,
+      "height": 400,
       "symbol": tvSymbol,
-      "interval": "D",
+      "interval": interval,
       "timezone": "Asia/Kolkata",
-      "theme": "dark",
+      "theme": document.documentElement.classList.contains("dark") ? "dark" : "light",
       "style": "1",
-      "toolbar_bg": "#f1f3f6",
-      "allow_symbol_change": true,
+      "hide_top_toolbar": true,
+      "hide_legend": true,
+      "allow_symbol_change": false,
       "save_image": false,
       "container_id": containerId
     });
-    return widget;
   }
 
-  // render sets
-  function renderIndicesSet(list, parentId) {
+  function renderIndicesSet(list, parentId, interval="D") {
     const parent = document.getElementById(parentId);
     parent.innerHTML = "";
     list.forEach((it, idx) => {
       const id = parentId + "_item_" + idx;
       const wrapper = document.createElement("div");
-      wrapper.className = "bg-gray-900 rounded p-2";
-      wrapper.innerHTML = `<div class="text-sm font-medium mb-2">${it.name}</div><div id="${id}"></div>`;
+      wrapper.className = "bg-gray-900 rounded p-3 flex-shrink-0";
+      wrapper.style.minWidth = "500px"; // horizontal scroll card
+      wrapper.innerHTML = `
+        <div class="text-sm font-medium mb-2">${it.name}</div>
+        <div id="${id}"></div>`;
       parent.appendChild(wrapper);
-      attachWidget(id, it.symbol);
+      attachWidget(id, it.symbol, interval);
     });
   }
 
-  // initial render
-  renderIndicesSet(indian, "indianIndices");
-  renderIndicesSet(global, "globalIndices");
-
-  // time buttons: change interval on all widgets (recreate for simplicity)
-  document.querySelectorAll(".time-btn").forEach(btn=>{
-    btn.addEventListener("click", (e)=>{
-      document.querySelectorAll(".time-btn").forEach(b=>b.classList.remove("bg-blue-600","text-white"));
-      btn.classList.add("bg-blue-600","text-white");
-      // map range to interval
-      const r = btn.dataset.range;
-      const intMap = { "D":"D", "W":"W", "M":"M", "3M":"3M" };
-      const int = intMap[r] || "D";
-      // re-render with new interval: (easiest is to destroy/recreate widgets)
-      // For simplicity recreate containers:
-      renderIndicesSet(indian, "indianIndices");
-      renderIndicesSet(global, "globalIndices");
-      // NOTE: TradingView.widget accepts "interval" param; above attachWidget sets "D" default.
-      // If you want to pass interval, modify attachWidget to accept it and pass int.
-    });
-  });
+  // Initial load
+  renderIndicesSet(indian, "indianIndices", "D");
+  renderIndicesSet(global, "globalIndices", "D");
 </script>
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
