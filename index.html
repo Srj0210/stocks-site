@@ -11,44 +11,53 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-
-    /* Common ticker wrapper */
-    .ticker-wrap { 
-      overflow: hidden; 
-      white-space: nowrap; 
-      font-weight: bold; 
-    }
-    .ticker { 
-      display: inline-block; 
-      padding-left: 100%; 
-      white-space: nowrap; 
-    }
-    #tickerText { animation: tickerNews 40s linear infinite; }
-    #moversTicker { animation: tickerMovers 45s linear infinite; }
-
-    /* Animations */
-    @keyframes tickerNews { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-    @keyframes tickerMovers { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-
-    /* Colors for movers */
-    .ticker-green { color: #10B981; }   /* +ve */
-    .ticker-red { color: #EF4444; }     /* -ve */
-    .ticker-neutral { color: #F3F4F6; } /* 0% */
+    canvas { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 10px; }
   </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
+
+  <!-- NAV -->
+  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
+    <div class="max-w-6xl mx-auto flex justify-between items-center px-4 py-3">
+      <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
+        <span>Stock Portal</span>
+      </a>
+      <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <!-- Market Indices -->
+    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
+
+      <!-- Time Buttons -->
+      <div class="flex space-x-2 mb-4">
+        <button class="time-btn bg-blue-600 text-white px-3 py-1 rounded" data-range="7">1W</button>
+        <button class="time-btn bg-gray-300 dark:bg-gray-700 px-3 py-1 rounded" data-range="30">1M</button>
+        <button class="time-btn bg-gray-300 dark:bg-gray-700 px-3 py-1 rounded" data-range="180">6M</button>
+      </div>
+
+      <h3 class="text-lg font-semibold mb-2">🇮🇳 Indian Indices</h3>
+      <div class="grid sm:grid-cols-2 gap-4 mb-6" id="indianIndices"></div>
+
+      <h3 class="text-lg font-semibold mb-2">🌍 Global Indices</h3>
+      <div class="grid sm:grid-cols-2 gap-4" id="globalIndices"></div>
+    </section>
+  </main>
+
+  <!-- JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="indices.js"></script>
   <script>
+    // Dark mode toggle
     if (localStorage.theme === 'light') {
       document.documentElement.classList.remove('dark');
     } else {
       document.documentElement.classList.add('dark');
       localStorage.theme = 'dark';
     }
-    function toggleTheme(){ 
+    function toggleTheme(){
       if(document.documentElement.classList.contains('dark')){
         document.documentElement.classList.remove('dark'); 
         localStorage.theme='light';
@@ -58,165 +67,5 @@
       } 
     }
   </script>
-</head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
-
-  <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
-      <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
-        <span>Stock Portal</span>
-        <img src="logo.png.png" alt="logo" class="w-8 h-8">
-      </a>
-      <ul class="flex space-x-4 text-sm">
-        <li><a href="#news" class="hover:underline">News</a></li>
-        <li><a href="#ipos" class="hover:underline">IPOs</a></li>
-        <li><a href="#gainers" class="hover:underline">Movers</a></li>
-        <li><a href="#picks" class="hover:underline">Picks</a></li>
-        <li><a href="#about" class="hover:underline">About</a></li>
-      </ul>
-      <div class="flex items-center space-x-2">
-        <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
-        <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
-      </div>
-    </div>
-  </nav>
-
-  <!-- News Ticker -->
-  <div class="ticker-wrap dark:bg-yellow-600 dark:text-white bg-yellow-400">
-    <div class="ticker" id="tickerText">Loading latest news...</div>
-  </div>
-
-  <!-- Movers Ticker -->
-  <div class="ticker-wrap bg-gray-200 dark:bg-gray-700 dark:text-white">
-    <div class="ticker" id="moversTicker">Loading movers...</div>
-  </div>
-
-  <main class="max-w-6xl mx-auto px-4 py-6">
-
-    <!-- Market Indices -->
-    <section class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-      <h2 class="text-xl font-bold mb-3">📊 Market Indices</h2>
-
-      <!-- Time Range Buttons -->
-      <div class="flex space-x-2 mb-4">
-        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="1d">1D</button>
-        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="5d">5D</button>
-        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="1mo">1M</button>
-        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="6mo">6M</button>
-        <button class="range-btn bg-blue-600 text-white px-2 py-1 rounded" data-range="1y">1Y</button>
-      </div>
-
-      <!-- Indian Indices -->
-      <h3 class="text-lg mb-2">🇮🇳 Indian Indices</h3>
-      <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-2"></div>
-
-      <!-- Global Indices -->
-      <h3 class="text-lg mt-4 mb-2">🌍 Global Indices</h3>
-      <div id="globalIndices" class="flex overflow-x-auto space-x-4 pb-2"></div>
-    </section>
-
-    <!-- News -->
-    <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-      <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
-      <div id="newsList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-      <div class="text-right mt-4">
-        <a href="news.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All News →</a>
-      </div>
-    </section>
-
-    <!-- IPOs -->
-    <section id="ipos" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-      <h2 class="text-xl font-bold mb-3">📊 Upcoming IPOs</h2>
-      <div class="overflow-x-auto mb-6">
-        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-          <thead class="bg-gray-200 dark:bg-gray-700">
-            <tr>
-              <th class="border px-2 py-1">Name</th>
-              <th class="border px-2 py-1">Issue Type</th>
-              <th class="border px-2 py-1">Price Band</th>
-              <th class="border px-2 py-1">Open Date</th>
-              <th class="border px-2 py-1">Close Date</th>
-              <th class="border px-2 py-1">Issue Size</th>
-            </tr>
-          </thead>
-          <tbody id="ipoUpcoming"></tbody>
-        </table>
-      </div>
-      <div class="text-right mb-6">
-        <a href="ipos_upcoming.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View More Upcoming IPOs →</a>
-      </div>
-
-      <h2 class="text-xl font-bold mb-3">📈 Recent IPOs</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full border border-gray-300 dark:border-gray-600 text-sm">
-          <thead class="bg-gray-200 dark:bg-gray-700">
-            <tr>
-              <th class="border px-2 py-1">Name</th>
-              <th class="border px-2 py-1">Issue Type</th>
-              <th class="border px-2 py-1">Price Band</th>
-              <th class="border px-2 py-1">Open Date</th>
-              <th class="border px-2 py-1">Close Date</th>
-              <th class="border px-2 py-1">Issue Size</th>
-            </tr>
-          </thead>
-          <tbody id="ipoRecent"></tbody>
-        </table>
-      </div>
-      <div class="text-right mt-3">
-        <a href="ipos_recent.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View More Recent IPOs →</a>
-      </div>
-    </section>
-
-    <!-- Movers -->
-    <section id="gainers" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-      <h2 class="text-xl font-bold mb-3">📈 Top Movers</h2>
-      <div id="moversList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-      <div class="text-right mt-3">
-        <a href="movers.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Movers →</a>
-      </div>
-    </section>
-
-    <!-- Picks -->
-    <section id="picks" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-10">
-      <h2 class="text-xl font-bold mb-3">🎯 Stock Picks</h2>
-      <div id="picksList" class="grid sm:grid-cols-2 gap-4">Loading...</div>
-      <div class="text-right mt-3">
-        <a href="picks.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Picks →</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- ABOUT -->
-  <section id="about" class="bg-white text-black text-center py-10">
-    <div class="mb-6">
-      <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
-        <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
-      </a>
-      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
-      <p class="mt-1 text-sm text-gray-600">Only available on Instagram</p>
-    </div>
-
-    <div class="my-8">
-      <a href="https://www.srjahir.in/home" target="_blank">
-        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
-      </a>
-      <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
-    </div>
-
-    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
-      <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
-    </a>
-
-    <p class="text-xs text-gray-500 mt-4">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
-  </section>
-
-  <!-- JS -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="common.js"></script>
-  <script src="script-home.js"></script>
-  <script src="indices.js"></script>
 </body>
 </html>
