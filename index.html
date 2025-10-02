@@ -11,35 +11,15 @@
   </script>
   <style>
     html { scroll-behavior: smooth; }
-
-    /* Common ticker wrapper */
-    .ticker-wrap { 
-      overflow: hidden; 
-      white-space: nowrap; 
-      font-weight: bold; 
-    }
-    .ticker { 
-      display: inline-block; 
-      padding-left: 100%; 
-      white-space: nowrap; 
-    }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
+    .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
     #tickerText { animation: tickerNews 40s linear infinite; }
     #moversTicker { animation: tickerMovers 45s linear infinite; }
-
-    /* Animations */
-    @keyframes tickerNews { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-    @keyframes tickerMovers { 
-      0% { transform: translateX(0%);} 
-      100% { transform: translateX(-100%);} 
-    }
-
-    /* Colors for movers */
-    .ticker-green { color: #10B981; }   /* +ve */
-    .ticker-red { color: #EF4444; }     /* -ve */
-    .ticker-neutral { color: #F3F4F6; } /* 0% */
+    @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
+    .ticker-green { color: #10B981; }
+    .ticker-red { color: #EF4444; }
+    .ticker-neutral { color: #F3F4F6; }
   </style>
   <script>
     if (localStorage.theme === 'light') {
@@ -69,6 +49,8 @@
         <img src="logo.png.png" alt="logo" class="w-8 h-8">
       </a>
       <ul class="flex space-x-4 text-sm">
+        <li><a href="#indices" class="hover:underline">Indices</a></li>
+        <li><a href="#stockSearch" class="hover:underline">Search Stock</a></li>
         <li><a href="#news" class="hover:underline">News</a></li>
         <li><a href="#ipos" class="hover:underline">IPOs</a></li>
         <li><a href="#gainers" class="hover:underline">Movers</a></li>
@@ -93,74 +75,25 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-<!-- Market Indices Section -->
-<section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-  <h2 class="text-xl font-bold mb-3">📊 Market Overview — Indices</h2>
+    
+    <!-- Market Indices Section -->
+    <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">📊 Market Overview — Indices</h2>
+      <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
+      <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
 
-  <!-- Indian Indices -->
-  <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
-  <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
+      <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
+      <div id="globalIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
+    </section>
 
-  <!-- Global Indices -->
-  <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
-  <div id="globalIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
-</section>
+    <!-- Stock Search Section -->
+    <section id="stockSearch" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">🔍 Search Stocks</h2>
+      <input id="stockInput" type="text" placeholder="Type stock name or symbol..." class="w-full p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+      <ul id="suggestions" class="mt-2 bg-white dark:bg-gray-700 border rounded hidden"></ul>
+      <div id="stockChart" class="mt-4"></div>
+    </section>
 
-<!-- TradingView Library -->
-<script src="https://s3.tradingview.com/tv.js"></script>
-<script>
-  const indian = [
-    { symbol: "BSE:SENSEX", name: "Sensex" },
-    { symbol: "NSE:NIFTY50", name: "Nifty 50" },
-    { symbol: "NSE:BANKNIFTY", name: "Bank Nifty" },
-    { symbol: "NSE:NIFTYIT", name: "Nifty IT" },
-    { symbol: "NSE:NIFTYFIN", name: "Nifty Financial" }
-  ];
-
-  const global = [
-    { symbol: "DJI", name: "Dow Jones" },
-    { symbol: "NASDAQ:NDX", name: "Nasdaq 100" },
-    { symbol: "INDEX:FTSE", name: "FTSE 100" },
-    { symbol: "INDEX:DAX", name: "DAX" },
-    { symbol: "INDEX:NKY", name: "Nikkei 225" }
-  ];
-
-  function attachWidget(containerId, tvSymbol) {
-    new TradingView.widget({
-      "width": 350,
-      "height": 280,
-      "symbol": tvSymbol,
-      "interval": "D",
-      "timezone": "Asia/Kolkata",
-      "theme": document.documentElement.classList.contains("dark") ? "dark" : "light",
-      "style": "1",
-      "hide_top_toolbar": true,
-      "hide_legend": true,
-      "allow_symbol_change": false,
-      "container_id": containerId
-    });
-  }
-
-  function renderIndicesSet(list, parentId) {
-    const parent = document.getElementById(parentId);
-    parent.innerHTML = "";
-    list.forEach((it, idx) => {
-      const id = parentId + "_item_" + idx;
-      const wrapper = document.createElement("div");
-      wrapper.className = "bg-gray-900 rounded p-3 flex-shrink-0";
-      wrapper.style.minWidth = "350px"; // smooth horizontal scroll
-      wrapper.innerHTML = `
-        <div class="text-sm font-medium mb-2">${it.name}</div>
-        <div id="${id}"></div>`;
-      parent.appendChild(wrapper);
-      attachWidget(id, it.symbol);
-    });
-  }
-
-  // Initial load
-  renderIndicesSet(indian, "indianIndices");
-  renderIndicesSet(global, "globalIndices");
-</script>
     <!-- News -->
     <section id="news" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📢 Latest News</h2>
@@ -235,7 +168,7 @@
   <!-- ABOUT -->
   <section id="about" class="bg-white text-black text-center py-10">
     <div class="mb-6">
-      <a href="https://www.instagram.com/srj_ahir?igsh=eDEzcXA2OWc2MzE0" target="_blank">
+      <a href="https://www.instagram.com/srj_ahir" target="_blank">
         <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
       </a>
       <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
@@ -249,7 +182,7 @@
       <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
     </div>
 
-    <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
+    <a href="https://pin.it/7IW2OrGOT" target="_blank">
       <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
     </a>
 
@@ -258,8 +191,12 @@
     </p>
   </section>
 
-  <!-- JS -->
+  <!-- TradingView Script -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <!-- Custom Scripts -->
   <script src="common.js"></script>
   <script src="script-home.js"></script>
+  <script src="indices.js"></script>
+  <script src="search.js"></script>
 </body>
 </html>
