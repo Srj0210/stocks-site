@@ -97,13 +97,6 @@
 <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
   <h2 class="text-xl font-bold mb-3">📊 Market Overview — Indices</h2>
 
-  <!-- Time Period Buttons -->
-  <div class="flex space-x-2 mb-4">
-    <button class="time-btn px-3 py-1 rounded bg-blue-600 text-white" data-interval="D">1D</button>
-    <button class="time-btn px-3 py-1 rounded bg-gray-300 dark:bg-gray-700" data-interval="W">1W</button>
-    <button class="time-btn px-3 py-1 rounded bg-gray-300 dark:bg-gray-700" data-interval="M">1M</button>
-  </div>
-
   <!-- Indian Indices -->
   <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
   <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
@@ -123,29 +116,27 @@
     { symbol: "NSE:NIFTYIT", name: "Nifty IT" },
     { symbol: "NSE:NIFTYFIN", name: "Nifty Financial" }
   ];
+
   const global = [
     { symbol: "DJI", name: "Dow Jones" },
     { symbol: "NASDAQ:NDX", name: "Nasdaq 100" },
-    { symbol: "INDEX:FTSE100", name: "FTSE 100" },
+    { symbol: "INDEX:FTSE", name: "FTSE 100" },
     { symbol: "INDEX:DAX", name: "DAX" },
     { symbol: "INDEX:NKY", name: "Nikkei 225" }
   ];
 
-  let currentInterval = "D"; // default
-
   function attachWidget(containerId, tvSymbol) {
     new TradingView.widget({
-      "width": 400,
-      "height": 300,
+      "width": 350,
+      "height": 280,
       "symbol": tvSymbol,
-      "interval": currentInterval,
+      "interval": "D",
       "timezone": "Asia/Kolkata",
       "theme": document.documentElement.classList.contains("dark") ? "dark" : "light",
       "style": "1",
       "hide_top_toolbar": true,
       "hide_legend": true,
       "allow_symbol_change": false,
-      "save_image": false,
       "container_id": containerId
     });
   }
@@ -157,7 +148,7 @@
       const id = parentId + "_item_" + idx;
       const wrapper = document.createElement("div");
       wrapper.className = "bg-gray-900 rounded p-3 flex-shrink-0";
-      wrapper.style.minWidth = "400px"; // horizontal scroll
+      wrapper.style.minWidth = "350px"; // smooth horizontal scroll
       wrapper.innerHTML = `
         <div class="text-sm font-medium mb-2">${it.name}</div>
         <div id="${id}"></div>`;
@@ -165,17 +156,6 @@
       attachWidget(id, it.symbol);
     });
   }
-
-  // Time period buttons
-  document.querySelectorAll(".time-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".time-btn").forEach(b => b.classList.remove("bg-blue-600","text-white"));
-      btn.classList.add("bg-blue-600","text-white");
-      currentInterval = btn.dataset.interval;
-      renderIndicesSet(indian, "indianIndices");
-      renderIndicesSet(global, "globalIndices");
-    });
-  });
 
   // Initial load
   renderIndicesSet(indian, "indianIndices");
