@@ -1,4 +1,4 @@
-// search.js
+// ===== search.js (Secure Autocomplete with TradingView) =====
 (function(){
   const allowedSymbols = [
     { symbol: "NASDAQ:AAPL", name: "Apple Inc." },
@@ -25,6 +25,18 @@
   const suggestionsEl = $("suggestions");
   const chartEl = $("stockChart");
 
+  // 🔒 Escape HTML
+  function escapeHTML(str){
+    return str.replace(/[&<>'"]/g, tag => ({
+      "&":"&amp;", "<":"&lt;", ">":"&gt;", "'":"&#39;", "\"":"&quot;"
+    }[tag]));
+  }
+
+  // 🔒 Ensure symbol is only from allowed list
+  function sanitizeSymbol(symbol){
+    return allowedSymbols.find(it => it.symbol === symbol) ? symbol : null;
+  }
+
   function debounce(fn, wait=200){
     let t; return (...args)=>{ clearTimeout(t); t=setTimeout(()=>fn(...args), wait); };
   }
@@ -44,16 +56,22 @@
     list.forEach(it => {
       const li = document.createElement("li");
       li.className = "px-3 py-2 cursor-pointer hover:bg-blue-600 hover:text-white";
-      li.innerHTML = `<div class="font-medium">${it.name}</div><div class="text-xs text-gray-500">${it.symbol}</div>`;
+      li.innerHTML = `
+        <div class="font-medium">${escapeHTML(it.name)}</div>
+        <div class="text-xs text-gray-500">${escapeHTML(it.symbol)}</div>`;
       li.onclick = ()=> selectSymbol(it);
       suggestionsEl.appendChild(li);
     });
   }
 
   function selectSymbol(item){
+    const safeSymbol = sanitizeSymbol(item.symbol);
+    if (!safeSymbol) return; // 🚫 block invalid symbol
+
     inputEl.value = item.name + " — " + item.symbol;
     suggestionsEl.classList.add("hidden");
     chartEl.innerHTML = "";
+
     const id = "tv_" + Date.now();
     const div = document.createElement("div");
     div.id = id;
@@ -64,19 +82,19 @@
     new TradingView.widget({
       "width": "100%",
       "height": 420,
-      "symbol": item.symbol,
+      "symbol": safeSymbol,
       "interval": "D",
       "timezone": "Asia/Kolkata",
       "theme": document.documentElement.classList.contains("dark") ? "dark" : "light",
       "style": "1",
       "locale": "en",
-      "allow_symbol_change": true,
+      "allow_symbol_change": false, // 🔒 prevent user editing
       "container_id": id
     });
   }
 
   inputEl.addEventListener("input", debounce((e)=>{
-    const q = e.target.value;
+    const q = e.target.value.trim();
     renderSuggestions(findMatches(q));
   }, 200));
 
