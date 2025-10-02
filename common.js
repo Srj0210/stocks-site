@@ -19,9 +19,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 })();
 
 // ====== Loader ======
-function showLoader(elId, msg="⏳ Loading...") {
+function showLoader(elId) {
   const el = document.getElementById(elId);
-  if (el) el.innerHTML = `<p class="text-center text-gray-400">${msg}</p>`;
+  if (el) el.innerHTML = `<p class="text-center text-gray-400">⏳ Loading...</p>`;
 }
 
 // ====== Search ======
@@ -40,24 +40,16 @@ function formatDate(dateStr) {
   return d.toLocaleDateString("en-GB");
 }
 
-// ====== Fetch Data (JSONP safe) ======
-function fetchData(type) {
-  return new Promise((resolve) => {
-    const cbName = "cb_" + Date.now();
-    window[cbName] = (data) => {
-      try {
-        resolve(data[type] || []);
-      } catch {
-        resolve([]);
-      }
-      delete window[cbName];
-    };
-
-    const script = document.createElement("script");
-    script.src = API_URL + "?callback=" + cbName;
-    script.onerror = () => resolve([]);
-    document.body.appendChild(script);
-  });
+// ====== Fetch Data ======
+async function fetchData(type) {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    return data[type] || [];
+  } catch (e) {
+    console.error(`❌ Error fetching ${type}:`, e);
+    return [];
+  }
 }
 
 // ====== Pagination Helper ======
@@ -79,7 +71,7 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
     const totalPages = Math.ceil(data.length / itemsPerPage);
     for (let i = 1; i <= totalPages; i++) {
       pagination.innerHTML += `<button onclick="renderPage(${i})"
-        class="px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-700'}">${i}</button>`;
+        class="px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-300'}">${i}</button>`;
     }
   }
 
