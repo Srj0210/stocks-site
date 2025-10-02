@@ -19,9 +19,9 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 })();
 
 // ====== Loader ======
-function showLoader(elId) {
+function showLoader(elId, msg="⏳ Loading...") {
   const el = document.getElementById(elId);
-  if (el) el.innerHTML = `<p class="text-center text-gray-400">⏳ Loading...</p>`;
+  if (el) el.innerHTML = `<p class="text-center text-gray-400">${escapeHTML(msg)}</p>`;
 }
 
 // ====== Search ======
@@ -36,15 +36,14 @@ function searchContent(){
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
-  if (isNaN(d)) return dateStr;
+  if (isNaN(d)) return escapeHTML(dateStr);
   return d.toLocaleDateString("en-GB");
 }
 
-// ====== Fetch Data ======
+// ====== Fetch Data (SAFE) ======
 async function fetchData(type) {
   try {
-    const res = await fetch(API_URL);
-    const data = await res.json();
+    const data = await safeFetch(API_URL);
     return data[type] || [];
   } catch (e) {
     console.error(`❌ Error fetching ${type}:`, e);
@@ -57,6 +56,7 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   let currentPage = 1;
   const container = document.getElementById(containerId);
   if (!container) return;
+
   const pagination = document.createElement("div");
   pagination.className = "flex justify-center mt-4 space-x-2";
 
