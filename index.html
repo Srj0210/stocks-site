@@ -17,9 +17,9 @@
     #moversTicker { animation: tickerMovers 45s linear infinite; }
     @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
     @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
-    .ticker-green { color: #10B981; }
-    .ticker-red { color: #EF4444; }
-    .ticker-neutral { color: #F3F4F6; }
+    .ticker-green { color: #10B981; }   
+    .ticker-red { color: #EF4444; }     
+    .ticker-neutral { color: #F3F4F6; } 
   </style>
   <script>
     if (localStorage.theme === 'light') {
@@ -38,6 +38,7 @@
       } 
     }
   </script>
+  <script src="https://s3.tradingview.com/tv.js"></script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
 
@@ -50,15 +51,15 @@
       </a>
       <ul class="flex space-x-4 text-sm">
         <li><a href="#indices" class="hover:underline">Indices</a></li>
-        <li><a href="#stockSearch" class="hover:underline">Search Stock</a></li>
         <li><a href="#news" class="hover:underline">News</a></li>
         <li><a href="#ipos" class="hover:underline">IPOs</a></li>
         <li><a href="#gainers" class="hover:underline">Movers</a></li>
         <li><a href="#picks" class="hover:underline">Picks</a></li>
+        <li><a href="#searchStocks" class="hover:underline">Search</a></li>
         <li><a href="#about" class="hover:underline">About</a></li>
       </ul>
       <div class="flex items-center space-x-2">
-        <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search..." class="px-2 py-1 rounded text-black">
+        <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search site..." class="px-2 py-1 rounded text-black">
         <button onclick="toggleTheme()" class="bg-yellow-400 text-black dark:bg-gray-700 dark:text-white px-3 py-1 rounded">🌞/🌙</button>
       </div>
     </div>
@@ -75,23 +76,11 @@
   </div>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
-    
+
     <!-- Market Indices Section -->
     <section id="indices" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
       <h2 class="text-xl font-bold mb-3">📊 Market Overview — Indices</h2>
-      <h3 class="font-semibold mb-2">🇮🇳 Indian Indices</h3>
-      <div id="indianIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
-
-      <h3 class="font-semibold mt-6 mb-2">🌍 Global Indices</h3>
-      <div id="globalIndices" class="flex overflow-x-auto space-x-4 pb-4"></div>
-    </section>
-
-    <!-- Stock Search Section -->
-    <section id="stockSearch" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
-      <h2 class="text-xl font-bold mb-3">🔍 Search Stocks</h2>
-      <input id="stockInput" type="text" placeholder="Type stock name or symbol..." class="w-full p-2 rounded border dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-      <ul id="suggestions" class="mt-2 bg-white dark:bg-gray-700 border rounded hidden"></ul>
-      <div id="stockChart" class="mt-4"></div>
+      <div id="indicesContainer" class="flex overflow-x-auto space-x-4 pb-4"></div>
     </section>
 
     <!-- News -->
@@ -163,37 +152,39 @@
         <a href="picks.html" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-800">View All Picks →</a>
       </div>
     </section>
+
+    <!-- Search Stocks -->
+    <section id="searchStocks" class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 mb-6">
+      <h2 class="text-xl font-bold mb-3">🔎 Search Stocks (Global charts)</h2>
+      <div class="relative">
+        <input id="stockSearchInput" type="search" autocomplete="off"
+          placeholder="Type name or symbol (e.g. NASDAQ:AAPL)"
+          class="w-full px-3 py-2 rounded text-black dark:text-gray-200 dark:bg-gray-900 border" />
+        <ul id="suggestions"
+          class="absolute z-50 left-0 right-0 mt-1 bg-white dark:bg-gray-800 border rounded max-h-64 overflow-auto hidden"></ul>
+      </div>
+      <div id="searchHint" class="text-xs text-gray-500 mt-2 italic">Only for global charts</div>
+      <div id="stockChart" class="mt-4 bg-gray-900 dark:bg-gray-800 rounded p-2"></div>
+    </section>
+
   </main>
 
   <!-- ABOUT -->
-  <section id="about" class="bg-white text-black text-center py-10">
-    <div class="mb-6">
-      <a href="https://www.instagram.com/srj_ahir" target="_blank">
-        <img src="instagram-qr.png.png" alt="Instagram QR" class="mx-auto w-52 sm:w-60 md:w-72 hover:scale-105 transition-transform duration-300">
-      </a>
-      <p class="mt-2 text-lg font-semibold">DM US ON INSTAGRAM</p>
-      <p class="mt-1 text-sm text-gray-600">Only available on Instagram</p>
-    </div>
-
+  <section id="about" class="bg-gray-100 dark:bg-gray-800 text-center py-10">
     <div class="my-8">
       <a href="https://www.srjahir.in/home" target="_blank">
         <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
       </a>
-      <p class="text-sm text-gray-700 mt-2">©️ 2025 SRJ Ahir Technologies</p>
+      <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">©️ 2025 SRJ Ahir Technologies</p>
+      <p class="text-xs text-gray-500 mt-4 max-w-xl mx-auto">
+        Disclaimer: This website and its data are for educational purposes only.  
+        Market data provided by third-party sources. We do not guarantee accuracy.  
+        Use at your own risk.
+      </p>
     </div>
-
-    <a href="https://pin.it/7IW2OrGOT" target="_blank">
-      <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
-    </a>
-
-    <p class="text-xs text-gray-500 mt-4">
-      Disclaimer: This website and its data are for educational purposes only. All rights reserved by respective owners.
-    </p>
   </section>
 
-  <!-- TradingView Script -->
-  <script src="https://s3.tradingview.com/tv.js"></script>
-  <!-- Custom Scripts -->
+  <!-- JS -->
   <script src="common.js"></script>
   <script src="script-home.js"></script>
   <script src="indices.js"></script>
