@@ -13,8 +13,8 @@
     html { scroll-behavior: smooth; }
     .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
     .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
-    #tickerText { animation: tickerNews 100s linear infinite; }
-    #moversTicker { animation: tickerMovers 105s linear infinite; }
+    #tickerText { animation: tickerNews 60s linear infinite; } /* slow speed */
+    #moversTicker { animation: tickerMovers 65s linear infinite; } /* slow speed */
     @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
     @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
     .ticker-green { color: #10B981; }   
@@ -170,19 +170,17 @@
   </main>
 
   <!-- ABOUT -->
-  <section id="about" class="bg-gray-100 dark:bg-gray-800 text-center py-10">
+  <section id="about" class="bg-white text-black text-center py-10"> <!-- fixed white bg -->
     <div class="my-8">
       <a href="https://www.srjahir.in/home" target="_blank">
         <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
       </a>
-      <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">©️ 2025 SRJ Ahir Technologies</p>
-
-      <!-- Sanskrit Image Added -->
-      <div class="mt-4">
-        <img src="sanskrit.png.png" alt="Sanskrit" class="mx-auto w-40 sm:w-48 md:w-56">
+      <p class="text-sm text-gray-600 mt-2">©️ 2025 SRJ Ahir Technologies</p>
+      <div class="my-6">
+        <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
+          <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
+        </a>
       </div>
-
-      <!-- Disclaimer -->
       <p class="text-xs text-gray-500 mt-4 max-w-xl mx-auto">
         Disclaimer: This website and its data are for educational purposes only.  
         Market data provided by third-party sources. We do not guarantee accuracy.  
