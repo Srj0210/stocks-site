@@ -44,7 +44,8 @@ async function safeFetch(url, options = {}) {
     } else if (contentType.includes("text/")) {
       return await response.text();
     } else {
-      throw new Error("Blocked unsafe content-type: " + contentType);
+      console.warn("⚠️ Blocked unsafe content-type:", contentType);
+      return null;
     }
   } catch (err) {
     console.error("❌ SafeFetch Error:", err);
@@ -52,14 +53,29 @@ async function safeFetch(url, options = {}) {
   }
 }
 
-// 🔹 Strict DOM injection (safe innerHTML)
+// 🔹 Safe DOM injection (allow limited HTML, strip <script>)
 function safeInject(el, html) {
   if (!el) return;
   el.textContent = ""; // clear existing
-  // only allow string injection (no scripts)
+
+  // ⚠️ Don't escape everything → only strip <script> & inline JS
   const temp = document.createElement("div");
-  temp.innerHTML = escapeHTML(html);
-  el.appendChild(temp);
+  temp.innerHTML = html;
+
+  // remove <script> tags
+  temp.querySelectorAll("script").forEach(s => s.remove());
+
+  // remove dangerous attributes like onclick, onerror etc.
+  temp.querySelectorAll("*").forEach(node => {
+    [...node.attributes].forEach(attr => {
+      if (/^on/i.test(attr.name)) node.removeAttribute(attr.name);
+      if (attr.value && attr.value.toLowerCase().startsWith("javascript:")) {
+        node.removeAttribute(attr.name);
+      }
+    });
+  });
+
+  el.append(...temp.childNodes);
 }
 
 // Expose globally
