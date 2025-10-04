@@ -51,6 +51,17 @@ async function fetchData(type) {
   }
 }
 
+// ✅ ====== Fetch All Data (for bundle.js) ======
+async function fetchAllData() {
+  try {
+    const data = await safeFetch(API_URL);
+    return data || {};
+  } catch (e) {
+    console.error("❌ Error fetching all data:", e);
+    return {};
+  }
+}
+
 // ====== Pagination Helper ======
 function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   let currentPage = 1;
