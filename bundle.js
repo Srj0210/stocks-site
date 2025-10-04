@@ -1,71 +1,88 @@
 // ===== bundle.js =====
-// Ye file "view more" pages (news, picks, movers, IPOs) ke liye hai
+// This handles rendering for all "view more" pages like news.html, picks.html, movers.html, ipos_recent.html, ipos_upcoming.html
 
-// ===== Query Params Helper =====
-function getQueryParams() {
-  const q = {};
-  location.search.substring(1).split("&").forEach(kv => {
-    if (!kv) return;
-    const [k, v] = kv.split("=");
-    q[decodeURIComponent(k)] = decodeURIComponent(v || "");
-  });
-  return q;
-}
+document.addEventListener("DOMContentLoaded", async () => {
+  const path = window.location.pathname;
 
-// ===== All Data Fetcher =====
-// common.js me ek helper bana lo safeFetch(API_URL) ke liye
-async function fetchAllData() {
-  try {
-    return await safeFetch(API_URL);
-  } catch (e) {
-    console.error("❌ Error fetching all data:", e);
-    return {};
+  // 🔹 NEWS PAGE
+  if (path.includes("news")) {
+    showLoader("newsContainer");
+    const news = await fetchData("news");
+    renderNews(news);
   }
-}
 
-// ===== View Page Loader =====
-async function loadView() {
-  const q = getQueryParams();
-  const type = q.type || "news"; // default news
-  const index = Number(q.i || q.index || 0);
-
-  showLoader("viewContent", "⏳ Loading...");
-  try {
-    const data = await fetchAllData();   // ✅ FIXED
-    const arr = data[type] || [];
-    const item = arr[index];
-
-    if (!item) {
-      document.getElementById("viewContent").innerHTML =
-        "<p class='text-gray-400'>Item not found</p>";
-      return;
-    }
-
-    // Render content
-    let html = `<h2 class="text-xl font-bold mb-2">${escapeHTML(item.Title || item.Stock || item.Name || "")}</h2>`;
-
-    if (item.Published) {
-      html += `<div class="text-xs text-gray-400 mb-3">${escapeHTML(formatDate(item.Published))}</div>`;
-    }
-
-    if (item.Link) {
-      html += `<div class="mb-4">
-        <a href="${sanitizeURL(item.Link)}" target="_blank" rel="noopener noreferrer" class="text-blue-400">Open source</a>
-      </div>`;
-    }
-
-    html += `<pre class="whitespace-pre-wrap text-sm text-gray-200">${escapeHTML(JSON.stringify(item, null, 2))}</pre>`;
-
-    document.getElementById("viewContent").innerHTML = html;
-
-  } catch (e) {
-    console.error("❌ View Load Error:", e);
-    document.getElementById("viewContent").innerHTML =
-      `<p class="text-red-400">Failed to load content.</p>`;
+  // 🔹 PICKS PAGE
+  else if (path.includes("picks")) {
+    showLoader("picksContainer");
+    const picks = await fetchData("picks");
+    renderPicks(picks);
   }
+
+  // 🔹 MOVERS PAGE
+  else if (path.includes("movers")) {
+    showLoader("moversContainer");
+    const movers = await fetchData("movers");
+    renderMovers(movers);
+  }
+
+  // 🔹 RECENT IPO PAGE
+  else if (path.includes("ipos_recent")) {
+    showLoader("iposRecentContainer");
+    const iposRecent = await fetchData("ipos_recent");
+    renderIPOs(iposRecent, "iposRecentContainer");
+  }
+
+  // 🔹 UPCOMING IPO PAGE
+  else if (path.includes("ipos_upcoming")) {
+    showLoader("iposUpcomingContainer");
+    const iposUpcoming = await fetchData("ipos_upcoming");
+    renderIPOs(iposUpcoming, "iposUpcomingContainer");
+  }
+});
+
+
+// ====== Render Functions ======
+function renderNews(news) {
+  paginate("newsContainer", news, n => `
+    <div class="searchable p-3 border rounded bg-gray-800 hover:bg-gray-700">
+      <a href="${sanitizeURL(n.Link)}" target="_blank" class="font-semibold hover:underline">
+        ${escapeHTML(n.Title)}
+      </a>
+      <p class="text-xs text-gray-400 mt-1">${escapeHTML(n.Published || "")}</p>
+    </div>
+  `, 10);
 }
 
-// ===== Run on Load =====
-if (document.getElementById("viewContent")) {
-  window.addEventListener("load", loadView);
+function renderPicks(picks) {
+  paginate("picksContainer", picks, p => `
+    <div class="searchable p-3 border rounded bg-gray-800 hover:bg-gray-700">
+      <a href="${sanitizeURL(p.Link)}" target="_blank" class="font-semibold hover:underline">
+        ${escapeHTML(p.Stock)}
+      </a>
+      <p class="text-xs text-gray-400 mt-1">${escapeHTML(p.Reason || "")}</p>
+    </div>
+  `, 10);
+}
+
+function renderMovers(movers) {
+  paginate("moversContainer", movers, m => {
+    const change = parseFloat(m["Change%"] || 0);
+    const color = change > 0 ? "bg-green-600" : change < 0 ? "bg-red-600" : "bg-gray-600";
+    return `<div class="searchable p-3 rounded text-white ${color}">
+      ${escapeHTML(m.Name)} ₹${escapeHTML(m.CMP)} (${escapeHTML(change.toString())}%)
+    </div>`;
+  }, 20);
+}
+
+function renderIPOs(ipos, containerId) {
+  paginate(containerId, ipos, ipo => `
+    <tr class="searchable border-b border-gray-700">
+      <td class="p-2">${escapeHTML(ipo.Name)}</td>
+      <td class="p-2">${escapeHTML(ipo["Issue Type"] || "")}</td>
+      <td class="p-2">${escapeHTML(ipo["Price Band"] || "")}</td>
+      <td class="p-2">${formatDate(ipo["Open Date"])}</td>
+      <td class="p-2">${formatDate(ipo["Close Date"])}</td>
+      <td class="p-2">${escapeHTML(ipo["Issue Size"] || "")}</td>
+    </tr>
+  `, 10);
 }
