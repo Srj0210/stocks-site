@@ -62,30 +62,45 @@ async function fetchAllData() {
   }
 }
 
-// ====== Pagination Helper ======
+// ====== Pagination Helper (Fixed) ======
 function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   let currentPage = 1;
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const pagination = document.createElement("div");
-  pagination.className = "flex justify-center mt-4 space-x-2";
+  // Make sure pagination element exists only once
+  let pagination = document.getElementById(containerId + "_pagination");
+  if (!pagination) {
+    pagination = document.createElement("div");
+    pagination.id = containerId + "_pagination";
+    pagination.className = "flex justify-center mt-4 space-x-2";
+    container.after(pagination);
+  }
 
   function renderPage(page) {
     currentPage = page;
+
+    // Render items
     container.innerHTML = data
       .slice((page - 1) * itemsPerPage, page * itemsPerPage)
       .map(renderItem)
       .join("");
 
+    // Render pagination buttons
     pagination.innerHTML = "";
     const totalPages = Math.ceil(data.length / itemsPerPage);
+
     for (let i = 1; i <= totalPages; i++) {
-      pagination.innerHTML += `<button onclick="renderPage(${i})"
-        class="px-3 py-1 rounded ${i === currentPage ? 'bg-blue-600 text-white' : 'bg-gray-300'}">${i}</button>`;
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className =
+        "px-3 py-1 rounded " +
+        (i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300");
+
+      btn.addEventListener("click", () => renderPage(i));
+      pagination.appendChild(btn);
     }
   }
 
-  container.after(pagination);
   renderPage(1);
 }
