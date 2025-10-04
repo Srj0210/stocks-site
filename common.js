@@ -68,38 +68,32 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  // Make sure pagination element exists only once
-  let pagination = document.getElementById(containerId + "_pagination");
-  if (!pagination) {
-    pagination = document.createElement("div");
-    pagination.id = containerId + "_pagination";
-    pagination.className = "flex justify-center mt-4 space-x-2";
-    container.after(pagination);
-  }
+  let pagination = document.createElement("div");
+  pagination.className = "flex justify-center mt-4 space-x-2";
 
   function renderPage(page) {
     currentPage = page;
-
-    // Render items
     container.innerHTML = data
       .slice((page - 1) * itemsPerPage, page * itemsPerPage)
       .map(renderItem)
       .join("");
 
-    // Render pagination buttons
+    // Reset pagination
     pagination.innerHTML = "";
     const totalPages = Math.ceil(data.length / itemsPerPage);
 
     for (let i = 1; i <= totalPages; i++) {
       const btn = document.createElement("button");
       btn.textContent = i;
-      btn.className =
-        "px-3 py-1 rounded " +
-        (i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300");
-
+      btn.className = `px-3 py-1 rounded ${i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300"}`;
       btn.addEventListener("click", () => renderPage(i));
       pagination.appendChild(btn);
     }
+  }
+
+  // Insert pagination only once
+  if (!container.nextSibling || container.nextSibling !== pagination) {
+    container.after(pagination);
   }
 
   renderPage(1);
