@@ -1,0 +1,12 @@
+# robots.txt for https://stocks.srjahir.in/
+# Created for SRJahir Tools (© 2025 SRJ Ahir)
+
+User-agent: *
+Allow: /
+
+# Disallow internal folders (optional)
+Disallow: /assets/
+Disallow: /scripts/
+Disallow: /images/
+
+Sitemap: https://stocks.srjahir.in/sitemap.xml
