@@ -3,65 +3,79 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Live Indian Stock Market | Indices, IPOs & Movers – SRJahir Tools</title>
+  <title>Live Indian Stock Market | Indices, IPOs & Movers – SRJahir Tech</title>
 
-  <!-- SEO OPTIMIZATION START -->
-  <meta name="description" content="Track live Indian stock indices (Nifty, Sensex, Bank Nifty), IPO calendar, top gainers, losers, and market news on SRJahir Tools. Real-time data from trusted sources." />
-  <meta name="keywords" content="Indian stock market, live indices, Nifty 50, Sensex, IPOs, top gainers, stock movers, SRJahir Tools, SRJ Ahir Technologies" />
+  <!-- 🔥 SEO & BRAND OPTIMIZATION START -->
+  <meta name="description" content="Track live Indian stock indices (Nifty, Sensex, Bank Nifty), IPO calendar, top gainers, losers, and market news on SRJahir Tech. Real-time data from trusted sources." />
+  <meta name="keywords" content="SRJahir Tech, Indian stock market, live indices, Nifty 50, Sensex, IPOs, stock gainers, stock movers, financial data, real-time stocks" />
+  <meta name="author" content="SRJahir Tech – surajmaitra1996@gmail.com" />
   <link rel="canonical" href="https://stocks.srjahir.in/" />
+
+  <!-- Favicon & App Icons -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/fevicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/fevicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/fevicon/favicon-16x16.png">
+  <link rel="manifest" href="/fevicon/site.webmanifest">
+  <link rel="icon" type="image/png" href="/fevicon/android-chrome-192x192.png">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Live Indian Stock Market – SRJahir Tools" />
-  <meta property="og:description" content="Track live Indian stock indices, IPOs, and top movers with SRJahir Tools." />
+  <meta property="og:title" content="Live Indian Stock Market – SRJahir Tech" />
+  <meta property="og:description" content="Track live Indian stock indices, IPOs, and top movers with SRJahir Tech." />
   <meta property="og:url" content="https://stocks.srjahir.in/" />
-  <meta property="og:image" content="https://stocks.srjahir.in/og-image.jpg" />
+  <meta property="og:image" content="https://stocks.srjahir.in/logo.png.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Live Indian Stock Market – SRJahir Tools" />
-  <meta name="twitter:description" content="Stay updated with live Nifty, Sensex, IPOs, and top movers. Powered by SRJahir Tools." />
-  <meta name="twitter:image" content="https://stocks.srjahir.in/og-image.jpg" />
+  <meta name="twitter:title" content="Live Indian Stock Market – SRJahir Tech" />
+  <meta name="twitter:description" content="Stay updated with live Nifty, Sensex, IPOs, and top movers. Powered by SRJahir Tech." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/logo.png.png" />
 
   <!-- Brand & Theme -->
   <meta name="theme-color" content="#0f172a" />
-  <link rel="icon" type="image/png" href="favicon.png" />
 
-  <!-- Structured Data (JSON-LD Schema.org) -->
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "FinancialService",
-    "name": "SRJahir Tools — Live Stocks",
+    "name": "SRJahir Tech — Live Stocks",
     "url": "https://stocks.srjahir.in/",
-    "description": "Live Indian stock market data, IPO updates, and top movers powered by SRJahir Tools.",
+    "description": "Live Indian stock market data, IPO updates, and top movers powered by SRJahir Tech.",
     "brand": {
       "@type": "Brand",
-      "name": "SRJahir Tools"
+      "name": "SRJahir Tech"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "surajmaitra1996@gmail.com",
+      "contactType": "customer support"
     },
     "sameAs": [
       "https://www.srjahir.in/home"
     ]
   }
   </script>
-  <!-- 🔥 SEO OPTIMIZATION END -->
+  <!-- 🔥 SEO & BRAND OPTIMIZATION END -->
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = { darkMode: 'class' };
   </script>
+
   <style>
     html { scroll-behavior: smooth; }
     .ticker-wrap { overflow: hidden; white-space: nowrap; font-weight: bold; }
     .ticker { display: inline-block; padding-left: 100%; white-space: nowrap; }
-    #tickerText { animation: tickerNews 90s linear infinite; } /* slow speed */
-    #moversTicker { animation: tickerMovers 95s linear infinite; } /* slow speed */
+    #tickerText { animation: tickerNews 90s linear infinite; }
+    #moversTicker { animation: tickerMovers 95s linear infinite; }
     @keyframes tickerNews { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
     @keyframes tickerMovers { 0% { transform: translateX(0%);} 100% { transform: translateX(-100%);} }
     .ticker-green { color: #10B981; }   
     .ticker-red { color: #EF4444; }     
     .ticker-neutral { color: #F3F4F6; } 
   </style>
+
   <script>
     if (localStorage.theme === 'light') {
       document.documentElement.classList.remove('dark');
@@ -89,7 +103,7 @@
     <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between items-center px-4 py-3 space-y-2 sm:space-y-0">
       <a href="https://www.srjahir.in/home" class="flex items-center space-x-2 text-xl font-bold">
         <span>Stock Portal</span>
-        <img src="logo.png.png" alt="logo" class="w-8 h-8">
+        <img src="logo.png.png" alt="SRJahir Tech Logo" class="w-8 h-8">
       </a>
       <ul class="flex space-x-4 text-sm">
         <li><a href="#indices" class="hover:underline">Indices</a></li>
@@ -214,10 +228,11 @@
   <!-- ABOUT -->
   <section id="about" class="bg-white text-black text-center py-10">
     <div class="my-8">
+      <img src="Stokes.png" alt="SRJahir Tech Branch Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300 mb-6">
       <a href="https://www.srjahir.in/home" target="_blank">
-        <img src="logo.png.png" alt="Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
+        <img src="logo.png.png" alt="SRJahir Tech Main Logo" class="mx-auto w-28 sm:w-32 md:w-40 hover:scale-105 transition-transform duration-300">
       </a>
-      <p class="text-sm text-gray-600 mt-2">©️ 2025 SRJ Ahir Technologies</p>
+      <p class="text-sm text-gray-600 mt-2">©️ 2025 SRJahir Tech.</p>
       <div class="my-6">
         <a href="https://pin.it/7IW2OrGOT" target="_blank" rel="noopener noreferrer">
           <img src="sanskrit.png.png" alt="Sanskrit Mantra" class="mx-auto w-44 sm:w-52 md:w-64 hover:scale-105 transition-transform duration-300">
@@ -225,8 +240,8 @@
       </div>
       <p class="text-xs text-gray-500 mt-4 max-w-xl mx-auto">
         Disclaimer: This website and its data are for educational purposes only.  
-        Market data provided by third-party sources. We do not guarantee accuracy.  
-        Use at your own risk.
+        Market data provided by third-party sources. Accuracy not guaranteed.  
+        Contact: <a href="mailto:surajmaitra1996@gmail.com" class="underline text-blue-600">surajmaitra1996@gmail.com</a>
       </p>
     </div>
   </section>
