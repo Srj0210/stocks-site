@@ -1,6 +1,10 @@
 // =======================================================
-// =============== API URL (MAIN BACKEND) ================
+//               SRJahir Tech - COMMON.JS (STABLE)
+//      SAFE FETCH + ANALYTICS + SEARCH + PAGINATION
 // =======================================================
+
+
+// ====== API URL ======
 const API_URL =
   "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
 
@@ -8,6 +12,7 @@ const API_URL =
 // =======================================================
 // ========== GOOGLE ANALYTICS AUTO-INJECT ===============
 // =======================================================
+
 (function addAnalytics() {
   const GA_ID = "G-FJGKC63PF4";
 
@@ -26,13 +31,6 @@ const API_URL =
 
       gtag("js", new Date());
       gtag("config", GA_ID);
-
-      // Initial page view
-      gtag("event", "page_view", {
-        page_title: document.title,
-        page_path: window.location.pathname,
-        page_location: window.location.href,
-      });
     };
   }
 })();
@@ -41,20 +39,19 @@ const API_URL =
 // =======================================================
 // ================= SAFE FETCH FUNCTION =================
 // =======================================================
+
 async function safeFetch(url) {
   try {
     const res = await fetch(url);
 
-    // Read raw text because Apps Script sometimes returns HTML error pages
-    const raw = await res.text();
-
-    // Try JSON
-    try {
-      return JSON.parse(raw);
-    } catch (e) {
-      console.error("❌ API non-JSON response:", raw);
+    if (!res.ok) {
+      console.error("❌ HTTP ERROR:", res.status);
       return {};
     }
+
+    // Direct JSON parse (no double conversion)
+    return await res.json();
+
   } catch (err) {
     console.error("❌ Fetch Error:", err);
     return {};
@@ -65,6 +62,7 @@ async function safeFetch(url) {
 // =======================================================
 // =================== DATA FETCH LOGIC ==================
 // =======================================================
+
 async function fetchData(type) {
   try {
     const data = await safeFetch(API_URL);
@@ -77,8 +75,7 @@ async function fetchData(type) {
 
 async function fetchAllData() {
   try {
-    const data = await safeFetch(API_URL);
-    return data || {};
+    return await safeFetch(API_URL) || {};
   } catch (e) {
     console.error("❌ Error fetching all data:", e);
     return {};
@@ -89,6 +86,7 @@ async function fetchAllData() {
 // =======================================================
 // ===================== PAGINATION ======================
 // =======================================================
+
 function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   let currentPage = 1;
   const container = document.getElementById(containerId);
@@ -99,7 +97,6 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
 
   function renderPage(page) {
     currentPage = page;
-
     container.innerHTML = data
       .slice((page - 1) * itemsPerPage, page * itemsPerPage)
       .map(renderItem)
@@ -111,9 +108,8 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
     for (let i = 1; i <= totalPages; i++) {
       const btn = document.createElement("button");
       btn.textContent = i;
-      btn.className = `px-3 py-1 rounded ${
-        i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300"
-      }`;
+      btn.className =
+        `px-3 py-1 rounded ${i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300"}`;
       btn.addEventListener("click", () => renderPage(i));
       pagination.appendChild(btn);
     }
@@ -127,6 +123,7 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
 // =======================================================
 // ======================= UTILS =========================
 // =======================================================
+
 function escapeHTML(str = "") {
   return str.replace(/[&<>"']/g, (m) => {
     return {
@@ -148,62 +145,35 @@ function formatDate(dateStr) {
 function searchContent() {
   let input = document.getElementById("searchBox")?.value.toLowerCase();
   document.querySelectorAll(".searchable").forEach((el) => {
-    el.style.display = el.innerText.toLowerCase().includes(input)
-      ? ""
-      : "none";
+    el.style.display =
+      el.innerText.toLowerCase().includes(input) ? "" : "none";
   });
 }
 
 function showLoader(elId, msg = "⏳ Loading...") {
   const el = document.getElementById(elId);
-  if (el)
-    el.innerHTML = `<p class="text-center text-gray-400">${escapeHTML(
-      msg
-    )}</p>`;
+  if (el) el.innerHTML = `<p class="text-center text-gray-400">${escapeHTML(msg)}</p>`;
 }
 
 
 // =======================================================
-// =================== ANALYTICS EVENTS ==================
+// ================= ANALYTICS EVENTS ====================
 // =======================================================
+
 document.addEventListener("click", (e) => {
   const g = window.gtag;
   if (!g) return;
 
   if (e.target.closest(".news-item")) {
-    g("event", "news_click", {
-      event_category: "News",
-      event_label: e.target.innerText.substring(0, 50),
-    });
+    g("event", "news_click");
   }
-
   if (e.target.closest(".ipo-row")) {
-    g("event", "ipo_open", {
-      event_category: "IPO",
-      event_label: e.target.innerText.substring(0, 50),
-    });
+    g("event", "ipo_open");
   }
-
   if (e.target.closest(".mover-card")) {
-    g("event", "mover_click", {
-      event_category: "Movers",
-      event_label: e.target.innerText.substring(0, 50),
-    });
+    g("event", "mover_click");
   }
-
   if (e.target.closest(".pick-card")) {
-    g("event", "pick_click", {
-      event_category: "Picks",
-      event_label: e.target.innerText.substring(0, 50),
-    });
-  }
-});
-
-document.getElementById("searchBox")?.addEventListener("input", () => {
-  if (window.gtag) {
-    gtag("event", "site_search", {
-      event_category: "Search",
-      event_label: "Search bar used",
-    });
+    g("event", "pick_click");
   }
 });
