@@ -1,8 +1,8 @@
 // =======================================================
 //               SRJahir Tech - COMMON.JS (STABLE)
-//      SAFE FETCH + ANALYTICS + SEARCH + PAGINATION
+//   SAFE FETCH + ANALYTICS + SEARCH + PAGINATION (Option A)
+//   IPOs & Movers are IGNORED here → handled by bundle.js
 // =======================================================
-
 
 // ====== API URL ======
 const API_URL =
@@ -49,9 +49,7 @@ async function safeFetch(url) {
       return {};
     }
 
-    // Direct JSON parse (no double conversion)
     return await res.json();
-
   } catch (err) {
     console.error("❌ Fetch Error:", err);
     return {};
@@ -62,8 +60,20 @@ async function safeFetch(url) {
 // =======================================================
 // =================== DATA FETCH LOGIC ==================
 // =======================================================
+// Option A → Common.js will IGNORE IPO + MOVERS completely.
 
 async function fetchData(type) {
+
+  // ❗ IGNORE IPO & MOVERS → bundle.js will handle them
+  if (
+    type === "movers" ||
+    type === "ipos_recent" ||
+    type === "ipos_upcoming"
+  ) {
+    console.warn(`⚠️ Ignored fetchData("${type}") in common.js (Option A mode)`);
+    return [];  // send empty to prevent conflict
+  }
+
   try {
     const data = await safeFetch(API_URL);
     return data[type] || [];
@@ -97,6 +107,7 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
 
   function renderPage(page) {
     currentPage = page;
+
     container.innerHTML = data
       .slice((page - 1) * itemsPerPage, page * itemsPerPage)
       .map(renderItem)
