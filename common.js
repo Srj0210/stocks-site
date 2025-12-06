@@ -1,15 +1,16 @@
-// ====== API URL ======
-const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
+// =======================================================
+// =============== API URL (MAIN BACKEND) ================
+// =======================================================
+const API_URL =
+  "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZYsXX0RXcISFqVdXlp5BE7s4sXXIb9kw6bA1JuHFyT6u9R/exec";
 
 
 // =======================================================
 // ========== GOOGLE ANALYTICS AUTO-INJECT ===============
 // =======================================================
-
 (function addAnalytics() {
   const GA_ID = "G-FJGKC63PF4";
 
-  // Prevent duplicate loading
   if (!document.querySelector(`script[src*="googletagmanager.com/gtag/js"]`)) {
     const ga = document.createElement("script");
     ga.async = true;
@@ -18,18 +19,19 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 
     ga.onload = () => {
       window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
-
-      window.gtag = gtag; // Make global
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
 
       gtag("js", new Date());
       gtag("config", GA_ID);
 
-      // Track initial page view
+      // Initial page view
       gtag("event", "page_view", {
         page_title: document.title,
         page_path: window.location.pathname,
-        page_location: window.location.href
+        page_location: window.location.href,
       });
     };
   }
@@ -37,84 +39,32 @@ const API_URL = "https://script.google.com/macros/s/AKfycby-VuqKc03bVz8OKCscnLZY
 
 
 // =======================================================
-// ========== ADVANCED ANALYTICS EVENT TRACKING ==========
+// ================= SAFE FETCH FUNCTION =================
 // =======================================================
-
-document.addEventListener("click", (e) => {
-  const g = window.gtag;
-  if (!g) return;
-
-  if (e.target.closest(".news-item")) {
-    g("event", "news_click", {
-      event_category: "News",
-      event_label: e.target.innerText.substring(0, 50)
-    });
-  }
-
-  if (e.target.closest(".ipo-row")) {
-    g("event", "ipo_open", {
-      event_category: "IPO",
-      event_label: e.target.innerText.substring(0, 50)
-    });
-  }
-
-  if (e.target.closest(".mover-card")) {
-    g("event", "mover_click", {
-      event_category: "Movers",
-      event_label: e.target.innerText.substring(0, 50)
-    });
-  }
-
-  if (e.target.closest(".pick-card")) {
-    g("event", "pick_click", {
-      event_category: "Picks",
-      event_label: e.target.innerText.substring(0, 50)
-    });
-  }
-});
-
-// Track site search usage
-document.getElementById("searchBox")?.addEventListener("input", () => {
-  if (window.gtag) {
-    gtag("event", "site_search", {
-      event_category: "Search",
-      event_label: "Search bar used"
-    });
-  }
-});
-
-// Track global stock search usage
-document.getElementById("stockSearchInput")?.addEventListener("input", () => {
-  if (window.gtag) {
-    gtag("event", "global_stock_search", {
-      event_category: "Stocks",
-      event_label: "Typed global stock"
-    });
-  }
-});
-
-
-// =======================================================
-// ================ SAFE FETCH FUNCTION ==================
-// =======================================================
-
 async function safeFetch(url) {
   try {
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
-    return await res.json();
-  } catch (e) {
-    console.error("❌ Fetch Error:", e);
+
+    // Read raw text because Apps Script sometimes returns HTML error pages
+    const raw = await res.text();
+
+    // Try JSON
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error("❌ API non-JSON response:", raw);
+      return {};
+    }
+  } catch (err) {
+    console.error("❌ Fetch Error:", err);
     return {};
   }
 }
 
 
 // =======================================================
-// ================ DATA FETCH FUNCTIONS =================
+// =================== DATA FETCH LOGIC ==================
 // =======================================================
-
-// Fetch specific category (news, movers, IPO etc.)
 async function fetchData(type) {
   try {
     const data = await safeFetch(API_URL);
@@ -125,10 +75,10 @@ async function fetchData(type) {
   }
 }
 
-// Fetch entire dataset for pages using bundle.js
 async function fetchAllData() {
   try {
-    return await safeFetch(API_URL) || {};
+    const data = await safeFetch(API_URL);
+    return data || {};
   } catch (e) {
     console.error("❌ Error fetching all data:", e);
     return {};
@@ -139,7 +89,6 @@ async function fetchAllData() {
 // =======================================================
 // ===================== PAGINATION ======================
 // =======================================================
-
 function paginate(containerId, data, renderItem, itemsPerPage = 10) {
   let currentPage = 1;
   const container = document.getElementById(containerId);
@@ -162,7 +111,9 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
     for (let i = 1; i <= totalPages; i++) {
       const btn = document.createElement("button");
       btn.textContent = i;
-      btn.className = `px-3 py-1 rounded ${i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300"}`;
+      btn.className = `px-3 py-1 rounded ${
+        i === currentPage ? "bg-blue-600 text-white" : "bg-gray-300"
+      }`;
       btn.addEventListener("click", () => renderPage(i));
       pagination.appendChild(btn);
     }
@@ -174,34 +125,85 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
 
 
 // =======================================================
-// ===================== UTILITIES =======================
+// ======================= UTILS =========================
 // =======================================================
-
-// Escape HTML (security)
 function escapeHTML(str = "") {
-  return str.replace(/[&<>"']/g, m => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
-  })[m]);
+  return str.replace(/[&<>"']/g, (m) => {
+    return {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[m];
+  });
 }
 
-// Date formatter
 function formatDate(dateStr) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
   return isNaN(d) ? escapeHTML(dateStr) : d.toLocaleDateString("en-GB");
 }
 
-// Search filter
 function searchContent() {
   let input = document.getElementById("searchBox")?.value.toLowerCase();
-  document.querySelectorAll(".searchable").forEach(el => {
-    el.style.display = el.innerText.toLowerCase().includes(input) ? "" : "none";
+  document.querySelectorAll(".searchable").forEach((el) => {
+    el.style.display = el.innerText.toLowerCase().includes(input)
+      ? ""
+      : "none";
   });
 }
 
-// Loader
 function showLoader(elId, msg = "⏳ Loading...") {
   const el = document.getElementById(elId);
-  if (el) el.innerHTML = `<p class="text-center text-gray-400">${escapeHTML(msg)}</p>`;
+  if (el)
+    el.innerHTML = `<p class="text-center text-gray-400">${escapeHTML(
+      msg
+    )}</p>`;
 }
+
+
+// =======================================================
+// =================== ANALYTICS EVENTS ==================
+// =======================================================
+document.addEventListener("click", (e) => {
+  const g = window.gtag;
+  if (!g) return;
+
+  if (e.target.closest(".news-item")) {
+    g("event", "news_click", {
+      event_category: "News",
+      event_label: e.target.innerText.substring(0, 50),
+    });
+  }
+
+  if (e.target.closest(".ipo-row")) {
+    g("event", "ipo_open", {
+      event_category: "IPO",
+      event_label: e.target.innerText.substring(0, 50),
+    });
+  }
+
+  if (e.target.closest(".mover-card")) {
+    g("event", "mover_click", {
+      event_category: "Movers",
+      event_label: e.target.innerText.substring(0, 50),
+    });
+  }
+
+  if (e.target.closest(".pick-card")) {
+    g("event", "pick_click", {
+      event_category: "Picks",
+      event_label: e.target.innerText.substring(0, 50),
+    });
+  }
+});
+
+document.getElementById("searchBox")?.addEventListener("input", () => {
+  if (window.gtag) {
+    gtag("event", "site_search", {
+      event_category: "Search",
+      event_label: "Search bar used",
+    });
+  }
+});
