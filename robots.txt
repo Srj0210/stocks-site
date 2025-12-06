@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /assets/
-Disallow: /scripts/
-Disallow: /images/
+
 Sitemap: https://stocks.srjahir.in/sitemap.xml
