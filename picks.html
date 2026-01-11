@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Stock Picks & Research Insights | Stokes SRJahir</title>
+  <meta charset="utf-8" />
+  <title>Best Stock Picks & Research Insights | Stokes SRJahir</title>
 
-  <meta name="description" content="Daily updated stock picks & curated market insights based on technical and trend analysis. Provided by Stokes SRJahir." />
+  <!-- SEO -->
+  <meta name="description" content="Explore curated stock picks, buy-sell-hold calls and research insights based on market trends. Powered by Stokes SRJahir." />
+  <meta name="keywords" content="stock picks, buy sell hold stocks, market research, equity recommendations, stocks srjahir" />
   <link rel="canonical" href="https://stocks.srjahir.in/picks.html" />
 
-  <meta property="og:title" content="Stock Picks | Stokes SRJahir" />
-  <meta property="og:description" content="Curated stock suggestions & research insights." />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Stock Picks & Research | Stokes SRJahir" />
+  <meta property="og:description" content="Curated stock recommendations and market research insights." />
+  <meta property="og:url" content="https://stocks.srjahir.in/picks.html" />
   <meta property="og:image" content="https://stocks.srjahir.in/favicon.png" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stock Picks | Stokes SRJahir" />
+  <meta name="twitter:description" content="Daily stock picks and research insights for Indian markets." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/favicon.png" />
+
+  <!-- CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -21,23 +32,34 @@
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md flex justify-between items-center px-4 py-3">
     <div class="flex items-center space-x-2">
       <a href="index.html" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded">← Back</a>
-      <img src="logo.png.png" alt="Logo" class="w-8 h-8">
+      <img src="logo.png.png" alt="Stokes SRJahir Logo" class="w-8 h-8">
       <span class="font-bold">Stock Portal</span>
     </div>
     <span class="font-semibold text-lg">🎯 Stock Picks</span>
   </nav>
 
+  <!-- MAIN -->
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search picks..."
-      class="w-full px-3 py-2 mb-4 rounded text-black" />
+    <input
+      id="searchBox"
+      onkeyup="searchContent()"
+      type="text"
+      placeholder="Search stock picks..."
+      class="w-full px-3 py-2 mb-4 rounded text-black"
+    />
 
-    <div id="picksContainer">⏳ Loading...</div>
+    <!-- REQUIRED ID -->
+    <div id="picksContainer" class="space-y-3">
+      ⏳ Loading stock picks...
+    </div>
   </main>
 
+  <!-- FOOTER -->
   <footer class="text-center text-xs text-gray-500 py-4">
     Disclaimer: This website and its data are for educational purposes only.
   </footer>
 
+  <!-- JS (ONLY ONCE) -->
   <script src="common.js"></script>
   <script src="bundle.js"></script>
 </body>
