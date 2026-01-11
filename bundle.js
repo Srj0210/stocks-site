@@ -1,5 +1,5 @@
 // =======================================================
-// SRJahir Tech - bundle.js (FINAL)
+// SRJahir Tech - bundle.js (FINAL + COMPLETE)
 // Data Fetch + Page Rendering ONLY
 // =======================================================
 
@@ -8,7 +8,7 @@ if (typeof API_URL === "undefined") {
 }
 
 // =======================================================
-// SAFE FETCH
+// SAFE FETCH (SINGLE SOURCE)
 // =======================================================
 async function fetchAPI() {
   try {
@@ -22,7 +22,64 @@ async function fetchAPI() {
 }
 
 // =======================================================
-// RENDER FUNCTIONS
+// RENDER: NEWS
+// =======================================================
+function renderNewsList(news = []) {
+  clearLoader("newsContainer");
+
+  const container = document.getElementById("newsContainer");
+  if (!container) return;
+
+  if (!news.length) {
+    container.innerHTML =
+      `<p class="text-gray-400 text-center">No news available</p>`;
+    return;
+  }
+
+  paginate("newsContainer", news, item => `
+    <div class="searchable p-4 mb-3 rounded border border-gray-700 bg-gray-800 hover:bg-gray-700">
+      <a href="${escapeHTML(item.Link || "#")}"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="block font-semibold text-blue-400 hover:underline">
+        ${escapeHTML(item.Title || "Untitled News")}
+      </a>
+      <div class="text-xs text-gray-400 mt-1">
+        ${escapeHTML(item.Published || "")}
+      </div>
+    </div>
+  `, 10);
+}
+
+// =======================================================
+// RENDER: PICKS
+// =======================================================
+function renderPicksList(picks = []) {
+  clearLoader("picksContainer");
+
+  const container = document.getElementById("picksContainer");
+  if (!container) return;
+
+  if (!picks.length) {
+    container.innerHTML =
+      `<p class="text-gray-400 text-center">No stock picks available</p>`;
+    return;
+  }
+
+  paginate("picksContainer", picks, pick => `
+    <div class="searchable p-4 mb-3 rounded border border-gray-700 bg-gray-800 hover:bg-gray-700">
+      <div class="font-semibold text-white">
+        ${escapeHTML(pick.Stock || "Unknown Stock")}
+      </div>
+      <div class="text-sm text-gray-400 mt-1">
+        ${escapeHTML(pick.Reason || "")}
+      </div>
+    </div>
+  `, 10);
+}
+
+// =======================================================
+// RENDER: MOVERS
 // =======================================================
 function renderMoversList(movers = []) {
   clearLoader("moversContainer");
@@ -37,7 +94,8 @@ function renderMoversList(movers = []) {
     const ch = parseFloat(
       String(m["Change%"] || m.Change || "0").replace(/[^\d.-]/g, "")
     ) || 0;
-    const color = ch > 0 ? "bg-green-600" : ch < 0 ? "bg-red-600" : "bg-gray-600";
+    const color =
+      ch > 0 ? "bg-green-600" : ch < 0 ? "bg-red-600" : "bg-gray-600";
 
     return `
       <div class="searchable p-3 rounded text-white ${color}">
@@ -46,6 +104,9 @@ function renderMoversList(movers = []) {
   }, 20);
 }
 
+// =======================================================
+// RENDER: IPO TABLES
+// =======================================================
 function renderIPOsList(ipos, containerId) {
   clearLoader(containerId);
 
@@ -62,13 +123,27 @@ function renderIPOsList(ipos, containerId) {
 }
 
 // =======================================================
-// PAGE BOOTSTRAP
+// PAGE BOOTSTRAP (ROUTING)
 // =======================================================
 document.addEventListener("DOMContentLoaded", async () => {
   const path = location.pathname;
   const data = await fetchAPI();
 
-  // MOVERS PAGE
+  // NEWS
+  if (path.includes("news.html")) {
+    showLoader("newsContainer", "Loading latest news...");
+    renderNewsList(data.news || []);
+    return;
+  }
+
+  // PICKS
+  if (path.includes("picks.html")) {
+    showLoader("picksContainer", "Loading stock picks...");
+    renderPicksList(data.picks || []);
+    return;
+  }
+
+  // MOVERS
   if (path.includes("movers.html")) {
     showLoader("moversContainer");
     renderMoversList(data.movers || []);
