@@ -2,20 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Upcoming IPOs - Stock Portal</title>
+  <title>Upcoming IPOs in India | Stock Portal by SRJahir</title>
 
   <!-- SEO -->
-  <meta name="description" content="Track all upcoming Indian IPOs with dates, issue size and price bands on SRJahir Stock Portal." />
+  <meta name="description" content="Track upcoming IPOs in India with open dates, price bands and issue size. Powered by SRJahir Stock Portal." />
   <link rel="canonical" href="https://stocks.srjahir.in/ipos_upcoming.html" />
 
-  <!-- IMPORTANT: Load JS First -->
+  <!-- Open Graph -->
+  <meta property="og:title" content="Upcoming IPOs in India | SRJahir Stock Portal" />
+  <meta property="og:description" content="All upcoming Indian IPOs with complete issue details." />
+  <meta property="og:type" content="website" />
+
+  <!-- JS -->
   <script src="common.js" defer></script>
   <script src="bundle.js" defer></script>
 
-  <!-- Load Tailwind LAST -->
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
 
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-200">
 
@@ -23,21 +27,26 @@
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md flex justify-between items-center px-4 py-3">
     <div class="flex items-center space-x-2">
       <a href="index.html" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded">← Back</a>
-      <img src="logo.png.png" alt="Logo" class="w-8 h-8">
+      <img src="logo.png.png" alt="SRJahir Stock Portal Logo" class="w-8 h-8">
       <span class="font-bold">Stock Portal</span>
     </div>
-    <span class="font-semibold text-lg">📊 Upcoming IPOs</span>
+    <span class="font-semibold text-lg">📅 Upcoming IPOs</span>
   </nav>
 
   <main class="max-w-6xl mx-auto px-4 py-6">
     <table class="w-full border border-gray-600 text-sm">
-      <thead class="bg-gray-200 dark:bg-gray-700">
+      <thead class="bg-gray-200 dark:bg-gray-700 text-black dark:text-white">
         <tr>
-          <th>Name</th><th>Issue Type</th><th>Price Band</th>
-          <th>Open Date</th><th>Close Date</th><th>Issue Size</th>
+          <th class="p-2">Name</th>
+          <th class="p-2">Issue Type</th>
+          <th class="p-2">Price Band</th>
+          <th class="p-2">Open Date</th>
+          <th class="p-2">Close Date</th>
+          <th class="p-2">Issue Size</th>
         </tr>
       </thead>
-      <tbody id="iposUpcomingContainer">⏳ Loading...</tbody>
+      <!-- IMPORTANT: EMPTY TBODY -->
+      <tbody id="iposUpcomingContainer"></tbody>
     </table>
   </main>
 
