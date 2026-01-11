@@ -64,14 +64,13 @@ async function safeFetch(url) {
 
 async function fetchData(type) {
 
-  // ❗ IGNORE IPO & MOVERS → bundle.js will handle them
   if (
     type === "movers" ||
     type === "ipos_recent" ||
     type === "ipos_upcoming"
   ) {
     console.warn(`⚠️ Ignored fetchData("${type}") in common.js (Option A mode)`);
-    return [];  // send empty to prevent conflict
+    return [];
   }
 
   try {
@@ -126,7 +125,13 @@ function paginate(containerId, data, renderItem, itemsPerPage = 10) {
     }
   }
 
-  container.after(pagination);
+  // ✅ FIX: tbody-safe pagination placement
+  if (container.tagName === "TBODY") {
+    container.parentElement.after(pagination);
+  } else {
+    container.after(pagination);
+  }
+
   renderPage(1);
 }
 
@@ -161,9 +166,23 @@ function searchContent() {
   });
 }
 
+
+// =======================================================
+// ===================== LOADER (FIXED) ==================
+// =======================================================
+
 function showLoader(elId, msg = "⏳ Loading...") {
   const el = document.getElementById(elId);
-  if (el) el.innerHTML = `<p class="text-center text-gray-400">${escapeHTML(msg)}</p>`;
+  if (!el) return;
+
+  // ✅ FIX: TBODY-safe loader
+  if (el.tagName === "TBODY") {
+    el.innerHTML =
+      `<tr><td colspan="10" class="p-4 text-center text-gray-400">${escapeHTML(msg)}</td></tr>`;
+  } else {
+    el.innerHTML =
+      `<p class="text-center text-gray-400">${escapeHTML(msg)}</p>`;
+  }
 }
 
 
