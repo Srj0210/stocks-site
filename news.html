@@ -1,17 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Market News & Financial Headlines (India) | Stokes SRJahir</title>
+  <meta charset="utf-8" />
+  <title>Latest Stock Market News & Financial Headlines | Stokes SRJahir</title>
 
-  <meta name="description" content="Latest stock market news, financial headlines, announcements and market summaries curated by Stokes SRJahir." />
+  <!-- SEO -->
+  <meta name="description" content="Get the latest Indian stock market news, financial headlines, company announcements and market updates. Powered by Stokes SRJahir." />
+  <meta name="keywords" content="stock market news, indian market news, share market updates, financial headlines, stocks srjahir" />
   <link rel="canonical" href="https://stocks.srjahir.in/news.html" />
 
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
   <meta property="og:title" content="Stock Market News | Stokes SRJahir" />
-  <meta property="og:description" content="Financial headlines & latest market announcements." />
+  <meta property="og:description" content="Latest Indian stock market news & financial headlines updated daily." />
+  <meta property="og:url" content="https://stocks.srjahir.in/news.html" />
   <meta property="og:image" content="https://stocks.srjahir.in/favicon.png" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stock Market News | Stokes SRJahir" />
+  <meta name="twitter:description" content="Daily stock market news, insights & financial headlines." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/favicon.png" />
+
+  <!-- CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -21,23 +32,34 @@
   <nav class="sticky top-0 z-50 bg-blue-900 dark:bg-gray-800 text-white shadow-md flex justify-between items-center px-4 py-3">
     <div class="flex items-center space-x-2">
       <a href="index.html" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded">← Back</a>
-      <img src="logo.png.png" alt="Logo" class="w-8 h-8">
+      <img src="logo.png.png" alt="Stokes SRJahir Logo" class="w-8 h-8">
       <span class="font-bold">Stock Portal</span>
     </div>
-    <span class="font-semibold text-lg">📢 All News</span>
+    <span class="font-semibold text-lg">📰 All Market News</span>
   </nav>
 
+  <!-- MAIN -->
   <main class="max-w-6xl mx-auto px-4 py-6">
-    <input id="searchBox" onkeyup="searchContent()" type="text" placeholder="Search news..."
-      class="w-full px-3 py-2 mb-4 rounded text-black" />
+    <input
+      id="searchBox"
+      onkeyup="searchContent()"
+      type="text"
+      placeholder="Search market news..."
+      class="w-full px-3 py-2 mb-4 rounded text-black"
+    />
 
-    <div id="newsContainer">⏳ Loading...</div>
+    <!-- REQUIRED ID -->
+    <div id="newsContainer" class="space-y-3">
+      ⏳ Loading latest news...
+    </div>
   </main>
 
+  <!-- FOOTER -->
   <footer class="text-center text-xs text-gray-500 py-4">
     Disclaimer: This website and its data are for educational purposes only.
   </footer>
 
+  <!-- JS (ONLY ONCE) -->
   <script src="common.js"></script>
   <script src="bundle.js"></script>
 </body>
