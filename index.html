@@ -45,7 +45,7 @@
     }
     html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
   </style>
-  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <link rel="stylesheet" href="assets/css/style.css?v22" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
@@ -271,10 +271,10 @@
   <button onclick="document.getElementById('pwa-banner').style.display='none'" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:1.1rem">✕</button>
 </div>
 
-<script src="assets/js/shared.js?v21"></script>
-<script src="assets/js/common.security.js?v20"></script>
-<script src="assets/js/common.js?v21"></script>
-<script src="assets/js/search.js?v21"></script>
+<script src="assets/js/shared.js?v22"></script>
+<script src="assets/js/common.security.js?v22"></script>
+<script src="assets/js/common.js?v22"></script>
+<script src="assets/js/search.js?v22"></script>
 
 <script>
 // Init
@@ -360,7 +360,7 @@ function renderIndices(indices) {
     // News Section
     const newsList = document.getElementById('newsList');
     if (newsList && data.news?.length) {
-      newsList.innerHTML = data.news.slice(0,6).map(n => `
+      newsList.innerHTML = data.news.slice(0,9).map(n => `
         <div class="news-card searchable">
           <a href="${escapeHTML(n.Link||'#')}" target="_blank" rel="noopener noreferrer">${decodeHTML(n.Title||'')}</a>
           <div class="news-meta">${escapeHTML(n.Published||'')}</div>

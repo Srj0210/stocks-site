@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Stock Market News Today | Live NSE BSE Updates — SRJahir Tech</title>
-  <meta name="description" content="Latest Indian stock market news today. Live updates on Nifty, Sensex, top stocks, results, IPOs and economy. Stay ahead with SRJahir Tech." />
+  <title>Most Active Stocks Today | Highest Volume NSE BSE — SRJahir Tech</title>
+  <meta name="description" content="Most active stocks by trading volume on NSE BSE today. See which stocks have the highest trading activity in Indian market." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://stocks.srjahir.in/news.html" />
+  <link rel="canonical" href="https://stocks.srjahir.in/most-active.html" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="SRJahir Tech Stocks" />
-  <meta property="og:title" content="Live Stock Market News — SRJahir Tech" />
-  <meta property="og:description" content="Breaking stock market news, Nifty/Sensex updates, IPO news and economy headlines." />
-  <meta property="og:url" content="https://stocks.srjahir.in/news.html" />
+  <meta property="og:title" content="Most Active Stocks Today — SRJahir Tech" />
+  <meta property="og:description" content="See most actively traded stocks by volume on NSE BSE." />
+  <meta property="og:url" content="https://stocks.srjahir.in/most-active.html" />
   <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Live Stock Market News — SRJahir Tech" />
-  <meta name="twitter:description" content="Breaking stock market news, Nifty/Sensex updates, IPO news and economy headlines." />
+  <meta name="twitter:title" content="Most Active Stocks Today — SRJahir Tech" />
+  <meta name="twitter:description" content="Most actively traded stocks by volume on NSE BSE." />
   <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
   <meta name="theme-color" content="#05060f" />
   <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
@@ -30,17 +30,6 @@
     :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
     html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
   </style>
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Live Stock Market News — SRJahir Tech",
-    "url":"https://stocks.srjahir.in/news.html",
-    "description":"Latest Indian stock market news today. Live updates on Nifty, Sensex, top stocks, results, IPOs and economy. Stay ahead with SRJahir Tech.",
-    "about":{"@type":"Thing","name":"Indian Stock Market"},
-    "publisher":{"@type":"Organization","name":"SRJahir Tech","url":"https://srjahir.in"}
-  }
-  </script>
   <link rel="stylesheet" href="assets/css/style.css?v22" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
@@ -49,49 +38,52 @@
 </head>
 <body>
 <div class="page-header">
-  <h1>📢 Market <span>News</span></h1>
-  <p>Latest business and stock market updates</p>
+  <h1>🔥 Most <span>Active</span></h1>
+  <p>Highest trading volume stocks on NSE/BSE today</p>
 </div>
 <div class="main-wrap">
-  <div style="text-align:center;margin-bottom:1rem;">
-    <input class="nav-search" style="width:100%;max-width:400px;border-radius:8px;padding:10px 16px" type="text" id="searchBox" placeholder="Search news..." oninput="searchContent()" />
-  </div>
-  <!-- AD -->
   <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
   </div>
-  <div id="newsContainer" class="card-grid-3">
-    <div class="loading-text">⏳ Loading news...</div>
-  </div>
-  <div class="pagination">
-    <button id="prevBtn" disabled>← Prev</button>
-    <button id="nextBtn">Next →</button>
+  <div id="activeContainer" class="card-grid">
+    <div class="loading-text">⏳ Loading most active stocks...</div>
   </div>
 </div>
 <script src="assets/js/shared.js?v22"></script>
 <script src="assets/js/common.security.js?v22"></script>
 <script src="assets/js/common.js?v22"></script>
 <script>
-injectNav('news'); injectFooter(); applyTheme();
+injectNav('active'); injectFooter(); applyTheme();
+
 (async () => {
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
-    if (!data.news?.length) {
-      document.getElementById('newsContainer').innerHTML = '<div class="loading-text">No news available.</div>';
+    var active = data.active || [];
+    var container = document.getElementById('activeContainer');
+    if (!active.length) {
+      container.innerHTML = '<div class="loading-text">No data available. Market may be closed.</div>';
       return;
     }
-    paginate('newsContainer', data.news, n => `
-      <div class="news-card searchable">
-        <a href="${escapeHTML(n.Link||'#')}" target="_blank" rel="noopener noreferrer">${decodeHTML(n.Title||'')}</a>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <div class="news-meta">${escapeHTML(n.Published||'')}</div>
-          ${n.Source ? `<span class="news-source">${escapeHTML(n.Source)}</span>` : ''}
+    container.innerHTML = active.map((s, i) => {
+      var chg = parseFloat(s['Change%']) || 0;
+      var dir = chg >= 0 ? 'up' : 'down';
+      var vol = Number(s.Volume || 0);
+      var volStr = vol >= 10000000 ? (vol/10000000).toFixed(2) + ' Cr' : vol >= 100000 ? (vol/100000).toFixed(2) + ' L' : vol.toLocaleString('en-IN');
+      return `<div class="mover-card searchable" style="border-left:3px solid var(--gold)">
+        <div>
+          <div class="mover-name"><span style="color:var(--gold);font-family:var(--font-mono);font-size:0.75rem">#${i+1}</span> ${decodeHTML(s.Name||'')}</div>
+          <div class="mover-sector">Vol: ${volStr}</div>
         </div>
-      </div>`, 12);
+        <div class="mover-price">
+          <div class="mover-cmp">₹${Number(s.Price||0).toLocaleString('en-IN')}</div>
+          <span class="mover-change ${dir}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</span>
+        </div>
+      </div>`;
+    }).join('');
   } catch(e) {
-    document.getElementById('newsContainer').innerHTML = '<div class="loading-text">Failed to load news. Please try again.</div>';
+    document.getElementById('activeContainer').innerHTML = '<div class="loading-text">Failed to load data. Please refresh.</div>';
   }
 })();
 </script>

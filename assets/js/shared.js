@@ -25,6 +25,15 @@ function injectNav(activePage) {
         <li><a href="sectors.html" ${activePage==='sectors'?'class="active"':''}>Sectors</a></li>
         <li><a href="articles.html" ${activePage==='articles'?'class="active"':''}>Learn</a></li>
       </ul>
+      <div class="nav-more-dropdown" style="position:relative;display:inline-block">
+        <button class="nav-more-btn" onclick="document.getElementById('moreMenu').style.display=document.getElementById('moreMenu').style.display==='block'?'none':'block'" style="background:transparent;border:1px solid var(--border);color:var(--text-secondary);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;font-family:var(--font-ui)">More ▾</button>
+        <div id="moreMenu" style="display:none;position:absolute;right:0;top:110%;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:6px 0;min-width:180px;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,0.5)">
+          <a href="52week.html" style="display:block;padding:8px 16px;color:var(--text-secondary);text-decoration:none;font-size:0.85rem;${activePage==='52week'?'color:var(--gold)':''}">📊 52W High/Low</a>
+          <a href="most-active.html" style="display:block;padding:8px 16px;color:var(--text-secondary);text-decoration:none;font-size:0.85rem;${activePage==='active'?'color:var(--gold)':''}">🔥 Most Active</a>
+          <a href="fii-dii.html" style="display:block;padding:8px 16px;color:var(--text-secondary);text-decoration:none;font-size:0.85rem;${activePage==='fiidii'?'color:var(--gold)':''}">🏦 FII/DII</a>
+          <a href="premarket.html" style="display:block;padding:8px 16px;color:var(--text-secondary);text-decoration:none;font-size:0.85rem;${activePage==='premarket'?'color:var(--gold)':''}">🌅 Pre-Market</a>
+        </div>
+      </div>
       <div class="nav-right">
         <input class="nav-search" type="text" placeholder="🔍 Search stocks..." id="navSearch" onkeydown="if(event.key==='Enter'){window.location='index.html?q='+encodeURIComponent(this.value)}" />
         
@@ -42,6 +51,10 @@ function injectNav(activePage) {
       <a href="calculator.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">Calculator</a>
       <a href="sectors.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">Sectors</a>
       <a href="articles.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">Learn</a>
+      <a href="52week.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">📊 52W High/Low</a>
+      <a href="most-active.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">🔥 Most Active</a>
+      <a href="fii-dii.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">🏦 FII/DII</a>
+      <a href="premarket.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">🌅 Pre-Market</a>
       <a href="about.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none;border-bottom:1px solid var(--border)">About</a>
       <a href="privacy.html" style="display:block;padding:10px 0;color:var(--text-secondary);text-decoration:none">Privacy</a>
     </div>
@@ -75,6 +88,10 @@ function injectFooter() {
         <a href="fno.html">F&amp;O Expiry</a>
         <a href="sectors.html">Sector Analysis</a>
         <a href="portfolio.html">Portfolio Tracker</a>
+        <a href="52week.html">52W High/Low</a>
+        <a href="most-active.html">Most Active</a>
+        <a href="fii-dii.html">FII/DII Activity</a>
+        <a href="premarket.html">Pre-Market</a>
         <a href="articles.html">Learn Stock Market</a>
       </div>
       <div class="footer-links" style="margin-top:0.5rem">

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FII DII Activity Today | Foreign Domestic Investor Data — SRJahir Tech</title>
+  <meta name="description" content="FII and DII buying selling activity today. Track Foreign Institutional Investors and Domestic Institutional Investors flow in Indian stock market." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stocks.srjahir.in/fii-dii.html" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SRJahir Tech Stocks" />
+  <meta property="og:title" content="FII DII Activity Today — SRJahir Tech" />
+  <meta property="og:description" content="Track FII and DII buying/selling in Indian stock market." />
+  <meta property="og:url" content="https://stocks.srjahir.in/fii-dii.html" />
+  <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FII DII Activity Today — SRJahir Tech" />
+  <meta name="twitter:description" content="Track FII and DII buying/selling in Indian market." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
+    html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
+    .fii-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1.5rem}
+    .fii-summary-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center}
+    .fii-summary-card h3{font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:1px}
+    .fii-summary-card .value{font-size:1.8rem;font-weight:700;font-family:var(--font-mono)}
+    .fii-summary-card .status{font-size:0.85rem;margin-top:0.3rem;font-weight:600}
+    .fii-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-top:0.5rem}
+    .fii-table th{background:var(--bg-card);color:var(--gold);padding:10px 14px;text-align:left;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+    .fii-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:0.85rem}
+    .fii-table tr:hover{background:var(--bg-card-hover)}
+  </style>
+  <link rel="stylesheet" href="assets/css/style.css?v22" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+</head>
+<body>
+<div class="page-header">
+  <h1>🏦 FII / <span>DII</span> Activity</h1>
+  <p>Foreign & Domestic Institutional Investor flows in Indian market</p>
+</div>
+<div class="main-wrap">
+  <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <!-- Summary Cards -->
+  <div id="summaryGrid" class="fii-summary-grid">
+    <div class="fii-summary-card"><h3>Loading...</h3><div class="value" style="color:var(--text-muted)">—</div></div>
+    <div class="fii-summary-card"><h3>Loading...</h3><div class="value" style="color:var(--text-muted)">—</div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showFiiTab('fii')">🌍 FII / FPI</button>
+    <button class="tab-btn" onclick="showFiiTab('dii')">🏠 DII</button>
+  </div>
+
+  <div id="fiiContainer" class="section-block">
+    <div class="loading-text">⏳ Loading FII data...</div>
+  </div>
+  <div id="diiContainer" class="section-block" style="display:none">
+    <div class="loading-text">⏳ Loading DII data...</div>
+  </div>
+
+  <div class="section-block" style="background:rgba(240,165,0,0.05);border-color:rgba(240,165,0,0.2);margin-top:1.5rem">
+    <p style="color:var(--text-secondary);font-size:0.82rem">
+      <strong style="color:var(--gold)">What is FII/DII?</strong><br>
+      <strong>FII (Foreign Institutional Investors)</strong> are overseas entities investing in Indian markets. When FIIs buy, it signals foreign confidence — when they sell, it often causes market dips.<br>
+      <strong>DII (Domestic Institutional Investors)</strong> include mutual funds, insurance companies and banks. DIIs often buy when FIIs sell, providing market stability.<br>
+      Net positive = Buying, Net negative = Selling. All values in ₹ Crores.
+    </p>
+  </div>
+</div>
+<script src="assets/js/shared.js?v22"></script>
+<script src="assets/js/common.security.js?v22"></script>
+<script src="assets/js/common.js?v22"></script>
+<script>
+injectNav('fiidii'); injectFooter(); applyTheme();
+
+function showFiiTab(tab) {
+  document.getElementById('fiiContainer').style.display = tab === 'fii' ? '' : 'none';
+  document.getElementById('diiContainer').style.display = tab === 'dii' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && tab==='fii') || (i===1 && tab==='dii'));
+  });
+}
+
+function renderFiiTable(container, entries, label) {
+  if (!entries || !entries.length) {
+    container.innerHTML = '<div class="loading-text">No ' + label + ' data available.</div>';
+    return;
+  }
+  container.innerHTML = `<table class="fii-table">
+    <thead><tr><th>Date</th><th>Buy (₹ Cr)</th><th>Sell (₹ Cr)</th><th>Net (₹ Cr)</th></tr></thead>
+    <tbody>${entries.map(r => {
+      var net = parseFloat(r.Net) || 0;
+      var netColor = net >= 0 ? 'var(--green)' : 'var(--red)';
+      return `<tr>
+        <td style="color:var(--text-secondary)">${escapeHTML(r.Date||'')}</td>
+        <td style="color:var(--green)">${Number(r.Buy||0).toLocaleString('en-IN')}</td>
+        <td style="color:var(--red)">${Number(r.Sell||0).toLocaleString('en-IN')}</td>
+        <td style="color:${netColor};font-weight:600">${net >= 0 ? '+' : ''}${net.toLocaleString('en-IN')}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+(async () => {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    var fd = data.fiidii || { fii: [], dii: [], summary: {} };
+
+    // Summary cards
+    var sg = document.getElementById('summaryGrid');
+    var fiiNet = fd.summary.fiiNet || 0;
+    var diiNet = fd.summary.diiNet || 0;
+    sg.innerHTML = `
+      <div class="fii-summary-card" style="border-left:4px solid ${fiiNet >= 0 ? 'var(--green)' : 'var(--red)'}">
+        <h3>🌍 FII / FPI</h3>
+        <div class="value" style="color:${fiiNet >= 0 ? 'var(--green)' : 'var(--red)'}">${fiiNet >= 0 ? '+' : ''}${Number(fiiNet).toLocaleString('en-IN')} Cr</div>
+        <div class="status" style="color:${fiiNet >= 0 ? 'var(--green)' : 'var(--red)'}">${fd.summary.fiiStatus || 'N/A'}</div>
+      </div>
+      <div class="fii-summary-card" style="border-left:4px solid ${diiNet >= 0 ? 'var(--green)' : 'var(--red)'}">
+        <h3>🏠 DII</h3>
+        <div class="value" style="color:${diiNet >= 0 ? 'var(--green)' : 'var(--red)'}">${diiNet >= 0 ? '+' : ''}${Number(diiNet).toLocaleString('en-IN')} Cr</div>
+        <div class="status" style="color:${diiNet >= 0 ? 'var(--green)' : 'var(--red)'}">${fd.summary.diiStatus || 'N/A'}</div>
+      </div>`;
+
+    renderFiiTable(document.getElementById('fiiContainer'), fd.fii, 'FII');
+    renderFiiTable(document.getElementById('diiContainer'), fd.dii, 'DII');
+  } catch(e) {
+    document.getElementById('summaryGrid').innerHTML = '<div class="loading-text">Failed to load data.</div>';
+  }
+})();
+</script>
+</body>
+</html>

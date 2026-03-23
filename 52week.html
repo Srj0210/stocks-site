@@ -3,22 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Stock Market News Today | Live NSE BSE Updates — SRJahir Tech</title>
-  <meta name="description" content="Latest Indian stock market news today. Live updates on Nifty, Sensex, top stocks, results, IPOs and economy. Stay ahead with SRJahir Tech." />
+  <title>52 Week High Low Stocks Today | NSE BSE — SRJahir Tech</title>
+  <meta name="description" content="Stocks hitting 52 week high and 52 week low today on NSE BSE. Track breakout stocks and falling stocks in Indian market." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://stocks.srjahir.in/news.html" />
+  <link rel="canonical" href="https://stocks.srjahir.in/52week.html" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="SRJahir Tech Stocks" />
-  <meta property="og:title" content="Live Stock Market News — SRJahir Tech" />
-  <meta property="og:description" content="Breaking stock market news, Nifty/Sensex updates, IPO news and economy headlines." />
-  <meta property="og:url" content="https://stocks.srjahir.in/news.html" />
+  <meta property="og:title" content="52 Week High Low Stocks Today — SRJahir Tech" />
+  <meta property="og:description" content="Track stocks at 52 week highs and lows on NSE BSE today." />
+  <meta property="og:url" content="https://stocks.srjahir.in/52week.html" />
   <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Live Stock Market News — SRJahir Tech" />
-  <meta name="twitter:description" content="Breaking stock market news, Nifty/Sensex updates, IPO news and economy headlines." />
+  <meta name="twitter:title" content="52 Week High Low Stocks — SRJahir Tech" />
+  <meta name="twitter:description" content="Track stocks at 52 week highs and lows on NSE BSE." />
   <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
   <meta name="theme-color" content="#05060f" />
   <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
@@ -30,17 +30,6 @@
     :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
     html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
   </style>
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Live Stock Market News — SRJahir Tech",
-    "url":"https://stocks.srjahir.in/news.html",
-    "description":"Latest Indian stock market news today. Live updates on Nifty, Sensex, top stocks, results, IPOs and economy. Stay ahead with SRJahir Tech.",
-    "about":{"@type":"Thing","name":"Indian Stock Market"},
-    "publisher":{"@type":"Organization","name":"SRJahir Tech","url":"https://srjahir.in"}
-  }
-  </script>
   <link rel="stylesheet" href="assets/css/style.css?v22" />
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
@@ -49,49 +38,71 @@
 </head>
 <body>
 <div class="page-header">
-  <h1>📢 Market <span>News</span></h1>
-  <p>Latest business and stock market updates</p>
+  <h1>📊 52 Week <span>High / Low</span></h1>
+  <p>Stocks hitting new 52 week highs and lows on NSE/BSE</p>
 </div>
 <div class="main-wrap">
-  <div style="text-align:center;margin-bottom:1rem;">
-    <input class="nav-search" style="width:100%;max-width:400px;border-radius:8px;padding:10px 16px" type="text" id="searchBox" placeholder="Search news..." oninput="searchContent()" />
-  </div>
-  <!-- AD -->
   <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
     <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
     <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
   </div>
-  <div id="newsContainer" class="card-grid-3">
-    <div class="loading-text">⏳ Loading news...</div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab52('high')">🔺 52W High</button>
+    <button class="tab-btn" onclick="showTab52('low')">🔻 52W Low</button>
   </div>
-  <div class="pagination">
-    <button id="prevBtn" disabled>← Prev</button>
-    <button id="nextBtn">Next →</button>
+  <div id="highContainer" class="card-grid">
+    <div class="loading-text">⏳ Loading 52 week data...</div>
+  </div>
+  <div id="lowContainer" class="card-grid" style="display:none">
+    <div class="loading-text">⏳ Loading...</div>
   </div>
 </div>
 <script src="assets/js/shared.js?v22"></script>
 <script src="assets/js/common.security.js?v22"></script>
 <script src="assets/js/common.js?v22"></script>
 <script>
-injectNav('news'); injectFooter(); applyTheme();
+injectNav('52week'); injectFooter(); applyTheme();
+
+function showTab52(tab) {
+  document.getElementById('highContainer').style.display = tab === 'high' ? '' : 'none';
+  document.getElementById('lowContainer').style.display = tab === 'low' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', (i===0 && tab==='high') || (i===1 && tab==='low'));
+  });
+}
+
+function renderStockCards(container, stocks, type) {
+  if (!stocks || !stocks.length) {
+    container.innerHTML = '<div class="loading-text">No data available. Market may be closed.</div>';
+    return;
+  }
+  container.innerHTML = stocks.map(s => {
+    var chg = parseFloat(s['Change%']) || 0;
+    var dir = type === 'high' ? 'up' : 'down';
+    var price = s.Price || 0;
+    var val52 = s.Value52 || 0;
+    return `<div class="mover-card ${dir}-card searchable">
+      <div>
+        <div class="mover-name">${decodeHTML(s.Name||'')}</div>
+        <div class="mover-sector">52W ${type === 'high' ? 'High' : 'Low'}: ₹${Number(val52).toLocaleString('en-IN')}</div>
+      </div>
+      <div class="mover-price">
+        <div class="mover-cmp">₹${Number(price).toLocaleString('en-IN')}</div>
+        <span class="mover-change ${dir}">${chg >= 0 ? '+' : ''}${chg.toFixed(2)}%</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 (async () => {
   try {
     const res = await fetch(API_URL);
     const data = await res.json();
-    if (!data.news?.length) {
-      document.getElementById('newsContainer').innerHTML = '<div class="loading-text">No news available.</div>';
-      return;
-    }
-    paginate('newsContainer', data.news, n => `
-      <div class="news-card searchable">
-        <a href="${escapeHTML(n.Link||'#')}" target="_blank" rel="noopener noreferrer">${decodeHTML(n.Title||'')}</a>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-          <div class="news-meta">${escapeHTML(n.Published||'')}</div>
-          ${n.Source ? `<span class="news-source">${escapeHTML(n.Source)}</span>` : ''}
-        </div>
-      </div>`, 12);
+    var w = data.week52 || { high: [], low: [] };
+    renderStockCards(document.getElementById('highContainer'), w.high, 'high');
+    renderStockCards(document.getElementById('lowContainer'), w.low, 'low');
   } catch(e) {
-    document.getElementById('newsContainer').innerHTML = '<div class="loading-text">Failed to load news. Please try again.</div>';
+    document.getElementById('highContainer').innerHTML = '<div class="loading-text">Failed to load data. Please refresh.</div>';
   }
 })();
 </script>
