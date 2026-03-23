@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stock Portfolio Tracker India | Free Watchlist & Price Alerts — SRJahir Tech</title>
+  <meta name="description" content="Free stock portfolio tracker for Indian investors. Track your NSE BSE holdings, set price alerts, manage watchlist. Data saved locally on your device." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stocks.srjahir.in/portfolio.html" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SRJahir Tech Stocks" />
+  <meta property="og:title" content="Free Stock Portfolio Tracker — SRJahir Tech" />
+  <meta property="og:description" content="Track your stocks, set price alerts and manage your watchlist. Free portfolio tracker for Indian investors." />
+  <meta property="og:url" content="https://stocks.srjahir.in/portfolio.html" />
+  <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Free Stock Portfolio Tracker — SRJahir Tech" />
+  <meta name="twitter:description" content="Track your stocks, set price alerts and manage your watchlist. Free portfolio tracker for Indian investors." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;
+      --bg-card-hover:#161830;--border:rgba(255,255,255,0.07);
+      --gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;
+      --red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;
+      --text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;
+      --font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;
+      --radius:12px;--radius-sm:8px;
+    }
+    body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-ui);}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Free Stock Portfolio Tracker — SRJahir Tech",
+    "url":"https://stocks.srjahir.in/portfolio.html",
+    "description":"Free stock portfolio tracker for Indian investors. Track your NSE BSE holdings, set price alerts, manage watchlist. Data saved locally on your device.",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},
+    "author":{"@type":"Organization","name":"SRJahir Tech"}
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+  <script defer src="https://s3.tradingview.com/tv.js"></script>
+  <style>
+    .port-tabs { display:flex; gap:4px; background:var(--bg-primary); border:1px solid var(--border); border-radius:10px; padding:4px; width:fit-content; margin-bottom:1.5rem; }
+    .port-tab { background:none; border:none; color:var(--text-muted); padding:8px 20px; border-radius:8px; cursor:pointer; font-size:0.9rem; font-weight:600; font-family:var(--font-ui); transition:all 0.2s; }
+    .port-tab.active { background:var(--gold); color:#000; }
+    .port-panel { display:none; } .port-panel.active { display:block; }
+
+    /* Portfolio */
+    .add-form { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1.2rem; margin-bottom:1.2rem; }
+    .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; margin-bottom:10px; }
+    .form-input { background:var(--bg-primary); border:1px solid var(--border); color:var(--text-primary); padding:10px 12px; border-radius:8px; font-size:0.9rem; font-family:var(--font-ui); outline:none; transition:border-color 0.2s; width:100%; }
+    .form-input:focus { border-color:var(--gold); }
+    .form-input::placeholder { color:var(--text-muted); }
+    .add-btn { background:var(--gold); color:#000; border:none; padding:10px 24px; border-radius:8px; font-weight:700; cursor:pointer; font-family:var(--font-ui); font-size:0.9rem; transition:all 0.2s; }
+    .add-btn:hover { background:#d4920a; }
+    .del-btn { background:var(--red-dim); color:var(--red); border:1px solid rgba(255,61,87,0.3); width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:0.9rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+    .del-btn:hover { background:var(--red); color:#fff; }
+    .summary-bar { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin-bottom:1.2rem; }
+    .summary-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1rem; text-align:center; }
+    .summary-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-family:var(--font-mono); }
+    .summary-val { font-size:1.3rem; font-weight:700; font-family:var(--font-mono); margin-top:4px; }
+    .port-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    .port-table th { background:rgba(240,165,0,0.06); color:var(--gold); padding:8px 12px; text-align:left; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:1px; text-transform:uppercase; }
+    .port-table td { padding:10px 12px; border-bottom:1px solid var(--border); color:var(--text-secondary); font-family:var(--font-mono); vertical-align:middle; }
+    .port-table td:first-child { color:var(--text-primary); font-weight:600; }
+
+    /* Watchlist */
+    .watch-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.8rem; }
+    .watch-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1rem; display:flex; flex-direction:column; gap:6px; transition:all 0.2s; position:relative; }
+    .watch-card:hover { border-color:rgba(240,165,0,0.2); }
+    .watch-name { font-weight:700; font-size:0.9rem; color:var(--text-primary); }
+    .watch-symbol { font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); }
+    .watch-note { font-size:0.78rem; color:var(--text-secondary); font-style:italic; }
+    .watch-del { position:absolute; top:8px; right:8px; }
+    .alert-badge { display:inline-block; font-size:0.68rem; padding:2px 8px; border-radius:10px; background:rgba(240,165,0,0.1); color:var(--gold); border:1px solid rgba(240,165,0,0.2); font-family:var(--font-mono); }
+
+    /* Alerts */
+    .alert-list { display:flex; flex-direction:column; gap:0.8rem; }
+    .alert-item { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .alert-info { flex:1; }
+    .alert-stock { font-weight:700; color:var(--text-primary); font-size:0.9rem; }
+    .alert-detail { font-size:0.78rem; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px; }
+    .alert-status { text-align:right; }
+    .notify-note { background:rgba(79,195,247,0.06); border:1px solid rgba(79,195,247,0.15); border-radius:10px; padding:0.8rem 1rem; font-size:0.82rem; color:var(--blue); margin-bottom:1rem; }
+    .empty-state { text-align:center; padding:3rem; color:var(--text-muted); font-family:var(--font-mono); font-size:0.85rem; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <h1>📊 Portfolio <span>Tracker</span></h1>
+  <p>Track holdings · Watchlist · Price alerts — stored locally on your device</p>
+</div>
+<div class="main-wrap">
+
+  <div style="background:rgba(240,165,0,0.04);border:1px solid rgba(240,165,0,0.12);border-radius:10px;padding:0.8rem 1rem;margin-bottom:1.2rem;font-size:0.82rem;color:var(--text-secondary);">
+    🔒 All data is saved locally on your device (localStorage). Nothing is sent to any server. Refresh-safe.
+  </div>
+
+  <div class="port-tabs">
+    <button class="port-tab active" onclick="switchTab('portfolio',this)">📊 Portfolio</button>
+    <button class="port-tab" onclick="switchTab('watchlist',this)">👁 Watchlist</button>
+    <button class="port-tab" onclick="switchTab('alerts',this)">🔔 Price Alerts</button>
+  </div>
+
+  <!-- PORTFOLIO -->
+  <div class="port-panel active" id="panel-portfolio">
+    <div class="add-form">
+      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;font-weight:600;">Add Holding</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;line-height:1.6">
+        📝 <strong style="color:var(--text-secondary)">Kaise use karein:</strong> Stock ka naam likho (e.g. RELIANCE), qty, buy price, aur current price daalo. P&amp;L automatically calculate hoga.
+      </div>
+      <div class="form-grid">
+        <input class="form-input" id="p-stock" placeholder="Stock (e.g. RELIANCE)" />
+        <input class="form-input" id="p-qty" type="number" placeholder="Qty" min="1" />
+        <input class="form-input" id="p-buy" type="number" placeholder="Buy Price (₹)" min="1" />
+        <input class="form-input" id="p-cmp" type="number" placeholder="Current Price (₹)" min="1" />
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="add-btn" onclick="addHolding()">+ Add Holding</button>
+        <button onclick="loadSample()" style="background:var(--bg-primary);border:1px solid var(--border);color:var(--text-secondary);padding:10px 16px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-family:var(--font-ui);">📥 Load Sample Data</button>
+      </div>
+    </div>
+
+    <div class="summary-bar" id="port-summary" style="display:none"></div>
+
+    <div style="overflow-x:auto">
+      <table class="port-table">
+        <thead><tr>
+          <th>Stock</th><th>Qty</th><th>Buy</th><th>CMP</th>
+          <th>Invested</th><th>Value</th><th>P&L</th><th>%</th><th></th>
+        </tr></thead>
+        <tbody id="port-table-body"></tbody>
+      </table>
+    </div>
+    <div class="empty-state" id="port-empty">No holdings yet. Add your first stock above.</div>
+  </div>
+
+  <!-- WATCHLIST -->
+  <div class="port-panel" id="panel-watchlist">
+    <div class="add-form">
+      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;font-weight:600;">Add to Watchlist</div>
+      <div class="form-grid">
+        <input class="form-input" id="w-stock" placeholder="Stock name" />
+        <input class="form-input" id="w-symbol" placeholder="NSE Symbol (e.g. RELIANCE)" />
+        <input class="form-input" id="w-note" placeholder="Note (optional)" />
+      </div>
+      <button class="add-btn" onclick="addWatch()">+ Add to Watchlist</button>
+    </div>
+    <div class="watch-grid" id="watch-grid"></div>
+    <div class="empty-state" id="watch-empty">No stocks in watchlist yet.</div>
+
+    <!-- AD -->
+    <div style="text-align:center;margin-top:0.5rem;min-height:0">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+  </div>
+
+  <!-- PRICE ALERTS -->
+  <div class="port-panel" id="panel-alerts">
+    <div class="notify-note">
+      🔔 Price alerts use browser notifications. You'll get notified when a stock hits your target price. <strong>Enable notifications</strong> when prompted.
+      <br><em style="font-size:0.75rem">Note: Alerts only work while this page is open. For background alerts, install as PWA.</em>
+    </div>
+    <div class="add-form">
+      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px;font-weight:600;">Set Price Alert</div>
+      <div class="form-grid">
+        <input class="form-input" id="a-stock" placeholder="Stock name" />
+        <input class="form-input" id="a-price" type="number" placeholder="Target Price (₹)" />
+        <select class="form-input" id="a-type">
+          <option value="above">Price goes ABOVE ↑</option>
+          <option value="below">Price goes BELOW ↓</option>
+        </select>
+        <input class="form-input" id="a-current" type="number" placeholder="Current Price (₹)" />
+      </div>
+      <button class="add-btn" onclick="addAlert()">🔔 Set Alert</button>
+    </div>
+    <div class="alert-list" id="alert-list"></div>
+    <div class="empty-state" id="alert-empty">No alerts set. Add your first price alert above.</div>
+  </div>
+
+</div>
+
+<script src="assets/js/shared.js?v21"></script>
+<script src="assets/js/common.js?v21"></script>
+<script>
+injectNav('portfolio'); injectFooter(); applyTheme();
+
+// ===== DATA =====
+let portfolio = JSON.parse(localStorage.getItem('srj-portfolio') || '[]');
+let watchlist = JSON.parse(localStorage.getItem('srj-watchlist') || '[]');
+let alerts    = JSON.parse(localStorage.getItem('srj-alerts') || '[]');
+
+function save() {
+  localStorage.setItem('srj-portfolio', JSON.stringify(portfolio));
+  localStorage.setItem('srj-watchlist', JSON.stringify(watchlist));
+  localStorage.setItem('srj-alerts',    JSON.stringify(alerts));
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.port-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.port-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  btn.classList.add('active');
+  if (tab === 'portfolio') renderPortfolio();
+  if (tab === 'watchlist') renderWatchlist();
+  if (tab === 'alerts') renderAlerts();
+}
+
+// ===== PORTFOLIO =====
+function addHolding() {
+  const stock = document.getElementById('p-stock').value.trim().toUpperCase();
+  const qty   = parseFloat(document.getElementById('p-qty').value);
+  const buy   = parseFloat(document.getElementById('p-buy').value);
+  const cmp   = parseFloat(document.getElementById('p-cmp').value);
+  if (!stock || !qty || !buy) return alert('Please fill stock name, qty and buy price.');
+  portfolio.push({ id: Date.now(), stock, qty, buy, cmp: cmp || buy });
+  save(); renderPortfolio();
+  ['p-stock','p-qty','p-buy','p-cmp'].forEach(id => document.getElementById(id).value = '');
+}
+
+function removeHolding(id) {
+  portfolio = portfolio.filter(h => h.id !== id);
+  save(); renderPortfolio();
+}
+
+function renderPortfolio() {
+  const tbody = document.getElementById('port-table-body');
+  const empty = document.getElementById('port-empty');
+  const summary = document.getElementById('port-summary');
+
+  if (!portfolio.length) { tbody.innerHTML = ''; empty.style.display = ''; summary.style.display = 'none'; return; }
+  empty.style.display = 'none'; summary.style.display = '';
+
+  let totalInv = 0, totalVal = 0;
+  tbody.innerHTML = portfolio.map(h => {
+    const inv = h.qty * h.buy;
+    const val = h.qty * h.cmp;
+    const pl  = val - inv;
+    const pct = ((pl / inv) * 100).toFixed(2);
+    totalInv += inv; totalVal += val;
+    const color = pl >= 0 ? 'var(--green)' : 'var(--red)';
+    return `<tr>
+      <td>${h.stock}</td>
+      <td>${h.qty}</td>
+      <td>₹${h.buy.toLocaleString('en-IN')}</td>
+      <td>₹${h.cmp.toLocaleString('en-IN')}</td>
+      <td>₹${Math.round(inv).toLocaleString('en-IN')}</td>
+      <td>₹${Math.round(val).toLocaleString('en-IN')}</td>
+      <td style="color:${color}">₹${Math.round(pl).toLocaleString('en-IN')}</td>
+      <td style="color:${color}">${pct}%</td>
+      <td><button class="del-btn" onclick="removeHolding(${h.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+
+  const totalPL = totalVal - totalInv;
+  const totalPct = ((totalPL/totalInv)*100).toFixed(2);
+  const plColor = totalPL >= 0 ? 'var(--green)' : 'var(--red)';
+  summary.innerHTML = `
+    <div class="summary-card"><div class="summary-label">Invested</div><div class="summary-val" style="color:var(--text-primary)">₹${Math.round(totalInv).toLocaleString('en-IN')}</div></div>
+    <div class="summary-card"><div class="summary-label">Current Value</div><div class="summary-val" style="color:var(--gold)">₹${Math.round(totalVal).toLocaleString('en-IN')}</div></div>
+    <div class="summary-card"><div class="summary-label">Total P&L</div><div class="summary-val" style="color:${plColor}">₹${Math.round(totalPL).toLocaleString('en-IN')}</div></div>
+    <div class="summary-card"><div class="summary-label">Return %</div><div class="summary-val" style="color:${plColor}">${totalPct}%</div></div>
+  `;
+}
+
+// ===== WATCHLIST =====
+function addWatch() {
+  const stock  = document.getElementById('w-stock').value.trim();
+  const symbol = document.getElementById('w-symbol').value.trim().toUpperCase();
+  const note   = document.getElementById('w-note').value.trim();
+  if (!stock) return alert('Please enter stock name.');
+  watchlist.push({ id: Date.now(), stock, symbol, note });
+  save(); renderWatchlist();
+  ['w-stock','w-symbol','w-note'].forEach(id => document.getElementById(id).value = '');
+}
+
+function removeWatch(id) {
+  watchlist = watchlist.filter(w => w.id !== id);
+  save(); renderWatchlist();
+}
+
+function renderWatchlist() {
+  const grid  = document.getElementById('watch-grid');
+  const empty = document.getElementById('watch-empty');
+  if (!watchlist.length) { grid.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  grid.innerHTML = watchlist.map(w => `
+    <div class="watch-card">
+      <button class="del-btn watch-del" onclick="removeWatch(${w.id})">✕</button>
+      <div class="watch-name">${w.stock}</div>
+      ${w.symbol ? `<div class="watch-symbol">${w.symbol}</div>` : ''}
+      ${w.note ? `<div class="watch-note">"${w.note}"</div>` : ''}
+      ${w.symbol ? `<span class="alert-badge">NSE:${w.symbol}</span>` : ''}
+    </div>`).join('');
+}
+
+// ===== PRICE ALERTS =====
+function requestNotify() {
+  if (Notification.permission === 'default') Notification.requestPermission();
+}
+
+function addAlert() {
+  const stock   = document.getElementById('a-stock').value.trim().toUpperCase();
+  const price   = parseFloat(document.getElementById('a-price').value);
+  const type    = document.getElementById('a-type').value;
+  const current = parseFloat(document.getElementById('a-current').value);
+  if (!stock || !price) return alert('Please fill stock name and target price.');
+  requestNotify();
+  alerts.push({ id: Date.now(), stock, price, type, current: current || 0, triggered: false });
+  save(); renderAlerts();
+  ['a-stock','a-price','a-current'].forEach(id => document.getElementById(id).value = '');
+}
+
+function removeAlert(id) {
+  alerts = alerts.filter(a => a.id !== id);
+  save(); renderAlerts();
+}
+
+function updateAlertPrice(id, price) {
+  const a = alerts.find(x => x.id === id);
+  if (!a) return;
+  a.current = parseFloat(price) || 0;
+
+  // Check if triggered
+  if (!a.triggered) {
+    if (a.type === 'above' && a.current >= a.price) {
+      a.triggered = true;
+      if (Notification.permission === 'granted') {
+        new Notification(`🔔 ${a.stock} Alert!`, { body: `${a.stock} crossed ₹${a.price} — now at ₹${a.current}`, icon: 'favicon-bull.png' });
+      }
+    }
+    if (a.type === 'below' && a.current <= a.price && a.current > 0) {
+      a.triggered = true;
+      if (Notification.permission === 'granted') {
+        new Notification(`🔔 ${a.stock} Alert!`, { body: `${a.stock} fell below ₹${a.price} — now at ₹${a.current}`, icon: 'favicon-bull.png' });
+      }
+    }
+  }
+  save(); renderAlerts();
+}
+
+function renderAlerts() {
+  const list  = document.getElementById('alert-list');
+  const empty = document.getElementById('alert-empty');
+  if (!alerts.length) { list.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  list.innerHTML = alerts.map(a => {
+    const statusColor = a.triggered ? 'var(--green)' : (a.type === 'above' ? 'var(--gold)' : 'var(--blue)');
+    return `<div class="alert-item">
+      <div class="alert-info">
+        <div class="alert-stock">🔔 ${a.stock}</div>
+        <div class="alert-detail">${a.type === 'above' ? '↑ Above' : '↓ Below'} ₹${a.price.toLocaleString('en-IN')}
+        ${a.triggered ? ' — <span style="color:var(--green)">✅ TRIGGERED</span>' : ''}</div>
+      </div>
+      <div>
+        <input class="form-input" type="number" placeholder="Update CMP" style="width:130px;padding:8px 10px;font-size:0.82rem"
+          value="${a.current || ''}" onchange="updateAlertPrice(${a.id}, this.value)" />
+      </div>
+      <button class="del-btn" onclick="removeAlert(${a.id})">✕</button>
+    </div>`;
+  }).join('');
+}
+
+// Load sample data for demo
+function loadSample() {
+  if (portfolio.length > 0 && !confirm('Sample data load karna chahte ho? Current data replace ho jayega.')) return;
+  portfolio = [
+    { id: 1, stock: 'RELIANCE', qty: 10, buy: 2800, cmp: 3100 },
+    { id: 2, stock: 'TCS', qty: 5, buy: 3600, cmp: 3400 },
+    { id: 3, stock: 'HDFC BANK', qty: 20, buy: 1650, cmp: 1720 },
+  ];
+  save(); renderPortfolio();
+}
+
+// Init
+renderPortfolio(); renderWatchlist(); renderAlerts();
+</script>
+</body>
+</html>

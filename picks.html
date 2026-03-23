@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stock Picks for Today | Buy Sell Hold Recommendations India — SRJahir Tech</title>
+  <meta name="description" content="Curated stock picks and recommendations from top analysts. Buy, sell or hold advice for Indian stocks. Educational purposes only." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stocks.srjahir.in/picks.html" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SRJahir Tech Stocks" />
+  <meta property="og:title" content="Stock Picks & Recommendations — SRJahir Tech" />
+  <meta property="og:description" content="Top stock picks curated from expert analyst recommendations. For educational purposes only." />
+  <meta property="og:url" content="https://stocks.srjahir.in/picks.html" />
+  <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Stock Picks & Recommendations — SRJahir Tech" />
+  <meta name="twitter:description" content="Top stock picks curated from expert analyst recommendations. For educational purposes only." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
+    html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FinancialService",
+    "name":"Stock Picks & Recommendations — SRJahir Tech",
+    "url":"https://stocks.srjahir.in/picks.html",
+    "description":"Curated stock picks and recommendations from top analysts. Buy, sell or hold advice for Indian stocks. Educational purposes only.",
+    "provider":{"@type":"Organization","name":"SRJahir Tech","url":"https://srjahir.in"},
+    "areaServed":"IN",
+    "audience":{"@type":"Audience","audienceType":"Indian stock market investors"}
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+</head>
+<body>
+<div class="page-header">
+  <h1>🎯 Stock <span>Picks</span></h1>
+  <p>Curated picks — for educational purposes only. Not financial advice.</p>
+</div>
+<div class="main-wrap">
+  <!-- AD -->
+  <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+  <div class="section-block" style="background:rgba(255,61,87,0.05);border-color:rgba(255,61,87,0.2);margin-bottom:1.5rem">
+    <p style="color:var(--red);font-size:0.85rem;font-family:var(--font-mono)">
+      ⚠️ DISCLAIMER: These picks are for educational and informational purposes only.
+      They do not constitute financial advice. Always do your own research and consult a registered financial advisor before investing.
+    </p>
+  </div>
+  <div id="picksContainer" class="card-grid-3">
+    <div class="loading-text">⏳ Loading picks...</div>
+  </div>
+  <div class="pagination">
+    <button id="prevBtn" disabled>← Prev</button>
+    <button id="nextBtn">Next →</button>
+  </div>
+</div>
+<script src="assets/js/shared.js?v21"></script>
+<script src="assets/js/common.security.js?v20"></script>
+<script src="assets/js/common.js?v21"></script>
+<script>
+injectNav('picks'); injectFooter(); applyTheme();
+(async () => {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    const picks = data.picks || [];
+    if (!picks.length) {
+      document.getElementById('picksContainer').innerHTML = '<div class="loading-text">No picks available.</div>';
+      return;
+    }
+    paginate('picksContainer', picks, p => `
+      <div class="pick-card searchable">
+        <div class="pick-name">${decodeHTML(p.Name||p.Stock||'')}</div>
+        <div class="pick-reason">${decodeHTML(p.Reason||p.Why||'')}</div>
+        <div class="pick-meta">
+          ${p.Target?`<div class="pick-stat"><span class="pick-stat-label">Target</span><span class="pick-stat-value" style="color:var(--green)">₹${escapeHTML(String(p.Target))}</span></div>`:''}
+          ${p.CMP?`<div class="pick-stat"><span class="pick-stat-label">CMP</span><span class="pick-stat-value">₹${escapeHTML(String(p.CMP))}</span></div>`:''}
+          ${p.Horizon?`<div class="pick-stat"><span class="pick-stat-label">Horizon</span><span class="pick-stat-value">${escapeHTML(p.Horizon)}</span></div>`:''}
+          ${p.Risk?`<div class="pick-stat"><span class="pick-stat-label">Risk</span><span class="pick-stat-value ${p.Risk==='Low'?'':p.Risk==='High'?'':''}"><span class="badge ${p.Risk==='Low'?'badge-green':p.Risk==='High'?'badge-red':'badge-gold'}">${escapeHTML(p.Risk)}</span></span></div>`:''}
+        </div>
+      </div>`, 9);
+  } catch(e) {
+    document.getElementById('picksContainer').innerHTML = '<div class="loading-text">Failed to load picks.</div>';
+  }
+})();
+</script>
+</body>
+</html>

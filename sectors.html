@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Indian Stock Market Sectors | IT Banking Pharma Auto Analysis — SRJahir Tech</title>
+  <meta name="description" content="Indian stock market sector analysis. Top stocks in IT, Banking, Pharma, Auto, FMCG, Energy, Infrastructure sectors with live charts and performance data." />
+  <meta name="keywords" content="Indian stock sectors, IT sector stocks India, banking sector NSE, pharma stocks BSE, FMCG stocks India, sector analysis 2026" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stocks.srjahir.in/sectors.html" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SRJahir Tech Stocks" />
+  <meta property="og:title" content="Indian Stock Market Sector Analysis — SRJahir Tech" />
+  <meta property="og:description" content="Explore IT, Banking, Pharma, Auto and FMCG sector stocks with live charts and analysis." />
+  <meta property="og:url" content="https://stocks.srjahir.in/sectors.html" />
+  <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Indian Stock Market Sector Analysis — SRJahir Tech" />
+  <meta name="twitter:description" content="Explore IT, Banking, Pharma, Auto and FMCG sector stocks with live charts and analysis." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
+    html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FinancialService",
+    "name":"Indian Stock Market Sector Analysis — SRJahir Tech",
+    "url":"https://stocks.srjahir.in/sectors.html",
+    "description":"Indian stock market sector analysis. Top stocks in IT, Banking, Pharma, Auto, FMCG, Energy, Infrastructure sectors with live charts and performance data.",
+    "provider":{"@type":"Organization","name":"SRJahir Tech","url":"https://srjahir.in"},
+    "areaServed":"IN",
+    "audience":{"@type":"Audience","audienceType":"Indian stock market investors"}
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+  <script defer src="https://s3.tradingview.com/tv.js"></script>
+  <style>
+    .sector-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+    .sector-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; overflow:hidden; cursor:pointer; transition:all 0.25s; }
+    .sector-card:hover { border-color:rgba(240,165,0,0.3); transform:translateY(-2px); box-shadow:var(--glow-gold); }
+    .sector-card.active { border-color:var(--gold); background:var(--bg-card-hover); }
+    .sector-header { padding:1rem 1.2rem; display:flex; align-items:center; gap:12px; }
+    .sector-icon { width:42px; height:42px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+    .sector-info { flex:1; }
+    .sector-name { font-size:0.95rem; font-weight:700; color:var(--text-primary); }
+    .sector-index { font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono); }
+    .sector-stocks { padding:0 1.2rem 1rem; display:flex; flex-wrap:wrap; gap:6px; }
+    .stock-chip { background:var(--bg-primary); border:1px solid var(--border); color:var(--text-secondary); padding:3px 10px; border-radius:20px; font-size:0.72rem; font-family:var(--font-mono); transition:all 0.2s; cursor:pointer; }
+    .stock-chip:hover { border-color:var(--gold); color:var(--gold); }
+    .detail-panel { background:var(--bg-secondary); border:1px solid var(--border); border-radius:14px; padding:1.4rem; margin-top:1.2rem; }
+    .detail-header { display:flex; align-items:center; gap:12px; margin-bottom:1.2rem; }
+    .detail-title { font-size:1.2rem; font-weight:700; color:var(--text-primary); }
+    .detail-subtitle { font-size:0.82rem; color:var(--text-secondary); margin-top:2px; }
+    .stocks-detail { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.8rem; margin-bottom:1.2rem; }
+    .stock-detail-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:1rem; }
+    .sdc-name { font-weight:700; color:var(--text-primary); font-size:0.9rem; margin-bottom:2px; }
+    .sdc-symbol { font-size:0.72rem; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px; }
+    .sdc-desc { font-size:0.8rem; color:var(--text-secondary); line-height:1.5; }
+    .sdc-cap { display:inline-block; font-size:0.68rem; padding:2px 8px; border-radius:10px; font-family:var(--font-mono); }
+    .cap-large { background:rgba(0,230,118,0.1); color:var(--green); border:1px solid rgba(0,230,118,0.2); }
+    .cap-mid { background:rgba(240,165,0,0.1); color:var(--gold); border:1px solid rgba(240,165,0,0.2); }
+    .cap-small { background:rgba(79,195,247,0.1); color:var(--blue); border:1px solid rgba(79,195,247,0.2); }
+    .chart-container { background:var(--bg-primary); border:1px solid var(--border); border-radius:10px; overflow:hidden; height:400px; margin-bottom:1rem; }
+  </style>
+</head>
+<body>
+<div class="page-header">
+  <h1>📈 Sector <span>Analysis</span></h1>
+  <p>IT · Banking · Pharma · Auto · FMCG · Energy · Infra</p>
+</div>
+<div class="main-wrap">
+
+  <!-- AD -->
+  <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <div class="section-block">
+    <div class="section-title"><span class="icon">🏭</span> Select a Sector</div>
+    <div class="sector-grid" id="sectorGrid"></div>
+  </div>
+
+  <div id="detailPanel" style="display:none"></div>
+
+  <!-- AD -->
+  <div style="text-align:center;margin-top:0.5rem;min-height:0">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+</div>
+
+<script src="assets/js/shared.js?v21"></script>
+<script src="assets/js/common.js?v21"></script>
+<script>
+injectNav('sectors'); injectFooter(); applyTheme();
+
+const SECTORS = [
+  {
+    id:'it', icon:'💻', name:'Information Technology', index:'NSE:CNXIT', tvIndex:'BSE:TCS', bg:'rgba(79,195,247,0.1)',
+    desc:'India\'s largest export sector. Dominated by TCS, Infosys, Wipro, HCL. Highly correlated with USD/INR.',
+    stocks:[
+      { name:'TCS', sym:'BSE:TCS', cap:'large', desc:'Largest IT services. Global presence, stable dividends.' },
+      { name:'Infosys', sym:'BSE:INFY', cap:'large', desc:'Second largest. Strong in consulting and digital transformation.' },
+      { name:'Wipro', sym:'BSE:WIPRO', cap:'large', desc:'Diversified IT services. Growing cloud & cybersecurity focus.' },
+      { name:'HCL Tech', sym:'BSE:HCLTECH', cap:'large', desc:'Strong products division. ER&D services leader.' },
+      { name:'Tech Mahindra', sym:'BSE:TECHM', cap:'large', desc:'Telecom IT focus. Good exposure to 5G spending.' },
+      { name:'LTIMindtree', sym:'BSE:LTIM', cap:'mid', desc:'Merger entity. Strong banking and financial services vertical.' },
+    ]
+  },
+  {
+    id:'banking', icon:'🏦', name:'Banking & Finance', index:'NSE:BANKNIFTY', tvIndex:'BSE:HDFCBANK', bg:'rgba(240,165,0,0.1)',
+    desc:'Largest sector by weight. Includes private, PSU banks and NBFCs. Sensitive to RBI rate decisions.',
+    stocks:[
+      { name:'HDFC Bank', sym:'BSE:HDFCBANK', cap:'large', desc:'India\'s largest private bank. Consistent performer.' },
+      { name:'ICICI Bank', sym:'BSE:ICICIBANK', cap:'large', desc:'Strong retail and corporate banking. Digital leader.' },
+      { name:'SBI', sym:'BSE:SBIN', cap:'large', desc:'Largest PSU bank. Proxy for India\'s economy.' },
+      { name:'Kotak Bank', sym:'BSE:KOTAKBANK', cap:'large', desc:'Premium private bank. Conservative, high ROE.' },
+      { name:'Axis Bank', sym:'BSE:AXISBANK', cap:'large', desc:'Retail banking turnaround story. Growing market share.' },
+      { name:'Bajaj Finance', sym:'BSE:BAJFINANCE', cap:'large', desc:'Leading NBFC. Consumer lending dominance.' },
+    ]
+  },
+  {
+    id:'pharma', icon:'💊', name:'Pharmaceuticals', index:'NSE:CNXPHARMA', tvIndex:'BSE:SUNPHARMA', bg:'rgba(0,230,118,0.08)',
+    desc:'Strong generic exports to US and Europe. Defensive sector. Regulated pricing in domestic market.',
+    stocks:[
+      { name:'Sun Pharma', sym:'BSE:SUNPHARMA', cap:'large', desc:'Largest pharma. Strong specialty portfolio in US.' },
+      { name:'Dr Reddy\'s', sym:'BSE:DRREDDY', cap:'large', desc:'Global generics. Strong ANDA pipeline in US.' },
+      { name:'Cipla', sym:'BSE:CIPLA', cap:'large', desc:'Respiratory drugs focus. Strong branded generics.' },
+      { name:'Divi\'s Lab', sym:'BSE:DIVISLAB', cap:'large', desc:'API manufacturer. Key supplier to global pharma.' },
+      { name:'Mankind Pharma', sym:'BSE:MANKIND', cap:'mid', desc:'Strong domestic branded generics. Good growth.' },
+      { name:'Lupin', sym:'BSE:LUPIN', cap:'large', desc:'US generics and inhalation drugs focus.' },
+    ]
+  },
+  {
+    id:'auto', icon:'🚗', name:'Automobiles', index:'NSE:CNXAUTO', tvIndex:'BSE:MARUTI', bg:'rgba(255,61,87,0.08)',
+    desc:'EV transition story. Maruti dominates 2-wheelers, Tata Motors in EVs. Strong domestic demand.',
+    stocks:[
+      { name:'Maruti Suzuki', sym:'BSE:MARUTI', cap:'large', desc:'Market leader in passenger cars. Budget to mid segment.' },
+      { name:'Tata Motors', sym:'BSE:TATAMOTORS', cap:'large', desc:'JLR + Indian EVs. Strong Nexon, Punch volumes.' },
+      { name:'M&M', sym:'BSE:M&M', cap:'large', desc:'SUV market leader. Strong tractor business.' },
+      { name:'Bajaj Auto', sym:'BSE:BAJAJAUTO', cap:'large', desc:'Pulsar, Dominar. Strong exports to Africa & SE Asia.' },
+      { name:'Hero MotoCorp', sym:'BSE:HEROMOTOCO', cap:'large', desc:'World\'s largest 2-wheeler. Rural market focus.' },
+      { name:'Eicher Motors', sym:'BSE:EICHERMOT', cap:'large', desc:'Royal Enfield premium bikes. Aspiring middle class.' },
+    ]
+  },
+  {
+    id:'fmcg', icon:'🛒', name:'FMCG', index:'NSE:CNXFMCG', tvIndex:'BSE:HINDUNILVR', bg:'rgba(255,193,7,0.08)',
+    desc:'Defensive sector. Urban + rural consumption play. HUL, ITC, Nestle are core holdings.',
+    stocks:[
+      { name:'HUL', sym:'BSE:HINDUNILVR', cap:'large', desc:'Soap to shampoo. Market share leader in most categories.' },
+      { name:'ITC', sym:'BSE:ITC', cap:'large', desc:'Cigarettes + FMCG + Hotels diversification.' },
+      { name:'Nestle India', sym:'BSE:NESTLEIND', cap:'large', desc:'Maggi, Munch, KitKat. Premium valuations.' },
+      { name:'Dabur', sym:'BSE:DABUR', cap:'large', desc:'Ayurvedic FMCG. Rural penetration play.' },
+      { name:'Britannia', sym:'BSE:BRITANNIA', cap:'large', desc:'Biscuits and dairy. High margins, cash flows.' },
+      { name:'Marico', sym:'BSE:MARICO', cap:'mid', desc:'Parachute coconut oil. Bangladesh exposure.' },
+    ]
+  },
+  {
+    id:'energy', icon:'⚡', name:'Energy & Power', index:'NSE:NIFTYENERGY', tvIndex:'BSE:RELIANCE', bg:'rgba(240,165,0,0.08)',
+    desc:'Oil, gas, renewables and power. Adani Green, NTPC for clean energy. ONGC, Reliance for conventional.',
+    stocks:[
+      { name:'Reliance', sym:'BSE:RELIANCE', cap:'large', desc:'Oil-to-retail-to-digital conglomerate.' },
+      { name:'ONGC', sym:'BSE:ONGC', cap:'large', desc:'Largest oil explorer. High dividend yield.' },
+      { name:'NTPC', sym:'BSE:NTPC', cap:'large', desc:'Largest power generator. Renewables expansion.' },
+      { name:'Power Grid', sym:'BSE:POWERGRID', cap:'large', desc:'Transmission monopoly. Stable regulated returns.' },
+      { name:'Adani Green', sym:'BSE:ADANIGREEN', cap:'large', desc:'Largest renewable energy company in India.' },
+      { name:'BPCL', sym:'BSE:BPCL', cap:'large', desc:'Oil marketing company. Privatization candidate.' },
+    ]
+  },
+  {
+    id:'infra', icon:'🏗️', name:'Infrastructure', index:'NSE:CNXINFRA', tvIndex:'BSE:LT', bg:'rgba(103,58,183,0.1)',
+    desc:'Roads, ports, airports and defence. Capex cycle beneficiary. L&T is the bellwether.',
+    stocks:[
+      { name:'L&T', sym:'BSE:LT', cap:'large', desc:'Engineering conglomerate. Largest infra company.' },
+      { name:'Adani Ports', sym:'BSE:ADANIPORTS', cap:'large', desc:'Largest private port operator.' },
+      { name:'IRFC', sym:'BSE:IRFC', cap:'large', desc:'Railway finance corporation. Stable returns.' },
+      { name:'IRB Infra', sym:'BSE:IRB', cap:'mid', desc:'Road BOT operator. Good toll income.' },
+      { name:'KNR Constructions', sym:'BSE:KNRCON', cap:'mid', desc:'Road and irrigation construction.' },
+      { name:'Siemens', sym:'BSE:SIEMENS', cap:'large', desc:'Industrial machinery and infrastructure tech.' },
+    ]
+  },
+  {
+    id:'realty', icon:'🏠', name:'Real Estate', index:'NSE:CNXREALTY', tvIndex:'BSE:DLF', bg:'rgba(0,188,212,0.08)',
+    desc:'Residential and commercial property. Post-COVID revival. DLF and Godrej lead.',
+    stocks:[
+      { name:'DLF', sym:'BSE:DLF', cap:'large', desc:'Largest real estate developer. Super-luxury focus.' },
+      { name:'Godrej Properties', sym:'BSE:GODREJPROP', cap:'large', desc:'Pan-India residential developer. Brand premium.' },
+      { name:'Prestige Estates', sym:'BSE:PRESTIGE', cap:'mid', desc:'South India leader expanding nationally.' },
+      { name:'Brigade Group', sym:'BSE:BRIGADE', cap:'mid', desc:'Bangalore-focused residential and commercial.' },
+      { name:'Macrotech (Lodha)', sym:'BSE:LODHA', cap:'large', desc:'MMR and Pune largest developer.' },
+      { name:'Sobha', sym:'BSE:SOBHA', cap:'mid', desc:'Quality construction. Premium Bangalore developer.' },
+    ]
+  }
+];
+
+let activeSector = null;
+
+function renderSectors() {
+  document.getElementById('sectorGrid').innerHTML = SECTORS.map(s => `
+    <div class="sector-card ${activeSector === s.id ? 'active' : ''}" onclick="selectSector('${s.id}')">
+      <div class="sector-header">
+        <div class="sector-icon" style="background:${s.bg}">${s.icon}</div>
+        <div class="sector-info">
+          <div class="sector-name">${s.name}</div>
+          <div class="sector-index">${s.tvIndex.replace("BSE:","")} BSE</div>
+        </div>
+      </div>
+      <div class="sector-stocks">
+        ${s.stocks.slice(0,4).map(st => `<span class="stock-chip">${st.name}</span>`).join('')}
+        <span class="stock-chip" style="color:var(--text-muted)">+${s.stocks.length - 4} more</span>
+      </div>
+    </div>`).join('');
+}
+
+function selectSector(id) {
+  activeSector = id;
+  const s = SECTORS.find(x => x.id === id);
+  renderSectors();
+
+  const panel = document.getElementById('detailPanel');
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-header">
+        <div class="sector-icon" style="background:${s.bg};width:48px;height:48px;font-size:1.5rem;border-radius:12px;display:flex;align-items:center;justify-content:center">${s.icon}</div>
+        <div>
+          <div class="detail-title">${s.name}</div>
+          <div class="detail-subtitle">${s.desc}</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-bottom:1rem">
+        <span class="icon">📊</span> ${s.name} — ${s.tvIndex.replace("BSE:","")} (BSE)
+        <span style="font-size:0.72rem;color:var(--text-muted);font-weight:400;margin-left:8px">Representative stock chart</span>
+      </div>
+      <div class="chart-container" id="sector-chart-${id}"></div>
+
+      <div class="section-title" style="margin-bottom:1rem"><span class="icon">🏢</span> Top Stocks in ${s.name}</div>
+      <div class="stocks-detail">
+        ${s.stocks.map(st => `
+          <div class="stock-detail-card">
+            <div class="sdc-name">${st.name}</div>
+            <div class="sdc-symbol">${st.sym}</div>
+            <div class="sdc-desc">${st.desc}</div>
+            <div style="margin-top:6px">
+              <span class="sdc-cap cap-${st.cap}">${st.cap.toUpperCase()} CAP</span>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+
+  // Load TradingView chart with unique ID to prevent caching
+  const chartId = `sector-chart-${id}-${Date.now()}`;
+  document.getElementById(`sector-chart-${id}`).id = chartId;
+
+  setTimeout(() => {
+    try {
+      new TradingView.widget({
+        container_id: chartId,
+        symbol: s.tvIndex,
+        interval: 'D',
+        timezone: 'Asia/Kolkata',
+        theme: 'dark',
+        style: '1',
+        locale: 'en',
+        allow_symbol_change: true,
+        autosize: true,
+        hide_top_toolbar: false,
+        save_image: false,
+        backgroundColor: 'rgba(13,14,26,1)',
+        gridColor: 'rgba(240,165,0,0.05)',
+        overrides: {
+          'paneProperties.background': '#05060f',
+          'paneProperties.backgroundType': 'solid'
+        }
+      });
+    } catch(e) {
+      document.getElementById(chartId).innerHTML =
+        `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.9rem;flex-direction:column;gap:12px">
+          <div style="font-size:2rem">📊</div>
+          <div>Chart: <strong style="color:var(--gold)">${s.tvIndex.replace('BSE:','')}</strong> on BSE</div>
+          <a href="https://www.tradingview.com/chart/?symbol=${encodeURIComponent(s.tvIndex)}" target="_blank" rel="noopener noreferrer" style="color:var(--gold);text-decoration:none;border:1px solid rgba(240,165,0,0.3);padding:8px 18px;border-radius:8px;font-size:0.85rem">View on TradingView →</a>
+        </div>`;
+    }
+  }, 200);
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+renderSectors();
+</script>
+</body>
+</html>

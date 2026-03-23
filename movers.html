@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Top Gainers Losers Today | NSE BSE Stock Movers — SRJahir Tech</title>
+  <meta name="description" content="Top gainers and losers in NSE BSE today. Live list of biggest stock movers, upper circuit, lower circuit stocks. Updated real-time." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stocks.srjahir.in/movers.html" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SRJahir Tech Stocks" />
+  <meta property="og:title" content="Top Gainers & Losers NSE BSE Today — SRJahir Tech" />
+  <meta property="og:description" content="See which stocks are moving the most today. Top gainers, losers and most active stocks on NSE and BSE." />
+  <meta property="og:url" content="https://stocks.srjahir.in/movers.html" />
+  <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Top Gainers & Losers NSE BSE Today — SRJahir Tech" />
+  <meta name="twitter:description" content="See which stocks are moving the most today. Top gainers, losers and most active stocks on NSE and BSE." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
+    html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FinancialService",
+    "name":"Top Gainers & Losers NSE BSE Today — SRJahir Tech",
+    "url":"https://stocks.srjahir.in/movers.html",
+    "description":"Top gainers and losers in NSE BSE today. Live list of biggest stock movers, upper circuit, lower circuit stocks. Updated real-time.",
+    "provider":{"@type":"Organization","name":"SRJahir Tech","url":"https://srjahir.in"},
+    "areaServed":"IN",
+    "audience":{"@type":"Audience","audienceType":"Indian stock market investors"}
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+</head>
+<body>
+<div class="page-header">
+  <h1>⚡ Top <span>Movers</span></h1>
+  <p>Gainers, losers and most active stocks</p>
+</div>
+<div class="main-wrap">
+  <!-- AD -->
+  <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('all')">All Movers</button>
+    <button class="tab-btn" onclick="showTab('up')">📈 Gainers</button>
+    <button class="tab-btn" onclick="showTab('down')">📉 Losers</button>
+  </div>
+  <div id="moversContainer" class="card-grid">
+    <div class="loading-text">⏳ Loading movers...</div>
+  </div>
+  <div class="pagination">
+    <button id="prevBtn" disabled>← Prev</button>
+    <button id="nextBtn">Next →</button>
+  </div>
+</div>
+<script src="assets/js/shared.js?v21"></script>
+<script src="assets/js/common.security.js?v20"></script>
+<script src="assets/js/common.js?v21"></script>
+<script>
+injectNav('movers'); injectFooter(); applyTheme();
+
+let allMovers = [];
+let currentMovers = [];
+let currentPage = 0;
+const PER_PAGE = 20;
+
+function renderPage() {
+  const container = document.getElementById('moversContainer');
+  if (!currentMovers.length) {
+    container.innerHTML = '<div class="loading-text">No data for this filter.</div>';
+    document.getElementById('prevBtn').disabled = true;
+    document.getElementById('nextBtn').disabled = true;
+    return;
+  }
+  const slice = currentMovers.slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE);
+  container.innerHTML = slice.map(m => {
+    const chg = parseFloat(m['Change%']) || 0;
+    const dir = chg >= 0 ? 'up' : 'down';
+    return `<div class="mover-card ${dir}-card searchable">
+      <div>
+        <div class="mover-name">${decodeHTML(m.Name||'')}</div>
+        <div class="mover-sector">NSE/BSE</div>
+      </div>
+      <div class="mover-price">
+        <div class="mover-cmp">₹${String(m.CMP||'')}</div>
+        <span class="mover-change ${dir}">${chg>=0?'+':''}${chg}%</span>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('prevBtn').disabled = currentPage === 0;
+  document.getElementById('nextBtn').disabled = (currentPage+1)*PER_PAGE >= currentMovers.length;
+}
+
+function showTab(type) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active',
+      (i===0&&type==='all')||(i===1&&type==='up')||(i===2&&type==='down'));
+  });
+  currentMovers = type === 'all' ? allMovers :
+    type === 'up' ? allMovers.filter(m => parseFloat(m['Change%']) >= 0) :
+    allMovers.filter(m => parseFloat(m['Change%']) < 0);
+  currentPage = 0;
+  renderPage();
+}
+
+document.getElementById('prevBtn').onclick = () => {
+  if (currentPage > 0) { currentPage--; renderPage(); }
+};
+document.getElementById('nextBtn').onclick = () => {
+  if ((currentPage+1)*PER_PAGE < currentMovers.length) { currentPage++; renderPage(); }
+};
+
+// Load data
+window.addEventListener('load', async () => {
+  try {
+    const res = await fetch(API_URL);
+    const data = await res.json();
+    allMovers = data.movers || [];
+    if (!allMovers.length) {
+      document.getElementById('moversContainer').innerHTML = '<div class="loading-text">No movers data available.</div>';
+      return;
+    }
+    currentMovers = allMovers;
+    renderPage();
+  } catch(e) {
+    document.getElementById('moversContainer').innerHTML = '<div class="loading-text">Failed to load data. Please refresh.</div>';
+  }
+});
+</script>
+</body>
+</html>

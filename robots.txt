@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Block only unnecessary files
+Disallow: /sw.js
+Disallow: /manifest.json
+
+# Crawl delay to be gentle
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://stocks.srjahir.in/sitemap.xml
+
+# Important pages for crawlers
+# Home: https://stocks.srjahir.in/
+# News: https://stocks.srjahir.in/news.html
+# IPOs: https://stocks.srjahir.in/ipos_upcoming.html
+# Movers: https://stocks.srjahir.in/movers.html
+# Calculator: https://stocks.srjahir.in/calculator.html
+# F&O Calendar: https://stocks.srjahir.in/fno.html

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title id="page-title">Stock Analysis — SRJahir Tech Stocks</title>
+  <meta name="description" id="page-desc" content="Live stock chart, analysis and data on SRJahir Tech Stocks." />
+  <meta name="robots" content="index, follow" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root{--bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;--bg-card-hover:#161830;--border:rgba(255,255,255,0.07);--gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;--red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;--text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;--font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;--radius:12px;--radius-sm:8px;}
+    html,body{margin:0;padding:0;background:#05060f;color:#f0f0f5;}
+  </style>
+  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+  <script defer src="https://s3.tradingview.com/tv.js"></script>
+  <style>
+    .stock-hero { background:linear-gradient(135deg,var(--bg-secondary),var(--bg-primary)); border-bottom:1px solid var(--border); padding:1.5rem; margin-bottom:1.5rem; }
+    .stock-hero-inner { max-width:1300px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+    .stock-name-block h1 { font-size:clamp(1.4rem,3vw,2rem); font-weight:700; color:var(--text-primary); }
+    .stock-symbol-badge { display:inline-block; font-size:0.78rem; padding:3px 12px; background:var(--gold-dim); color:var(--gold); border:1px solid rgba(240,165,0,0.25); border-radius:20px; font-family:var(--font-mono); margin-top:4px; }
+    .chart-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; overflow:hidden; height:500px; margin-bottom:1.5rem; }
+    .timeframe-bar { display:flex; gap:4px; margin-bottom:1rem; flex-wrap:wrap; }
+    .tf-btn { background:var(--bg-card); border:1px solid var(--border); color:var(--text-muted); padding:5px 14px; border-radius:6px; cursor:pointer; font-size:0.82rem; font-family:var(--font-mono); font-weight:600; transition:all 0.2s; }
+    .tf-btn.active { background:var(--gold); color:#000; border-color:var(--gold); }
+    .info-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0.8rem; margin-bottom:1.5rem; }
+    .info-card { background:var(--bg-card); border:1px solid var(--border); border-radius:10px; padding:0.9rem; }
+    .info-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:4px; }
+    .info-val { font-size:1rem; font-weight:600; color:var(--text-primary); font-family:var(--font-mono); }
+    .related-stocks { display:flex; gap:8px; flex-wrap:wrap; }
+    .related-chip { background:var(--bg-card); border:1px solid var(--border); color:var(--text-secondary); padding:6px 14px; border-radius:20px; font-size:0.82rem; text-decoration:none; transition:all 0.2s; font-family:var(--font-mono); }
+    .related-chip:hover { border-color:var(--gold); color:var(--gold); }
+    .search-another { display:flex; gap:10px; margin-bottom:1.5rem; }
+    .search-another input { flex:1; background:var(--bg-card); border:1px solid var(--border); color:var(--text-primary); padding:10px 14px; border-radius:8px; font-size:0.9rem; font-family:var(--font-ui); outline:none; }
+    .search-another input:focus { border-color:var(--gold); }
+    .search-another button { background:var(--gold); color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:700; cursor:pointer; font-family:var(--font-ui); }
+  </style>
+</head>
+<body>
+<!-- Nav injected -->
+
+<div class="stock-hero">
+  <div class="stock-hero-inner">
+    <div class="stock-name-block">
+      <h1 id="hero-name">Loading...</h1>
+      <div><span class="stock-symbol-badge" id="hero-symbol">NSE</span></div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:4px">Search another stock</div>
+      <div class="search-another">
+        <input id="stockSearchInput" type="text" placeholder="e.g. RELIANCE, TCS, HDFC" autocomplete="off" />
+        <button onclick="searchStock()">Go →</button>
+        <ul id="suggestions" class="hidden" style="position:absolute;min-width:220px;z-index:50"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- AD -->
+  <div style="text-align:center;margin-bottom:1.5rem;">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <!-- TIMEFRAME -->
+  <div class="timeframe-bar" id="tfBar">
+    <button class="tf-btn" onclick="loadChart('1')">1m</button>
+    <button class="tf-btn" onclick="loadChart('5')">5m</button>
+    <button class="tf-btn" onclick="loadChart('15')">15m</button>
+    <button class="tf-btn" onclick="loadChart('60')">1H</button>
+    <button class="tf-btn" onclick="loadChart('D')">1D</button>
+    <button class="tf-btn active" onclick="loadChart('W')">1W</button>
+    <button class="tf-btn" onclick="loadChart('M')">1M</button>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-wrap" id="mainChart"></div>
+
+  <!-- AD -->
+  <div style="text-align:center;margin-bottom:1.5rem;">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+  </div>
+
+  <!-- QUICK INFO -->
+  <div class="section-block">
+    <div class="section-title"><span class="icon">ℹ️</span> About This Stock</div>
+    <div class="info-grid" id="infoGrid">
+      <div class="info-card"><div class="info-label">Exchange</div><div class="info-val" id="info-exchange">NSE</div></div>
+      <div class="info-card"><div class="info-label">Type</div><div class="info-val" id="info-type">Equity</div></div>
+      <div class="info-card"><div class="info-label">Sector</div><div class="info-val" id="info-sector">—</div></div>
+      <div class="info-card"><div class="info-label">Market Cap</div><div class="info-val" id="info-cap">—</div></div>
+    </div>
+    <div id="stockDesc" style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;margin-top:0.5rem"></div>
+  </div>
+
+  <!-- RELATED -->
+  <div class="section-block">
+    <div class="section-title"><span class="icon">🔗</span> Related Stocks</div>
+    <div class="related-stocks" id="relatedStocks"></div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div style="background:rgba(255,61,87,0.05);border:1px solid rgba(255,61,87,0.15);border-radius:10px;padding:0.8rem 1rem;font-size:0.8rem;color:var(--text-muted);margin-top:1rem">
+    ⚠️ This page is for informational and educational purposes only. Not financial advice. Always do your own research.
+  </div>
+
+</div>
+
+<script src="assets/js/shared.js?v21"></script>
+<script src="assets/js/common.js?v21"></script>
+<script src="assets/js/search.js?v21"></script>
+<script>
+injectNav(''); injectFooter(); applyTheme();
+
+// Stock data
+const STOCK_DATA = {
+  'BSE:RELIANCE': { name:'Reliance Industries', sector:'Energy & Petrochemicals', cap:'Large Cap', desc:'India\'s largest company by market cap. Operates in oil & gas, petrochemicals, retail (Reliance Retail) and telecom (Jio). A proxy for India\'s consumption story.' },
+  'BSE:TCS': { name:'Tata Consultancy Services', sector:'Information Technology', cap:'Large Cap', desc:'India\'s largest IT company and second most valuable. Provides IT services, consulting and BPO to clients globally. Known for stable performance and high dividend payouts.' },
+  'BSE:INFY': { name:'Infosys', sector:'Information Technology', cap:'Large Cap', desc:'India\'s second largest IT services company. Strong in digital transformation, cloud services and consulting. Significant US and European revenue exposure.' },
+  'BSE:HDFCBANK': { name:'HDFC Bank', sector:'Banking & Finance', cap:'Large Cap', desc:'India\'s largest private sector bank. Known for consistent asset quality, low NPAs and steady earnings growth. A must-have in most institutional portfolios.' },
+  'BSE:ICICIBANK': { name:'ICICI Bank', sector:'Banking & Finance', cap:'Large Cap', desc:'India\'s second largest private bank. Strong retail and corporate banking. Leading in digital banking adoption and payments.' },
+  'BSE:SBIN': { name:'State Bank of India', sector:'Banking (PSU)', cap:'Large Cap', desc:'India\'s largest public sector bank. A proxy for the Indian economy. Benefits from government schemes and strong branch network.' },
+  'BSE:MARUTI': { name:'Maruti Suzuki', sector:'Automobiles', cap:'Large Cap', desc:'India\'s largest car manufacturer. Dominant in the budget to mid-segment passenger vehicle market. Strong dealer network across Tier-2 and Tier-3 cities.' },
+  'BSE:TATAMOTORS': { name:'Tata Motors', sector:'Automobiles', cap:'Large Cap', desc:'India\'s largest EV manufacturer through Nexon and Punch. Also owns Jaguar Land Rover. A dual play on India EVs and global luxury vehicles.' },
+  'BSE:SUNPHARMA': { name:'Sun Pharmaceutical', sector:'Pharmaceuticals', cap:'Large Cap', desc:'India\'s largest pharma company. Strong specialty drugs portfolio in the US market. Growing domestic branded generics business.' },
+  'BSE:WIPRO': { name:'Wipro', sector:'Information Technology', cap:'Large Cap', desc:'India\'s third largest IT services company. Strong in consulting and engineering services. Growing cloud and cybersecurity practice.' },
+};
+
+const RELATED = {
+  'it': ['BSE:TCS','BSE:INFY','BSE:WIPRO','BSE:HCLTECH','BSE:TECHM'],
+  'banking': ['BSE:HDFCBANK','BSE:ICICIBANK','BSE:SBIN','BSE:KOTAKBANK','BSE:AXISBANK'],
+  'pharma': ['BSE:SUNPHARMA','BSE:DRREDDY','BSE:CIPLA','BSE:DIVISLAB'],
+  'auto': ['BSE:MARUTI','BSE:TATAMOTORS','BSE:M&M','BSE:BAJAJAUTO'],
+};
+
+let currentSymbol = 'BSE:RELIANCE';
+let currentInterval = 'W';
+
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return { symbol: p.get('symbol') || 'NSE:RELIANCE', name: p.get('name') || '' };
+}
+
+function loadChart(interval) {
+  currentInterval = interval;
+  document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  const el = document.getElementById('mainChart');
+  el.innerHTML = '';
+  const id = 'tv_' + Date.now();
+  const div = document.createElement('div');
+  div.id = id;
+  div.style.cssText = 'width:100%;height:100%';
+  el.appendChild(div);
+
+  new TradingView.widget({
+    container_id: id,
+    symbol: currentSymbol,
+    interval: interval,
+    timezone: 'Asia/Kolkata',
+    theme: 'dark',
+    style: '1',
+    locale: 'en',
+    allow_symbol_change: true,
+    autosize: true,
+    backgroundColor: 'rgba(13,14,26,1)',
+    gridColor: 'rgba(240,165,0,0.05)',
+    hide_side_toolbar: false,
+  });
+}
+
+function initPage() {
+  const { symbol, name } = getParams();
+  currentSymbol = symbol;
+
+  const stockInfo = STOCK_DATA[symbol] || {};
+  const displayName = stockInfo.name || name || symbol.replace('NSE:','').replace('BSE:','');
+
+  document.getElementById('page-title').textContent = `${displayName} Stock Chart & Analysis — SRJahir Tech`;
+  document.getElementById('page-desc').setAttribute('content', `Live ${displayName} stock chart, analysis and data. NSE/BSE data on SRJahir Tech Stocks.`);
+  document.getElementById('hero-name').textContent = displayName;
+  document.getElementById('hero-symbol').textContent = symbol;
+  document.getElementById('info-sector').textContent = stockInfo.sector || '—';
+  document.getElementById('info-cap').textContent = stockInfo.cap || '—';
+  document.getElementById('info-exchange').textContent = symbol.startsWith('NSE:') ? 'NSE' : symbol.startsWith('BSE:') ? 'BSE' : 'Global';
+  if (stockInfo.desc) document.getElementById('stockDesc').textContent = stockInfo.desc;
+
+  // Related stocks
+  let related = [];
+  for (const [key, list] of Object.entries(RELATED)) {
+    if (list.includes(symbol)) {
+      related = list.filter(s => s !== symbol);
+      break;
+    }
+  }
+  if (!related.length) related = ['BSE:RELIANCE','BSE:TCS','BSE:HDFCBANK','BSE:INFY'].filter(s => s !== symbol);
+
+  document.getElementById('relatedStocks').innerHTML = related.slice(0,6).map(s => {
+    const n = STOCK_DATA[s]?.name || s.replace('NSE:','');
+    return `<a href="stock.html?symbol=${encodeURIComponent(s)}&name=${encodeURIComponent(n)}" class="related-chip">${n}</a>`;
+  }).join('');
+
+  loadChart('W');
+}
+
+function searchStock() {
+  const val = document.getElementById('stockSearchInput').value.trim();
+  if (!val) return;
+  window.location.href = `stock.html?symbol=NSE:${val.toUpperCase()}&name=${encodeURIComponent(val)}`;
+}
+
+document.getElementById('stockSearchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') searchStock();
+});
+
+initPage();
+</script>
+</body>
+</html>

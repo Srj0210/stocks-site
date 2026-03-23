@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SIP Calculator India 2026 | Mutual Fund Returns Calculator — SRJahir Tech</title>
+  <meta name="description" content="Free SIP calculator India. Calculate mutual fund SIP returns, lumpsum investment growth and EMI. Plan your financial future with accurate projections." />
+  <meta name="keywords" content="SIP calculator India, mutual fund calculator, SIP returns calculator, lumpsum calculator, EMI calculator India, investment calculator 2026" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://stocks.srjahir.in/calculator.html" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="SRJahir Tech Stocks" />
+  <meta property="og:title" content="Free SIP & Investment Calculator — SRJahir Tech" />
+  <meta property="og:description" content="Calculate SIP returns, lumpsum growth and EMI online. Free investment calculator for Indian investors." />
+  <meta property="og:url" content="https://stocks.srjahir.in/calculator.html" />
+  <meta property="og:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Free SIP & Investment Calculator — SRJahir Tech" />
+  <meta name="twitter:description" content="Calculate SIP returns, lumpsum growth and EMI online. Free investment calculator for Indian investors." />
+  <meta name="twitter:image" content="https://stocks.srjahir.in/assets/images/favicon-bull.png" />
+  <meta name="theme-color" content="#05060f" />
+  <link rel="icon" type="image/x-icon" href="favicon/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <style>
+    :root {
+      --bg-primary:#05060f;--bg-secondary:#0d0e1a;--bg-card:#111224;
+      --bg-card-hover:#161830;--border:rgba(255,255,255,0.07);
+      --gold:#f0a500;--gold-dim:#f0a50020;--green:#00e676;--green-dim:#00c85340;
+      --red:#ff3d57;--red-dim:#ff3d5740;--blue:#4fc3f7;
+      --text-primary:#f0f0f5;--text-secondary:#8b8fa8;--text-muted:#555870;
+      --font-ui:"Space Grotesk",sans-serif;--font-mono:"JetBrains Mono",monospace;
+      --radius:12px;--radius-sm:8px;
+    }
+    body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-ui);}
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Free SIP & Investment Calculator — SRJahir Tech",
+    "url":"https://stocks.srjahir.in/calculator.html",
+    "description":"Free SIP calculator India. Calculate mutual fund SIP returns, lumpsum investment growth and EMI. Plan your financial future with accurate projections.",
+    "applicationCategory":"FinanceApplication",
+    "operatingSystem":"All",
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"INR"},
+    "author":{"@type":"Organization","name":"SRJahir Tech"}
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/style.css?v21" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJGKC63PF4"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-FJGKC63PF4');</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1041324645386243" crossorigin="anonymous"></script>
+  <meta name="google-adsense-account" content="ca-pub-1041324645386243" />
+  <style>
+    .calc-wrap { max-width: 900px; margin: 0 auto; }
+    .calc-tabs { display:flex; gap:4px; margin-bottom:1.5rem; background:var(--bg-primary); border:1px solid var(--border); border-radius:10px; padding:4px; width:fit-content; }
+    .calc-tab { background:none; border:none; color:var(--text-muted); padding:8px 20px; border-radius:8px; cursor:pointer; font-size:0.9rem; font-weight:600; font-family:var(--font-ui); transition:all 0.2s; }
+    .calc-tab.active { background:var(--gold); color:#000; }
+    .calc-panel { display:none; } .calc-panel.active { display:block; }
+    .input-row { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.2rem; }
+    @media(max-width:600px){ .input-row { grid-template-columns:1fr; } }
+    .input-group { display:flex; flex-direction:column; gap:6px; }
+    .input-label { font-size:0.82rem; color:var(--text-secondary); font-weight:600; letter-spacing:0.5px; text-transform:uppercase; font-family:var(--font-mono); }
+    .calc-input { background:var(--bg-primary); border:1px solid var(--border); color:var(--text-primary); padding:12px 14px; border-radius:10px; font-size:1rem; font-family:var(--font-ui); outline:none; transition:all 0.2s; width:100%; }
+    .calc-input:focus { border-color:var(--gold); box-shadow:0 0 0 2px var(--gold-dim); }
+    .range-wrap { display:flex; align-items:center; gap:10px; }
+    .calc-range { flex:1; accent-color:var(--gold); cursor:pointer; }
+    .range-val { font-family:var(--font-mono); font-size:0.9rem; color:var(--gold); min-width:50px; text-align:right; }
+    .calc-btn { background:var(--gold); color:#000; border:none; padding:14px 32px; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:var(--font-ui); transition:all 0.2s; width:100%; margin-top:0.5rem; }
+    .calc-btn:hover { background:#d4920a; transform:translateY(-1px); }
+    .results-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-top:1.5rem; }
+    .result-card { background:var(--bg-primary); border:1px solid var(--border); border-radius:12px; padding:1.2rem; text-align:center; }
+    .result-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:6px; }
+    .result-value { font-size:1.5rem; font-weight:700; font-family:var(--font-mono); }
+    .result-value.green { color:var(--green); }
+    .result-value.gold { color:var(--gold); }
+    .result-value.white { color:var(--text-primary); }
+    .year-table { width:100%; border-collapse:collapse; margin-top:1.5rem; font-size:0.85rem; }
+    .year-table th { background:rgba(240,165,0,0.06); color:var(--gold); padding:8px 12px; text-align:left; font-family:var(--font-mono); font-size:0.72rem; letter-spacing:1px; text-transform:uppercase; }
+    .year-table td { padding:8px 12px; border-bottom:1px solid var(--border); color:var(--text-secondary); font-family:var(--font-mono); }
+    .year-table tr:hover td { background:rgba(240,165,0,0.03); }
+    .progress-bar { background:var(--border); border-radius:4px; height:6px; margin-top:4px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:4px; background:linear-gradient(90deg, var(--gold), var(--green)); transition:width 0.5s ease; }
+    .info-box { background:rgba(240,165,0,0.05); border:1px solid rgba(240,165,0,0.15); border-radius:10px; padding:1rem 1.2rem; margin-top:1.2rem; font-size:0.85rem; color:var(--text-secondary); line-height:1.6; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity": [
+    {"@type":"Question","name":"SIP Calculator kya hota hai?","acceptedAnswer":{"@type":"Answer","text":"SIP (Systematic Investment Plan) calculator ek tool hai jo aapko monthly investment pe expected returns calculate karne mein madad karta hai. Aap monthly amount, expected return rate aur investment period enter karte ho aur calculator batata hai kitna corpus banega."}},
+    {"@type":"Question","name":"₹5000 SIP mein 10 saal mein kitna milega?","acceptedAnswer":{"@type":"Answer","text":"₹5,000 monthly SIP at 12% annual return for 10 years = approximately ₹11.6 lakhs. Invested amount hogi ₹6 lakhs aur estimated returns ₹5.6 lakhs."}},
+    {"@type":"Question","name":"Step-up SIP kya hota hai?","acceptedAnswer":{"@type":"Answer","text":"Step-up SIP mein aap har saal apna monthly investment amount badha sakte hain (e.g. 10% per year). Ye normal SIP se zyada returns deta hai kyunki investment badhti rehti hai."}},
+    {"@type":"Question","name":"SIP mein kitna return milta hai?","acceptedAnswer":{"@type":"Answer","text":"Historical data ke hisaab se equity mutual funds mein SIP returns typically 10-15% CAGR milte hain long term mein. Ye market conditions pe depend karta hai. Past performance future returns ki guarantee nahi hai."}}
+    ]
+  }
+  </script>
+</head>
+<body>
+<div class="page-header">
+  <h1>💰 Investment <span>Calculator</span></h1>
+  <p>SIP · Lumpsum · EMI — Plan your financial future</p>
+</div>
+<div class="main-wrap">
+  <div class="calc-wrap">
+
+    <!-- AD -->
+    <div style="text-align:center;margin-bottom:0.5rem;min-height:0">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+
+    <div class="calc-tabs">
+      <button class="calc-tab active" onclick="switchCalc('sip')">SIP</button>
+      <button class="calc-tab" onclick="switchCalc('lumpsum')">Lumpsum</button>
+      <button class="calc-tab" onclick="switchCalc('emi')">EMI</button>
+    </div>
+
+    <!-- SIP CALCULATOR -->
+    <div class="section-block calc-panel active" id="panel-sip">
+      <div class="section-title"><span class="icon">📈</span> SIP Calculator</div>
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Monthly Investment (₹)</label>
+          <input class="calc-input" type="number" id="sip-amount" value="5000" min="500" oninput="calcSIP()" />
+          <div class="range-wrap">
+            <input class="calc-range" type="range" min="500" max="100000" step="500" value="5000" oninput="this.previousElementSibling.previousElementSibling.value=this.value;calcSIP()" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Expected Return (% per year)</label>
+          <input class="calc-input" type="number" id="sip-rate" value="12" min="1" max="30" step="0.5" oninput="calcSIP()" />
+          <div class="range-wrap">
+            <input class="calc-range" type="range" min="1" max="30" step="0.5" value="12" oninput="this.previousElementSibling.previousElementSibling.value=this.value;calcSIP()" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Investment Period (years)</label>
+          <input class="calc-input" type="number" id="sip-years" value="10" min="1" max="40" oninput="calcSIP()" />
+          <div class="range-wrap">
+            <input class="calc-range" type="range" min="1" max="40" value="10" oninput="this.previousElementSibling.previousElementSibling.value=this.value;calcSIP()" />
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Step-up SIP (% increase/year)</label>
+          <input class="calc-input" type="number" id="sip-stepup" value="0" min="0" max="50" step="1" oninput="calcSIP()" />
+          <div class="range-wrap">
+            <input class="calc-range" type="range" min="0" max="50" value="0" oninput="this.previousElementSibling.previousElementSibling.value=this.value;calcSIP()" />
+          </div>
+        </div>
+      </div>
+
+      <div class="results-grid" id="sip-results">
+        <div class="result-card"><div class="result-label">Invested Amount</div><div class="result-value white" id="sip-invested">—</div></div>
+        <div class="result-card"><div class="result-label">Est. Returns</div><div class="result-value green" id="sip-returns">—</div></div>
+        <div class="result-card"><div class="result-label">Total Value</div><div class="result-value gold" id="sip-total">—</div></div>
+        <div class="result-card"><div class="result-label">Wealth Gained</div><div class="result-value green" id="sip-gain">—</div><div class="progress-bar"><div class="progress-fill" id="sip-bar" style="width:0%"></div></div></div>
+      </div>
+
+      <div style="overflow-x:auto; margin-top:1rem;">
+        <table class="year-table">
+          <thead><tr><th>Year</th><th>Invested</th><th>Value</th><th>Gain</th><th>Return %</th></tr></thead>
+          <tbody id="sip-table"></tbody>
+        </table>
+      </div>
+
+      <div class="info-box">
+        💡 <strong>SIP Tip:</strong> Investing ₹5,000/month at 12% for 20 years gives ~₹50 lakhs. Start early — time is your biggest asset. Step-up SIP (increase by 10% every year) can multiply your corpus significantly.
+      </div>
+    </div>
+
+    <!-- LUMPSUM CALCULATOR -->
+    <div class="section-block calc-panel" id="panel-lumpsum">
+      <div class="section-title"><span class="icon">💵</span> Lumpsum Calculator</div>
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Investment Amount (₹)</label>
+          <input class="calc-input" type="number" id="ls-amount" value="100000" oninput="calcLS()" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Expected Return (% per year)</label>
+          <input class="calc-input" type="number" id="ls-rate" value="12" step="0.5" oninput="calcLS()" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Investment Period (years)</label>
+          <input class="calc-input" type="number" id="ls-years" value="10" oninput="calcLS()" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Inflation Rate (%)</label>
+          <input class="calc-input" type="number" id="ls-inflation" value="6" step="0.5" oninput="calcLS()" />
+        </div>
+      </div>
+      <div class="results-grid">
+        <div class="result-card"><div class="result-label">Invested</div><div class="result-value white" id="ls-invested">—</div></div>
+        <div class="result-card"><div class="result-label">Future Value</div><div class="result-value gold" id="ls-future">—</div></div>
+        <div class="result-card"><div class="result-label">Real Value (adj.)</div><div class="result-value green" id="ls-real">—</div></div>
+        <div class="result-card"><div class="result-label">Total Return</div><div class="result-value green" id="ls-return">—</div></div>
+      </div>
+      <div style="overflow-x:auto; margin-top:1rem;">
+        <table class="year-table">
+          <thead><tr><th>Year</th><th>Value</th><th>Real Value</th><th>CAGR</th></tr></thead>
+          <tbody id="ls-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EMI CALCULATOR -->
+    <div class="section-block calc-panel" id="panel-emi">
+      <div class="section-title"><span class="icon">🏠</span> EMI Calculator</div>
+      <div class="input-row">
+        <div class="input-group">
+          <label class="input-label">Loan Amount (₹)</label>
+          <input class="calc-input" type="number" id="emi-amount" value="2000000" oninput="calcEMI()" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Interest Rate (% per year)</label>
+          <input class="calc-input" type="number" id="emi-rate" value="8.5" step="0.1" oninput="calcEMI()" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Loan Tenure (years)</label>
+          <input class="calc-input" type="number" id="emi-years" value="20" oninput="calcEMI()" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Processing Fee (%)</label>
+          <input class="calc-input" type="number" id="emi-fee" value="0.5" step="0.1" oninput="calcEMI()" />
+        </div>
+      </div>
+      <div class="results-grid">
+        <div class="result-card"><div class="result-label">Monthly EMI</div><div class="result-value gold" id="emi-monthly">—</div></div>
+        <div class="result-card"><div class="result-label">Total Interest</div><div class="result-value" style="color:var(--red)" id="emi-interest">—</div></div>
+        <div class="result-card"><div class="result-label">Total Payment</div><div class="result-value white" id="emi-total">—</div></div>
+        <div class="result-card"><div class="result-label">Processing Fee</div><div class="result-value" style="color:var(--text-secondary)" id="emi-fee-val">—</div></div>
+      </div>
+      <div style="overflow-x:auto; margin-top:1rem;">
+        <table class="year-table">
+          <thead><tr><th>Year</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead>
+          <tbody id="emi-table"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- AD -->
+    <div style="text-align:center;margin-top:0.5rem;min-height:0">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1041324645386243" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle=window.adsbygoogle||[]).push({});</script>
+    </div>
+
+  </div>
+</div>
+
+<script src="assets/js/shared.js?v21"></script>
+<script src="assets/js/common.js?v21"></script>
+<script>
+injectNav('calc'); injectFooter(); applyTheme();
+
+function fmt(n) {
+  if (n >= 10000000) return '₹' + (n/10000000).toFixed(2) + ' Cr';
+  if (n >= 100000)   return '₹' + (n/100000).toFixed(2) + ' L';
+  return '₹' + Math.round(n).toLocaleString('en-IN');
+}
+
+function switchCalc(type) {
+  document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.calc-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + type).classList.add('active');
+  event.target.classList.add('active');
+  if (type === 'sip') calcSIP();
+  if (type === 'lumpsum') calcLS();
+  if (type === 'emi') calcEMI();
+}
+
+function calcSIP() {
+  const P = parseFloat(document.getElementById('sip-amount').value) || 0;
+  const r = (parseFloat(document.getElementById('sip-rate').value) || 0) / 100 / 12;
+  const n = (parseInt(document.getElementById('sip-years').value) || 0) * 12;
+  const stepup = (parseFloat(document.getElementById('sip-stepup').value) || 0) / 100;
+
+  let invested = 0, total = 0;
+  let monthly = P;
+  const rows = [];
+
+  for (let yr = 1; yr <= n/12; yr++) {
+    let yearInvested = 0, yearTotal = 0;
+    for (let m = 0; m < 12; m++) {
+      total = (total + monthly) * (1 + r);
+      invested += monthly;
+      yearInvested += monthly;
+    }
+    yearTotal = total;
+    rows.push({ yr, invested: invested, value: total });
+    monthly *= (1 + stepup);
+  }
+
+  const returns = total - invested;
+  const gainPct = invested > 0 ? (returns / invested * 100) : 0;
+
+  document.getElementById('sip-invested').textContent = fmt(invested);
+  document.getElementById('sip-returns').textContent  = fmt(returns);
+  document.getElementById('sip-total').textContent    = fmt(total);
+  document.getElementById('sip-gain').textContent     = gainPct.toFixed(1) + '%';
+  document.getElementById('sip-bar').style.width = Math.min(gainPct / 3, 100) + '%';
+
+  document.getElementById('sip-table').innerHTML = rows.map(r => `
+    <tr><td>${r.yr}</td><td>${fmt(r.invested)}</td><td>${fmt(r.value)}</td>
+    <td style="color:var(--green)">${fmt(r.value - r.invested)}</td>
+    <td style="color:var(--gold)">${r.invested > 0 ? ((r.value - r.invested)/r.invested*100).toFixed(1) : 0}%</td></tr>
+  `).join('');
+}
+
+function calcLS() {
+  const P = parseFloat(document.getElementById('ls-amount').value) || 0;
+  const r = (parseFloat(document.getElementById('ls-rate').value) || 0) / 100;
+  const n = parseInt(document.getElementById('ls-years').value) || 0;
+  const inf = (parseFloat(document.getElementById('ls-inflation').value) || 0) / 100;
+
+  const future = P * Math.pow(1 + r, n);
+  const real = P * Math.pow((1 + r) / (1 + inf), n);
+  const ret = ((future - P) / P * 100);
+
+  document.getElementById('ls-invested').textContent = fmt(P);
+  document.getElementById('ls-future').textContent   = fmt(future);
+  document.getElementById('ls-real').textContent     = fmt(real);
+  document.getElementById('ls-return').textContent   = ret.toFixed(1) + '%';
+
+  const rows = [];
+  for (let y = 1; y <= n; y++) {
+    const val = P * Math.pow(1 + r, y);
+    const rv  = P * Math.pow((1 + r) / (1 + inf), y);
+    rows.push(`<tr><td>${y}</td><td>${fmt(val)}</td><td>${fmt(rv)}</td>
+      <td style="color:var(--gold)">${(r * 100).toFixed(1)}%</td></tr>`);
+  }
+  document.getElementById('ls-table').innerHTML = rows.join('');
+}
+
+function calcEMI() {
+  const P = parseFloat(document.getElementById('emi-amount').value) || 0;
+  const annualRate = (parseFloat(document.getElementById('emi-rate').value) || 0) / 100;
+  const r = annualRate / 12;
+  const n = (parseInt(document.getElementById('emi-years').value) || 0) * 12;
+  const feeP = (parseFloat(document.getElementById('emi-fee').value) || 0) / 100;
+
+  const emi = r > 0 ? P * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1) : P/n;
+  const totalPay = emi * n;
+  const interest = totalPay - P;
+  const fee = P * feeP;
+
+  document.getElementById('emi-monthly').textContent  = fmt(emi);
+  document.getElementById('emi-interest').textContent = fmt(interest);
+  document.getElementById('emi-total').textContent    = fmt(totalPay + fee);
+  document.getElementById('emi-fee-val').textContent  = fmt(fee);
+
+  let balance = P;
+  const rows = [];
+  for (let yr = 1; yr <= n/12; yr++) {
+    let principalYear = 0, interestYear = 0;
+    for (let m = 0; m < 12 && balance > 0; m++) {
+      const intM = balance * r;
+      const prinM = Math.min(emi - intM, balance);
+      principalYear += prinM;
+      interestYear  += intM;
+      balance -= prinM;
+    }
+    rows.push(`<tr><td>${yr}</td><td>${fmt(principalYear)}</td><td style="color:var(--red)">${fmt(interestYear)}</td><td>${fmt(Math.max(balance,0))}</td></tr>`);
+  }
+  document.getElementById('emi-table').innerHTML = rows.join('');
+}
+
+// Init all
+calcSIP(); calcLS(); calcEMI();
+</script>
+</body>
+</html>
