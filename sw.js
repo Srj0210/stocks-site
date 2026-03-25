@@ -1,6 +1,6 @@
 // SRJahir Tech Stocks — Service Worker v6
 // Aggressive cache clear + no HTML caching
-const CACHE = 'srj-stocks-v22';
+const CACHE = 'srj-stocks-v23';
 
 // On install: clear everything first, then cache only static assets
 self.addEventListener('install', e => {
